@@ -11,7 +11,7 @@ import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BeregnSaertilskuddResulta
 
 public class TestUtil {
 
-  // Total barnebidrag
+  // Særtilskudd
   public static BeregnSaertilskuddGrunnlag byggSaertilskuddGrunnlag() {
     return byggSaertilskuddGrunnlag("");
   }

@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 @DisplayName("DtoTest")
 class DtoTest {
 
-  // Total barnebidrag
+  // Særtilskudd
   @Test
   @DisplayName("Skal kaste IllegalArgumentException når beregnDatoFra er null")
   void skalKasteIllegalArgumentExceptionNaarBeregnDatoFraErNull() {

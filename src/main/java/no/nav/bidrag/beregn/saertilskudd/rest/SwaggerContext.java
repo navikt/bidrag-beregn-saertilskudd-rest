@@ -18,7 +18,7 @@ public class SwaggerContext {
     return new Docket(DocumentationType.SWAGGER_2)
         .select()
         .apis(RequestHandlerSelectors.basePackage(BidragBeregnSaertilskudd.class.getPackage().getName()))
-        .paths(regex("/beregn/barnebidrag" + ".*"))
+        .paths(regex("/beregn/saertilskudd" + ".*"))
         .build();
   }
 }
