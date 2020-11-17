@@ -1,0 +1,105 @@
+package no.nav.bidrag.beregn.saertilskudd.rest.controller;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+import static org.springframework.http.HttpStatus.OK;
+
+import no.nav.bidrag.beregn.saertilskudd.rest.BidragBeregnSaertilskuddLocal;
+import no.nav.bidrag.beregn.saertilskudd.rest.TestUtil;
+import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BeregnSaertilskuddGrunnlag;
+import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BeregnSaertilskuddResultat;
+import no.nav.bidrag.beregn.saertilskudd.rest.service.BeregnSaertilskuddService;
+import no.nav.bidrag.commons.web.HttpResponse;
+import no.nav.bidrag.commons.web.test.HttpHeaderTestRestTemplate;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+
+@DisplayName("BeregnSaertilskuddControllerTest")
+@SpringBootTest(classes = BidragBeregnSaertilskuddLocal.class, webEnvironment = WebEnvironment.RANDOM_PORT)
+class BeregnSaertilskuddControllerTest {
+
+  @Autowired
+  private HttpHeaderTestRestTemplate httpHeaderTestRestTemplate;
+  @LocalServerPort
+  private int port;
+  @MockBean
+  private BeregnSaertilskuddService beregnSaertilskuddServiceMock;
+
+  @BeforeEach
+  void initMocks() {
+    MockitoAnnotations.initMocks(this);
+  }
+
+  @Test
+  @DisplayName("Skal returnere særtilskudd resultat ved gyldig input")
+  void skalReturnereSaertilskuddResultatVedGyldigInput() {
+
+    when(beregnSaertilskuddServiceMock.beregn(any(BeregnSaertilskuddGrunnlag.class)))
+        .thenReturn(HttpResponse.from(OK, TestUtil.dummySaertilskuddResultat()));
+
+    var url = "http://localhost:" + port + "/bidrag-beregn-saertilskudd-rest/beregn/saertilskudd";
+    var request = initHttpEntity(TestUtil.byggSaertilskuddGrunnlag());
+    var responseEntity = httpHeaderTestRestTemplate.exchange(url, HttpMethod.POST, request, BeregnSaertilskuddResultat.class);
+    var totalSaertilskuddResultat = responseEntity.getBody();
+
+    assertAll(
+        () -> assertThat(responseEntity.getStatusCode()).isEqualTo(OK),
+        () -> assertThat(totalSaertilskuddResultat).isNotNull(),
+
+        () -> assertThat(totalSaertilskuddResultat.getResultat()).isNotNull()
+    );
+  }
+
+  @Test
+  @DisplayName("Skal returnere 400 Bad Request når input data mangler")
+  void skalReturnere400BadRequestNaarInputDataMangler() {
+
+    when(beregnSaertilskuddServiceMock.beregn(any(BeregnSaertilskuddGrunnlag.class))).thenReturn(HttpResponse.from(BAD_REQUEST));
+
+    var url = "http://localhost:" + port + "/bidrag-beregn-saertilskudd-rest/beregn/saertilskudd";
+    var request = initHttpEntity(TestUtil.byggSaertilskuddGrunnlag());
+    var responseEntity = httpHeaderTestRestTemplate.exchange(url, HttpMethod.POST, request, BeregnSaertilskuddResultat.class);
+    var totalSaertilskuddResultat = responseEntity.getBody();
+
+    assertAll(
+        () -> assertThat(responseEntity.getStatusCode()).isEqualTo(BAD_REQUEST),
+        () -> assertThat(totalSaertilskuddResultat).isNull()
+    );
+  }
+
+  @Test
+  @DisplayName("Skal returnere 500 Internal Server Error når kall til servicen feiler")
+  void skalReturnere500InternalServerErrorNaarKallTilServicenFeiler() {
+
+    when(beregnSaertilskuddServiceMock.beregn(any(BeregnSaertilskuddGrunnlag.class))).thenReturn(HttpResponse.from(INTERNAL_SERVER_ERROR));
+
+    var url = "http://localhost:" + port + "/bidrag-beregn-saertilskudd-rest/beregn/saertilskudd";
+    var request = initHttpEntity(TestUtil.byggSaertilskuddGrunnlag());
+    var responseEntity = httpHeaderTestRestTemplate.exchange(url, HttpMethod.POST, request, BeregnSaertilskuddResultat.class);
+    var totalSaertilskuddResultat = responseEntity.getBody();
+
+    assertAll(
+        () -> assertThat(responseEntity.getStatusCode()).isEqualTo(INTERNAL_SERVER_ERROR),
+        () -> assertThat(totalSaertilskuddResultat).isNull()
+    );
+  }
+
+  private <T> HttpEntity<T> initHttpEntity(T body) {
+    var httpHeaders = new HttpHeaders();
+    return new HttpEntity<>(body, httpHeaders);
+  }
+}
