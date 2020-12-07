@@ -22,6 +22,7 @@
     <!-- dependencies -->
     <bidrag-commons.version>0.4.2</bidrag-commons.version>
     <bidrag-commons-test.version>0.2.1</bidrag-commons-test.version>
+    <bidrag-beregn-felles.version>0.14.0</bidrag-beregn-felles.version>
     <bidrag-beregn-saertilskudd-core.version>0.1.0</bidrag-beregn-saertilskudd-core.version>
     <springfox-swagger.version>2.9.2</springfox-swagger.version>
 
@@ -31,19 +32,25 @@
   </properties>
 
   <dependencies>
-    <!--    <dependency>
-          <groupId>no.nav.bidrag</groupId>
-          <artifactId>bidrag-beregn-saertilskudd-core</artifactId>
-          <version>${bidrag-beregn-saertilskudd-core.version}</version>
-        </dependency> -->
+    <dependency>
+      <groupId>no.nav.bidrag</groupId>
+      <artifactId>bidrag-beregn-felles</artifactId>
+      <version>${bidrag-beregn-felles.version}</version>
+    </dependency>
 
-        <dependency>
-          <groupId>no.nav.bidrag</groupId>
-          <artifactId>bidrag-commons</artifactId>
-          <version>${bidrag-commons.version}</version>
-        </dependency>
+    <dependency>
+      <groupId>no.nav.bidrag</groupId>
+      <artifactId>bidrag-beregn-saertilskudd-core</artifactId>
+      <version>${bidrag-beregn-saertilskudd-core.version}</version>
+    </dependency>
 
-        <!-- test -->
+    <dependency>
+      <groupId>no.nav.bidrag</groupId>
+      <artifactId>bidrag-commons</artifactId>
+      <version>${bidrag-commons.version}</version>
+    </dependency>
+
+    <!-- test -->
     <dependency>
       <groupId>no.nav.bidrag</groupId>
       <artifactId>bidrag-commons-test</artifactId>
