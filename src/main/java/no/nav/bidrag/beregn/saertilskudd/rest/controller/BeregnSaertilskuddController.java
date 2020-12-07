@@ -1,7 +1,7 @@
 package no.nav.bidrag.beregn.saertilskudd.rest.controller;
 
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BeregnSaertilskuddGrunnlag;
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BeregnSaertilskuddResultat;
+import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BeregnTotalSaertilskuddGrunnlag;
+import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BeregnTotalSaertilskuddResultat;
 import no.nav.bidrag.beregn.saertilskudd.rest.service.BeregnSaertilskuddService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,10 +20,10 @@ public class BeregnSaertilskuddController {
   }
 
   @PostMapping(path = "/saertilskudd")
-  public ResponseEntity<BeregnSaertilskuddResultat> beregnSaertilskudd(
-      @RequestBody BeregnSaertilskuddGrunnlag beregnSaertilskuddGrunnlag) {
-    var beregnSaertilskuddResultat = beregnSaertilskuddService.beregn(beregnSaertilskuddGrunnlag);
-    return new ResponseEntity<>(beregnSaertilskuddResultat.getResponseEntity().getBody(),
-        beregnSaertilskuddResultat.getResponseEntity().getStatusCode());
+  public ResponseEntity<BeregnTotalSaertilskuddResultat> beregnTotalSaertilskudd(
+      @RequestBody BeregnTotalSaertilskuddGrunnlag beregnTotalSaertilskuddGrunnlag) {
+    var beregnTotalSaertilskuddResultat = beregnSaertilskuddService.beregn(beregnTotalSaertilskuddGrunnlag);
+    return new ResponseEntity<>(beregnTotalSaertilskuddResultat.getResponseEntity().getBody(),
+        beregnTotalSaertilskuddResultat.getResponseEntity().getStatusCode());
   }
 }
