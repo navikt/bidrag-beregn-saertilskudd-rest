@@ -62,7 +62,6 @@ public class BeregnSaertilskuddService {
 
   private static final String BIDRAGSEVNE = "Bidragsevne";
   private static final String BP_ANDEL_SAERTILSKUDD = "BPsAndelSaertilskudd";
-  private static final String SAERTILSKUDD = "Særtilskudd";
 
   private final SjablonConsumer sjablonConsumer;
   private final BidragsevneCore bidragsevneCore;
@@ -110,7 +109,7 @@ public class BeregnSaertilskuddService {
     var bidragsevneResultatFraCore = beregnBidragsevne(bidragsevneGrunnlagTilCore);
 
     // ++ BPs andel av særtilskudd
-    var bpAndelSaertilskuddGrunnlagTilCore = byggBpAndelSaertilskuddGrunnlagTilCore(beregnTotalSaertilskuddGrunnlag, sjablontallMap, sjablonListe);
+    var bpAndelSaertilskuddGrunnlagTilCore = byggBPAndelSaertilskuddGrunnlagTilCore(beregnTotalSaertilskuddGrunnlag, sjablontallMap, sjablonListe);
     var bpAndelSaertilskuddResultatFraCore = beregnBPAndelSaertilskudd(bpAndelSaertilskuddGrunnlagTilCore);
 
     // ++ Samværsfradrag
@@ -118,8 +117,8 @@ public class BeregnSaertilskuddService {
     var samvaersfradragResultatFraCore = beregnSamvaersfradrag(samvaersfradragGrunnlagTilCore);
 
     // ++ Særtilskudd (totalberegning)
-    var saertilskuddGrunnlagTilCore = byggSaertilskuddGrunnlagTilCore(beregnTotalSaertilskuddGrunnlag, sjablontallMap, bidragsevneResultatFraCore,
-        bpAndelSaertilskuddResultatFraCore, samvaersfradragResultatFraCore, sjablonListe);
+    var saertilskuddGrunnlagTilCore = byggSaertilskuddGrunnlagTilCore(beregnTotalSaertilskuddGrunnlag, bidragsevneResultatFraCore,
+        bpAndelSaertilskuddResultatFraCore, samvaersfradragResultatFraCore);
     var saertilskuddResultatFraCore = beregnSaertilskudd(saertilskuddGrunnlagTilCore);
 
     // Bygger responsobjekt
@@ -149,7 +148,7 @@ public class BeregnSaertilskuddService {
   }
 
   // Bygger grunnlag til core for beregning av BPs andel av særtilskudd
-  private BeregnBPsAndelSaertilskuddGrunnlagCore byggBpAndelSaertilskuddGrunnlagTilCore(
+  private BeregnBPsAndelSaertilskuddGrunnlagCore byggBPAndelSaertilskuddGrunnlagTilCore(
       BeregnTotalSaertilskuddGrunnlag beregnTotalSaertilskuddGrunnlag, Map<String, SjablonTallNavn> sjablontallMap, SjablonListe sjablonListe) {
 
     // Hent aktuelle sjabloner
@@ -173,9 +172,8 @@ public class BeregnSaertilskuddService {
 
   // Bygger grunnlag til core for beregning av særtilskudd
   private BeregnSaertilskuddGrunnlagCore byggSaertilskuddGrunnlagTilCore(BeregnTotalSaertilskuddGrunnlag beregnTotalSaertilskuddGrunnlag,
-      Map<String, SjablonTallNavn> sjablontallMap, BeregnBidragsevneResultatCore bidragsevneResultatFraCore,
-      BeregnBPsAndelSaertilskuddResultatCore bpAndelSaertilskuddResultatFraCore, BeregnSamvaersfradragResultatCore samvaersfradragResultatFraCore,
-      SjablonListe sjablonListe) {
+      BeregnBidragsevneResultatCore bidragsevneResultatFraCore, BeregnBPsAndelSaertilskuddResultatCore bpAndelSaertilskuddResultatFraCore,
+      BeregnSamvaersfradragResultatCore samvaersfradragResultatFraCore) {
 
     // Løp gjennom output fra beregning av bidragsevne og bygg opp ny input-liste til core
     var bidragsevnePeriodeCoreListe =
@@ -188,7 +186,7 @@ public class BeregnSaertilskuddService {
             .collect(toList());
 
     // Løp gjennom output fra beregning av BPs andel særtilskudd og bygg opp ny input-liste til core
-    var bPAndelSaertilskuddPeriodeCoreListe =
+    var bpAndelSaertilskuddPeriodeCoreListe =
         bpAndelSaertilskuddResultatFraCore.getResultatPeriodeListe()
             .stream()
             .map(resultat -> new BPsAndelSaertilskuddPeriodeCore(
@@ -201,19 +199,15 @@ public class BeregnSaertilskuddService {
     var samvaersfradragPeriodeCoreListe =
         samvaersfradragResultatFraCore.getResultatPeriodeListe()
             .stream()
-            .map(resultat -> new SamvaersfradragPeriodeCore(
+            .map(resultat -> new SamvaersfradragPeriodeCore(resultat.getSoknadsbarnPersonId(),
                 new PeriodeCore(resultat.getResultatDatoFraTil().getPeriodeDatoFra(),
                     resultat.getResultatDatoFraTil().getPeriodeDatoTil()),
                 resultat.getResultatBeregning().getResultatSamvaersfradragBelop()))
             .collect(toList());
 
-    // Hent aktuelle sjabloner
-    var sjablonPeriodeCoreListe = mapSjablonSjablontall(sjablonListe.getSjablonSjablontallResponse(), SAERTILSKUDD,
-        beregnTotalSaertilskuddGrunnlag, sjablontallMap);
-
     // Bygg grunnlag for beregning av barnebidrag. Her gjøres også kontroll av inputdata
-    return beregnTotalSaertilskuddGrunnlag.saertilskuddTilCore(bidragsevnePeriodeCoreListe, bPAndelSaertilskuddPeriodeCoreListe,
-        samvaersfradragPeriodeCoreListe, sjablonPeriodeCoreListe);
+    return beregnTotalSaertilskuddGrunnlag.saertilskuddTilCore(bidragsevnePeriodeCoreListe, bpAndelSaertilskuddPeriodeCoreListe,
+        samvaersfradragPeriodeCoreListe);
   }
 
   //==================================================================================================================================================
@@ -436,7 +430,6 @@ public class BeregnSaertilskuddService {
     return switch (delberegning) {
       case BIDRAGSEVNE -> sjablonTallNavn.getBidragsevne();
       case BP_ANDEL_SAERTILSKUDD -> sjablonTallNavn.getBpAndelSaertilskudd();
-      case SAERTILSKUDD -> sjablonTallNavn.getSaertilskudd();
       default -> false;
     };
   }

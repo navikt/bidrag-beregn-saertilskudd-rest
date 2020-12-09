@@ -110,7 +110,6 @@ class BeregnSaertilskuddServiceTest {
     var bidragsevneGrunnlagTilCore = bidragsevneGrunnlagTilCoreCaptor.getValue();
     var bpAndelSaertilskuddGrunnlagTilCore = bpAndelSaertilskuddGrunnlagTilCoreCaptor.getValue();
     var samvaersfradragGrunnlagTilCore = samvaersfradragGrunnlagTilCoreCaptor.getValue();
-    var saertilskuddGrunnlagTilCore = saertilskuddGrunnlagTilCoreCaptor.getValue();
 
     // For Sjablontall sjekkes at det er riktig type sjablontall. For alle sjabloner sjekkes det at datoen er innenfor beregn-fra-til-dato
     // For å finne riktig tall: Sjekk TestUtil.dummySjablonxxx; tell hvor mange sjabloner som er innefor dato og (for Sjablontall) av riktig type
@@ -121,8 +120,7 @@ class BeregnSaertilskuddServiceTest {
     var forventetAntallSjablonElementerBPsAndelSaertilskudd = 4;
     // Samvaersfradrag: Samvaersfradrag
     var forventetAntallSjablonElementerSamvaersfradrag = 8;
-    // Saertilskudd: Sjablontall (0021, 0022)
-    var forventetAntallSjablonElementerSaertilskudd = 6;
+    // Saertilskudd: Ingenting
 
     assertAll(
         () -> assertThat(beregnTotalSaertilskuddResultat.getResponseEntity().getStatusCode()).isEqualTo(HttpStatus.OK),
@@ -155,7 +153,6 @@ class BeregnSaertilskuddServiceTest {
             .isNotNull(),
         () -> assertThat(beregnTotalSaertilskuddResultat.getResponseEntity().getBody().getBeregnSaertilskuddResultat().getResultatPeriodeListe()
             .size()).isEqualTo(1),
-        () -> assertThat(saertilskuddGrunnlagTilCore.getSjablonPeriodeListe().size()).isEqualTo(forventetAntallSjablonElementerSaertilskudd),
 
         // Sjekk at det mappes ut riktig antall for en gitt sjablon av type Sjablontall
         () -> assertThat(bidragsevneGrunnlagTilCore.getSjablonPeriodeListe().stream()

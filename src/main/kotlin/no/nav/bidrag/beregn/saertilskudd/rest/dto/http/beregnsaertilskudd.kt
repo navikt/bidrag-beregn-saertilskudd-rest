@@ -10,6 +10,7 @@ import no.nav.bidrag.beregn.saertilskudd.dto.LopendeBidragPeriodeCore
 import no.nav.bidrag.beregn.saertilskudd.dto.ResultatBeregningCore
 import no.nav.bidrag.beregn.saertilskudd.dto.ResultatGrunnlagCore
 import no.nav.bidrag.beregn.saertilskudd.dto.ResultatPeriodeCore
+import no.nav.bidrag.beregn.saertilskudd.dto.SamvaersfradragCore
 import no.nav.bidrag.beregn.saertilskudd.rest.exception.UgyldigInputException
 import java.math.BigDecimal
 
@@ -23,6 +24,7 @@ data class BeregnSaertilskuddGrunnlag(
 @ApiModel(value = "Løpende bidrag bidragspliktig")
 data class LopendeBidragBPPeriode(
     @ApiModelProperty(value = "Løpende bidrag fra-til-dato") var lopendeBidragDatoFraTil: Periode? = null,
+    @ApiModelProperty(value = "Barn person-id") var lopendeBidragBarnPersonId: Int? = null,
     @ApiModelProperty(value = "Løpende bidrag beløp") var lopendeBidragBelop: BigDecimal? = null,
     @ApiModelProperty(value = "Opprinnelig BP andel av underholdskostnad beløp") var opprinneligBPAndelUnderholdskostnadBelop: BigDecimal? = null,
     @ApiModelProperty(value = "Opprinnelig samværsfradrag beløp") var opprinneligSamvaersfradragBelop: BigDecimal? = null,
@@ -33,6 +35,8 @@ data class LopendeBidragBPPeriode(
   fun tilCore() = LopendeBidragPeriodeCore(
       periodeDatoFraTil = if (lopendeBidragDatoFraTil != null) lopendeBidragDatoFraTil!!.tilCore(
           "lopendeBidrag") else throw UgyldigInputException("lopendeBidragDatoFraTil kan ikke være null"),
+      soknadsbarnPersonId = if (lopendeBidragBarnPersonId != null) lopendeBidragBarnPersonId!! else throw UgyldigInputException(
+          "lopendeBidragBarnPersonId kan ikke være null"),
       lopendeBidragBelop = if (lopendeBidragBelop != null) lopendeBidragBelop!! else throw UgyldigInputException(
           "lopendeBidragBelop kan ikke være null"),
       opprinneligBPsAndelUnderholdskostnadBelop = if (opprinneligBPAndelUnderholdskostnadBelop != null) opprinneligBPAndelUnderholdskostnadBelop!!
@@ -62,13 +66,13 @@ data class BeregnSaertilskuddResultat(
 @ApiModel(value = "Resultatet av beregning av særtilskudd for en gitt periode")
 data class ResultatPeriodeSaertilskudd(
     @ApiModelProperty(value = "Beregning resultat fra-til-dato") var resultatDatoFraTil: Periode,
-    @ApiModelProperty(value = "Beregning resultat innhold liste") var resultatBeregningListe: ResultatBeregningSaertilskudd,
+    @ApiModelProperty(value = "Beregning resultat innhold liste") var resultatBeregning: ResultatBeregningSaertilskudd,
     @ApiModelProperty(value = "Beregning grunnlag innhold") var resultatGrunnlag: ResultatGrunnlagSaertilskudd
 ) {
 
   constructor(resultatPeriode: ResultatPeriodeCore) : this(
       resultatDatoFraTil = Periode(resultatPeriode.resultatDatoFraTil),
-      resultatBeregningListe = ResultatBeregningSaertilskudd(resultatPeriode.resultatBeregning),
+      resultatBeregning = ResultatBeregningSaertilskudd(resultatPeriode.resultatBeregning),
       resultatGrunnlag = ResultatGrunnlagSaertilskudd(resultatPeriode.resultatGrunnlag)
   )
 }
@@ -87,19 +91,17 @@ data class ResultatBeregningSaertilskudd(
 
 @ApiModel(value = "Grunnlaget for beregning av særtilskudd")
 data class ResultatGrunnlagSaertilskudd(
-    @ApiModelProperty(value = "Bidragsevne") var bidragsevne: BidragsevneGrunnlag,
-    @ApiModelProperty(value = "BPs andel særtilskudd") var bpAndelSaertilskudd: BPAndelSaertilskuddGrunnlag,
-    @ApiModelProperty(value = "Løpende bidrag") var lopendeBidrag: LopendeBidragGrunnlag,
-    @ApiModelProperty(value = "Samværsfradrag beløp") var samvaersfradragBelop: BigDecimal = BigDecimal.ZERO,
-    @ApiModelProperty(value = "Liste over sjablonperioder") var sjablonListe: List<Sjablon>
+    @ApiModelProperty(value = "Bidragsevne") var bidragsevneGrunnlag: BidragsevneGrunnlag,
+    @ApiModelProperty(value = "BPs andel særtilskudd") var bpAndelSaertilskuddGrunnlag: BPAndelSaertilskuddGrunnlag,
+    @ApiModelProperty(value = "Liste over samværsfradrag") var samvaersfradragGrunnlagListe: List<SamvaersfradragGrunnlag> = emptyList(),
+    @ApiModelProperty(value = "Liste over løpende bidrag") var lopendeBidragGrunnlagListe: List<LopendeBidragGrunnlag> = emptyList()
 ) {
 
   constructor(resultatGrunnlag: ResultatGrunnlagCore) : this(
-      bidragsevne = BidragsevneGrunnlag(resultatGrunnlag.bidragsevne),
-      bpAndelSaertilskudd = BPAndelSaertilskuddGrunnlag(resultatGrunnlag.bPsAndelSaertilskudd),
-      lopendeBidrag = LopendeBidragGrunnlag(resultatGrunnlag.lopendeBidrag),
-      samvaersfradragBelop = resultatGrunnlag.samvaersfradragBelop,
-      sjablonListe = resultatGrunnlag.sjablonListe.map { Sjablon(it) }
+      bidragsevneGrunnlag = BidragsevneGrunnlag(resultatGrunnlag.bidragsevne),
+      bpAndelSaertilskuddGrunnlag = BPAndelSaertilskuddGrunnlag(resultatGrunnlag.bPsAndelSaertilskudd),
+      samvaersfradragGrunnlagListe = resultatGrunnlag.samvaersfradragListe.map { SamvaersfradragGrunnlag(it) },
+      lopendeBidragGrunnlagListe = resultatGrunnlag.lopendeBidragListe.map { LopendeBidragGrunnlag(it) }
   )
 }
 
@@ -129,8 +131,21 @@ data class BPAndelSaertilskuddGrunnlag(
   )
 }
 
+@ApiModel(value = "Grunnlaget for beregning - samværsfradrag")
+data class SamvaersfradragGrunnlag(
+    @ApiModelProperty(value = "Barn person-id") var samvaersfradragBarnPersonId: Int? = null,
+    @ApiModelProperty(value = "Samværsfradrag beløp") var samvaersfradragBelop: BigDecimal = BigDecimal.ZERO
+) {
+
+  constructor(samvaersfradrag: SamvaersfradragCore) : this(
+      samvaersfradragBarnPersonId = samvaersfradrag.soknadsbarnPersonId,
+      samvaersfradragBelop = samvaersfradrag.samvaersfradragBelop
+  )
+}
+
 @ApiModel(value = "Grunnlaget for beregning - løpende bidrag")
 data class LopendeBidragGrunnlag(
+    @ApiModelProperty(value = "Barn person-id") var lopendeBidragBarnPersonId: Int? = null,
     @ApiModelProperty(value = "Løpende bidrag beløp") var lopendeBidragBelop: BigDecimal = BigDecimal.ZERO,
     @ApiModelProperty(value = "Opprinnelig BP andel av underholdskostnad beløp") var opprinneligBPAndelUnderholdskostnadBelop: BigDecimal? = BigDecimal.ZERO,
     @ApiModelProperty(value = "Opprinnelig samværsfradrag beløp") var opprinneligSamvaersfradragBelop: BigDecimal? = BigDecimal.ZERO,
@@ -139,8 +154,9 @@ data class LopendeBidragGrunnlag(
 ) {
 
   constructor(lopendeBidrag: LopendeBidragCore) : this(
+      lopendeBidragBarnPersonId = lopendeBidrag.soknadsbarnPersonId,
       lopendeBidragBelop = lopendeBidrag.lopendeBidragBelop,
-      opprinneligBPAndelUnderholdskostnadBelop = lopendeBidrag.opprinneligBPsAndelUnderholdskostnadBelop,
+      opprinneligBPAndelUnderholdskostnadBelop = lopendeBidrag.opprinneligBPsAndelSaertilskuddBelop,
       opprinneligSamvaersfradragBelop = lopendeBidrag.opprinneligSamvaersfradragBelop,
       opprinneligBidragBelop = lopendeBidrag.opprinneligBidragBelop,
       lopendeBidragResultatkode = lopendeBidrag.resultatkode

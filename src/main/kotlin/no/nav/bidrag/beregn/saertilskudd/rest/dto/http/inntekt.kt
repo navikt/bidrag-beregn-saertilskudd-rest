@@ -26,7 +26,7 @@ data class InntektPeriode(
       inntektBelop = if (inntektBelop != null) inntektBelop!! else throw UgyldigInputException("BP inntektBelop kan ikke være null")
   )
 
-  fun tilCoreBpAndelSaertilskudd(dataElement: String) = no.nav.bidrag.beregn.bpsandelsaertilskudd.dto.InntektPeriodeCore(
+  fun tilCoreBPAndelSaertilskudd(dataElement: String) = no.nav.bidrag.beregn.bpsandelsaertilskudd.dto.InntektPeriodeCore(
       periodeDatoFraTil = if (inntektDatoFraTil != null) inntektDatoFraTil!!.tilCore(
           "$dataElement inntekt") else throw UgyldigInputException("$dataElement inntektDatoFraTil kan ikke være null"),
       inntektType = if (inntektType != null) inntektType!! else throw UgyldigInputException("$dataElement inntektType kan ikke være null"),

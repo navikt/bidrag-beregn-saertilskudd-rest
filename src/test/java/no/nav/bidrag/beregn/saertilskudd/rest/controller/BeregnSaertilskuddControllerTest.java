@@ -113,9 +113,9 @@ class BeregnSaertilskuddControllerTest {
             .getPeriodeDatoFra()).isEqualTo(LocalDate.parse("2017-01-01")),
         () -> assertThat(totalSaertilskuddResultat.getBeregnSaertilskuddResultat().getResultatPeriodeListe().get(0).getResultatDatoFraTil()
             .getPeriodeDatoTil()).isEqualTo(LocalDate.parse("2019-01-01")),
-        () -> assertThat(totalSaertilskuddResultat.getBeregnSaertilskuddResultat().getResultatPeriodeListe().get(0).getResultatBeregningListe()
+        () -> assertThat(totalSaertilskuddResultat.getBeregnSaertilskuddResultat().getResultatPeriodeListe().get(0).getResultatBeregning()
             .getResultatBelop()).isEqualTo(BigDecimal.valueOf(100)),
-        () -> assertThat(totalSaertilskuddResultat.getBeregnSaertilskuddResultat().getResultatPeriodeListe().get(0).getResultatBeregningListe()
+        () -> assertThat(totalSaertilskuddResultat.getBeregnSaertilskuddResultat().getResultatPeriodeListe().get(0).getResultatBeregning()
             .getResultatKode()).isEqualTo("RESULTATKODE")
     );
   }
