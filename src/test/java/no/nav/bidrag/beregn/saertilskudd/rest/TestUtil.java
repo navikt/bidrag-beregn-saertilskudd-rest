@@ -35,6 +35,7 @@ import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BeregnSaertilskuddResulta
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BeregnTotalSaertilskuddGrunnlag;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BidragsevneGrunnlag;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BostatusPeriode;
+import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.GrunnlagBarn;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.Inntekt;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.InntektBM;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.InntektBMPeriode;
@@ -62,6 +63,8 @@ import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.SamvaersklassePeriode;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.SkatteklassePeriode;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.SoknadsbarnGrunnlag;
 import no.nav.bidrag.beregn.samvaersfradrag.dto.BeregnSamvaersfradragResultatCore;
+import no.nav.bidrag.beregn.samvaersfradrag.dto.GrunnlagBeregningPeriodisertCore;
+import no.nav.bidrag.beregn.samvaersfradrag.dto.SamvaersfradragGrunnlagPerBarnCore;
 
 public class TestUtil {
 
@@ -726,19 +729,19 @@ public class TestUtil {
   // Bygger opp BeregnSamvaersfradragResultat
   public static BeregnBPSamvaersfradragResultat dummySamvaersfradragResultat() {
     var bidragPeriodeResultatListe = new ArrayList<ResultatPeriodeSamvaersfradrag>();
-    bidragPeriodeResultatListe.add(new ResultatPeriodeSamvaersfradrag(1, new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2019-01-01")),
-        new ResultatBeregningSamvaersfradrag(BigDecimal.valueOf(100)),
-        new ResultatGrunnlagSamvaersfradrag(9, "00", emptyList())));
+    bidragPeriodeResultatListe.add(new ResultatPeriodeSamvaersfradrag(new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2019-01-01")),
+        singletonList(new ResultatBeregningSamvaersfradrag(1, BigDecimal.valueOf(100))),
+        new ResultatGrunnlagSamvaersfradrag(singletonList(new GrunnlagBarn(1, 9, "00")), emptyList())));
     return new BeregnBPSamvaersfradragResultat(bidragPeriodeResultatListe);
   }
 
   // Bygger opp BeregnSamvaersfradragResultatCore
   public static BeregnSamvaersfradragResultatCore dummySamvaersfradragResultatCore() {
     var bidragPeriodeResultatListe = new ArrayList<no.nav.bidrag.beregn.samvaersfradrag.dto.ResultatPeriodeCore>();
-    bidragPeriodeResultatListe.add(new no.nav.bidrag.beregn.samvaersfradrag.dto.ResultatPeriodeCore(1,
+    bidragPeriodeResultatListe.add(new no.nav.bidrag.beregn.samvaersfradrag.dto.ResultatPeriodeCore(
         new PeriodeCore(LocalDate.parse("2017-01-01"), LocalDate.parse("2019-01-01")),
-        new no.nav.bidrag.beregn.samvaersfradrag.dto.ResultatBeregningCore(BigDecimal.valueOf(100)),
-        new no.nav.bidrag.beregn.samvaersfradrag.dto.ResultatGrunnlagCore(9, "00", emptyList())));
+        singletonList(new no.nav.bidrag.beregn.samvaersfradrag.dto.ResultatBeregningCore(1, BigDecimal.valueOf(100))),
+        new GrunnlagBeregningPeriodisertCore(singletonList(new SamvaersfradragGrunnlagPerBarnCore(1, 9, "00")), emptyList())));
     return new BeregnSamvaersfradragResultatCore(bidragPeriodeResultatListe, emptyList());
   }
 
@@ -769,8 +772,8 @@ public class TestUtil {
   // Bygger opp BeregnSaertilskuddResultatCore
   public static BeregnSaertilskuddResultatCore dummySaertilskuddResultatCore() {
     var bidragPeriodeResultatListe = new ArrayList<no.nav.bidrag.beregn.saertilskudd.dto.ResultatPeriodeCore>();
-    bidragPeriodeResultatListe.add(new no.nav.bidrag.beregn.saertilskudd.dto.ResultatPeriodeCore(1,
-        new PeriodeCore(LocalDate.parse("2017-01-01"), LocalDate.parse("2019-01-01")),
+    bidragPeriodeResultatListe.add(new no.nav.bidrag.beregn.saertilskudd.dto.ResultatPeriodeCore(
+        new PeriodeCore(LocalDate.parse("2017-01-01"), LocalDate.parse("2019-01-01")), 1,
         new no.nav.bidrag.beregn.saertilskudd.dto.ResultatBeregningCore(BigDecimal.valueOf(100), "RESULTATKODE"),
         new no.nav.bidrag.beregn.saertilskudd.dto.ResultatGrunnlagCore(new BidragsevneCore(BigDecimal.valueOf(100), BigDecimal.valueOf(100)),
             new BPsAndelSaertilskuddCore(BigDecimal.valueOf(100), BigDecimal.valueOf(100), false),

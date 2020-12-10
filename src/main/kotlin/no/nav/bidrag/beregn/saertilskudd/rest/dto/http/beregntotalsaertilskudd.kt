@@ -113,9 +113,6 @@ data class BeregnTotalSaertilskuddGrunnlag(
   fun samvaersfradragTilCore(sjablonPeriodeListe: List<SjablonPeriodeCore>) = BeregnSamvaersfradragGrunnlagCore(
       beregnDatoFra = beregnDatoFra!!,
       beregnDatoTil = beregnDatoTil!!,
-//TODO
-      soknadsbarnPersonId = 1,
-      soknadsbarnFodselsdato = soknadsbarnGrunnlag!!.soknadsbarnFodselsdato!!,
 
       samvaersklassePeriodeListe =
       if (beregnBPSamvaersfradragGrunnlag!!.samvaersklassePeriodeListe != null)

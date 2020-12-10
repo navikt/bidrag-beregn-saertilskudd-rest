@@ -511,14 +511,13 @@ class DtoTest {
         .withMessage("samvaersklasseBarnPersonId kan ikke være null");
   }
 
-  //TODO
-//  @Test
-//  @DisplayName("Skal kaste IllegalArgumentException når samvaersklasseBarnFodselsdato er null")
-//  void skalKasteIllegalArgumentExceptionNaarSFSamvaersklasseBarnFodselsdatoErNull() {
-//    var grunnlag = TestUtil.byggSamvaersfradragGrunnlagUtenSamvaersklasseBarnFodselsdato().getSamvaersklassePeriodeListe();
-//    assertThatExceptionOfType(UgyldigInputException.class).isThrownBy(grunnlag.get(0)::tilCore)
-//        .withMessage("samvaersklasseBarnFodselsdato kan ikke være null");
-//  }
+  @Test
+  @DisplayName("Skal kaste IllegalArgumentException når samvaersklasseBarnFodselsdato er null")
+  void skalKasteIllegalArgumentExceptionNaarSFSamvaersklasseBarnFodselsdatoErNull() {
+    var grunnlag = TestUtil.byggSamvaersfradragGrunnlagUtenSamvaersklasseBarnFodselsdato().getSamvaersklassePeriodeListe();
+    assertThatExceptionOfType(UgyldigInputException.class).isThrownBy(grunnlag.get(0)::tilCore)
+        .withMessage("samvaersklasseBarnFodselsdato kan ikke være null");
+  }
 
   @Test
   @DisplayName("Skal kaste IllegalArgumentException når samvaersklasseId er null")

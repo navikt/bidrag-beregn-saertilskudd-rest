@@ -4,9 +4,10 @@ import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
 import no.nav.bidrag.beregn.saertilskudd.rest.exception.UgyldigInputException
 import no.nav.bidrag.beregn.samvaersfradrag.dto.BeregnSamvaersfradragResultatCore
+import no.nav.bidrag.beregn.samvaersfradrag.dto.GrunnlagBeregningPeriodisertCore
 import no.nav.bidrag.beregn.samvaersfradrag.dto.ResultatBeregningCore
-import no.nav.bidrag.beregn.samvaersfradrag.dto.ResultatGrunnlagCore
 import no.nav.bidrag.beregn.samvaersfradrag.dto.ResultatPeriodeCore
+import no.nav.bidrag.beregn.samvaersfradrag.dto.SamvaersfradragGrunnlagPerBarnCore
 import no.nav.bidrag.beregn.samvaersfradrag.dto.SamvaersklassePeriodeCore
 import java.math.BigDecimal
 import java.time.LocalDate
@@ -29,11 +30,10 @@ data class SamvaersklassePeriode(
   fun tilCore() = SamvaersklassePeriodeCore(
       samvaersklassePeriodeDatoFraTil = if (samvaersklasseDatoFraTil != null) samvaersklasseDatoFraTil!!.tilCore(
           "samvaersklasse") else throw UgyldigInputException("samvaersklasseDatoFraTil kan ikke være null"),
-      soknadsbarnPersonId = if (samvaersklasseBarnPersonId != null) samvaersklasseBarnPersonId!! else throw UgyldigInputException(
+      barnPersonId = if (samvaersklasseBarnPersonId != null) samvaersklasseBarnPersonId!! else throw UgyldigInputException(
           "samvaersklasseBarnPersonId kan ikke være null"),
-//TODO
-//      soknadsbarnFodselsdato = if (samvaersklasseBarnFodselsdato != null) samvaersklasseBarnFodselsdato!! else throw UgyldigInputException(
-//          "samvaersklasseBarnFodselsdato kan ikke være null"),
+      barnFodselsdato = if (samvaersklasseBarnFodselsdato != null) samvaersklasseBarnFodselsdato!! else throw UgyldigInputException(
+          "samvaersklasseBarnFodselsdato kan ikke være null"),
       samvaersklasse = if (samvaersklasseId != null) samvaersklasseId!! else throw UgyldigInputException("samvaersklasseId kan ikke være null")
   )
 }
@@ -47,46 +47,58 @@ data class BeregnBPSamvaersfradragResultat(
 ) {
 
   constructor(beregnSamvaersfradragResultat: BeregnSamvaersfradragResultatCore) : this(
-      resultatPeriodeListe = beregnSamvaersfradragResultat.resultatPeriodeListe.map {ResultatPeriodeSamvaersfradrag(it) }
+      resultatPeriodeListe = beregnSamvaersfradragResultat.resultatPeriodeListe.map { ResultatPeriodeSamvaersfradrag(it) }
   )
 }
 
 @ApiModel(value = "Resultatet av beregning av samværsfradrag for et søknadsbarn for en gitt periode")
 data class ResultatPeriodeSamvaersfradrag(
-    @ApiModelProperty(value = "Beregning resultat barn person-id") var resultatBarnPersonId: Int? = null,
     @ApiModelProperty(value = "Beregning resultat fra-til-dato") var resultatDatoFraTil: Periode,
-    @ApiModelProperty(value = "Beregning resultat innhold") var resultatBeregning: ResultatBeregningSamvaersfradrag,
+    @ApiModelProperty(value = "Beregning resultat innhold liste") var resultatBeregningListe: List<ResultatBeregningSamvaersfradrag> = emptyList(),
     @ApiModelProperty(value = "Beregning grunnlag innhold") var resultatGrunnlag: ResultatGrunnlagSamvaersfradrag
 ) {
 
   constructor(resultatPeriode: ResultatPeriodeCore) : this(
-      resultatBarnPersonId = resultatPeriode.soknadsbarnPersonId,
       resultatDatoFraTil = Periode(resultatPeriode.resultatDatoFraTil),
-      resultatBeregning = ResultatBeregningSamvaersfradrag(resultatPeriode.resultatBeregning),
+      resultatBeregningListe = resultatPeriode.resultatBeregning.map { ResultatBeregningSamvaersfradrag(it) },
       resultatGrunnlag = ResultatGrunnlagSamvaersfradrag(resultatPeriode.resultatGrunnlag)
   )
 }
 
 @ApiModel(value = "Resultatet av beregning av samværsfradrag")
 data class ResultatBeregningSamvaersfradrag(
+    @ApiModelProperty(value = "Barn person-id") var barnPersonId: Int? = null,
     @ApiModelProperty(value = "Beløp samværsfradrag") var resultatBelop: BigDecimal = BigDecimal.ZERO
 ) {
 
   constructor(resultatBeregning: ResultatBeregningCore) : this(
+      barnPersonId = resultatBeregning.barnPersonId,
       resultatBelop = resultatBeregning.resultatSamvaersfradragBelop
   )
 }
 
 @ApiModel(value = "Grunnlaget for beregning av samværsfradrag")
 data class ResultatGrunnlagSamvaersfradrag(
-    @ApiModelProperty(value = "Barnets alder") var barnAlder: Int = 0,
-    @ApiModelProperty(value = "Samværsklasse Id") var samvaersklasseId: String,
-    @ApiModelProperty(value = "Liste over sjablonperioder") var sjablonListe: List<Sjablon>
+    @ApiModelProperty(value = "Liste over grunnlag pr barn") var grunnlagBarnListe: List<GrunnlagBarn> = emptyList(),
+    @ApiModelProperty(value = "Liste over sjablonperioder") var sjablonListe: List<Sjablon> = emptyList()
 ) {
 
-  constructor(resultatGrunnlag: ResultatGrunnlagCore) : this(
-      barnAlder = resultatGrunnlag.soknadBarnAlder,
-      samvaersklasseId = resultatGrunnlag.samvaersklasse,
+  constructor(resultatGrunnlag: GrunnlagBeregningPeriodisertCore) : this(
+      grunnlagBarnListe = resultatGrunnlag.samvaersfradragGrunnlagPerBarnListeCore.map { GrunnlagBarn(it) },
       sjablonListe = resultatGrunnlag.sjablonListe.map { Sjablon(it) }
+  )
+}
+
+@ApiModel(value = "Grunnlaget for beregning av samværsfradrag - pr barn")
+data class GrunnlagBarn(
+    @ApiModelProperty(value = "Barn person-id") var barnPersonId: Int = 0,
+    @ApiModelProperty(value = "Barn alder") var barnAlder: Int = 0,
+    @ApiModelProperty(value = "Samværsklasse Id") var samvaersklasseId: String
+) {
+
+  constructor(resultatGrunnlagBarn: SamvaersfradragGrunnlagPerBarnCore) : this(
+      barnPersonId = resultatGrunnlagBarn.barnPersonId,
+      barnAlder = resultatGrunnlagBarn.barnAlder,
+      samvaersklasseId = resultatGrunnlagBarn.samvaersklasse
   )
 }

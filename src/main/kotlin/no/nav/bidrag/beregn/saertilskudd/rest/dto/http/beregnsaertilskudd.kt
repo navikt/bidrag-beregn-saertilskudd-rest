@@ -35,7 +35,7 @@ data class LopendeBidragBPPeriode(
   fun tilCore() = LopendeBidragPeriodeCore(
       periodeDatoFraTil = if (lopendeBidragDatoFraTil != null) lopendeBidragDatoFraTil!!.tilCore(
           "lopendeBidrag") else throw UgyldigInputException("lopendeBidragDatoFraTil kan ikke være null"),
-      soknadsbarnPersonId = if (lopendeBidragBarnPersonId != null) lopendeBidragBarnPersonId!! else throw UgyldigInputException(
+      barnPersonId = if (lopendeBidragBarnPersonId != null) lopendeBidragBarnPersonId!! else throw UgyldigInputException(
           "lopendeBidragBarnPersonId kan ikke være null"),
       lopendeBidragBelop = if (lopendeBidragBelop != null) lopendeBidragBelop!! else throw UgyldigInputException(
           "lopendeBidragBelop kan ikke være null"),
@@ -138,7 +138,7 @@ data class SamvaersfradragGrunnlag(
 ) {
 
   constructor(samvaersfradrag: SamvaersfradragCore) : this(
-      samvaersfradragBarnPersonId = samvaersfradrag.soknadsbarnPersonId,
+      samvaersfradragBarnPersonId = samvaersfradrag.barnPersonId,
       samvaersfradragBelop = samvaersfradrag.samvaersfradragBelop
   )
 }
@@ -154,9 +154,9 @@ data class LopendeBidragGrunnlag(
 ) {
 
   constructor(lopendeBidrag: LopendeBidragCore) : this(
-      lopendeBidragBarnPersonId = lopendeBidrag.soknadsbarnPersonId,
+      lopendeBidragBarnPersonId = lopendeBidrag.barnPersonId,
       lopendeBidragBelop = lopendeBidrag.lopendeBidragBelop,
-      opprinneligBPAndelUnderholdskostnadBelop = lopendeBidrag.opprinneligBPsAndelSaertilskuddBelop,
+      opprinneligBPAndelUnderholdskostnadBelop = lopendeBidrag.opprinneligBPsAndelUnderholdskostnadBelop,
       opprinneligSamvaersfradragBelop = lopendeBidrag.opprinneligSamvaersfradragBelop,
       opprinneligBidragBelop = lopendeBidrag.opprinneligBidragBelop,
       lopendeBidragResultatkode = lopendeBidrag.resultatkode

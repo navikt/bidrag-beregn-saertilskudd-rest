@@ -199,10 +199,14 @@ public class BeregnSaertilskuddService {
     var samvaersfradragPeriodeCoreListe =
         samvaersfradragResultatFraCore.getResultatPeriodeListe()
             .stream()
-            .map(resultat -> new SamvaersfradragPeriodeCore(resultat.getSoknadsbarnPersonId(),
-                new PeriodeCore(resultat.getResultatDatoFraTil().getPeriodeDatoFra(),
-                    resultat.getResultatDatoFraTil().getPeriodeDatoTil()),
-                resultat.getResultatBeregning().getResultatSamvaersfradragBelop()))
+            .flatMap(resultatperiode -> resultatperiode.getResultatBeregning()
+                .stream()
+                .map(resultatberegning ->
+                    new SamvaersfradragPeriodeCore(
+                        new PeriodeCore(resultatperiode.getResultatDatoFraTil().getPeriodeDatoFra(),
+                            resultatperiode.getResultatDatoFraTil().getPeriodeDatoTil()),
+                        resultatberegning.getBarnPersonId(),
+                        resultatberegning.getResultatSamvaersfradragBelop())))
             .collect(toList());
 
     // Bygg grunnlag for beregning av barnebidrag. Her gjøres også kontroll av inputdata
@@ -279,7 +283,6 @@ public class BeregnSaertilskuddService {
       LOGGER.info("Samværsfradrag - grunnlag for beregning: " + System.lineSeparator()
           + "beregnDatoFra= " + samvaersfradragGrunnlagTilCore.getBeregnDatoFra() + System.lineSeparator()
           + "beregnDatoTil= " + samvaersfradragGrunnlagTilCore.getBeregnDatoTil() + System.lineSeparator()
-          + "soknadsbarnFodselsdato= " + samvaersfradragGrunnlagTilCore.getSoknadsbarnFodselsdato() + System.lineSeparator()
           + "samvaersklassePeriodeListe= " + samvaersfradragGrunnlagTilCore.getSamvaersklassePeriodeListe() + System.lineSeparator());
       throw new UgyldigInputException("Ugyldig input ved beregning av samværsfradrag. Følgende avvik ble funnet: "
           + samvaersfradragResultatFraCore.getAvvikListe().stream().map(AvvikCore::getAvvikTekst).collect(Collectors.joining("; ")));
