@@ -77,7 +77,7 @@ data class ResultatGrunnlagBPAndelSaertilskudd(
     @ApiModelProperty(value = "Liste over bidragspliktiges inntekter") var inntektBPListe: List<Inntekt> = emptyList(),
     @ApiModelProperty(value = "Liste over bidragsmottakers inntekter") var inntektBMListe: List<InntektBM> = emptyList(),
     @ApiModelProperty(value = "Liste over søknadsbarnets inntekter") var inntektSBListe: List<Inntekt> = emptyList(),
-    @ApiModelProperty(value = "Liste over sjablonperioder") var sjablonListe: List<Sjablon>
+    @ApiModelProperty(value = "Liste over sjablonperioder") var sjablonListe: List<Sjablon> = emptyList()
 ) {
 
   constructor(resultatGrunnlag: ResultatGrunnlagCore) : this(

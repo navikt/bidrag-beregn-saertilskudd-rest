@@ -94,7 +94,7 @@ data class BeregnTotalSaertilskuddGrunnlag(
 
       inntektBPPeriodeListe =
       if (inntektBPBMGrunnlag!!.inntektBPPeriodeListe != null)
-        inntektBPBMGrunnlag!!.inntektBPPeriodeListe!!.map { it.tilCoreBpAndelSaertilskudd("BP") }
+        inntektBPBMGrunnlag!!.inntektBPPeriodeListe!!.map { it.tilCoreBPAndelSaertilskudd("BP") }
       else throw UgyldigInputException("inntektBPPeriodeListe kan ikke være null"),
 
       inntektBMPeriodeListe =
@@ -104,7 +104,7 @@ data class BeregnTotalSaertilskuddGrunnlag(
 
       inntektBBPeriodeListe =
       if (soknadsbarnGrunnlag!!.inntektPeriodeListe != null)
-        soknadsbarnGrunnlag!!.inntektPeriodeListe!!.map { it.tilCoreBpAndelSaertilskudd("SB") }
+        soknadsbarnGrunnlag!!.inntektPeriodeListe!!.map { it.tilCoreBPAndelSaertilskudd("SB") }
       else throw UgyldigInputException("inntektSBPeriodeListe kan ikke være null"),
 
       sjablonPeriodeListe = sjablonPeriodeListe
@@ -113,7 +113,6 @@ data class BeregnTotalSaertilskuddGrunnlag(
   fun samvaersfradragTilCore(sjablonPeriodeListe: List<SjablonPeriodeCore>) = BeregnSamvaersfradragGrunnlagCore(
       beregnDatoFra = beregnDatoFra!!,
       beregnDatoTil = beregnDatoTil!!,
-      soknadsbarnFodselsdato = soknadsbarnGrunnlag!!.soknadsbarnFodselsdato!!,
 
       samvaersklassePeriodeListe =
       if (beregnBPSamvaersfradragGrunnlag!!.samvaersklassePeriodeListe != null)
@@ -123,24 +122,21 @@ data class BeregnTotalSaertilskuddGrunnlag(
       sjablonPeriodeListe = sjablonPeriodeListe
   )
 
-  fun saertilskuddTilCore(bidragsevnePeriodeListe: List<BidragsevnePeriodeCore>,
-      bPAndelSaertilskuddPeriodeListe: List<BPsAndelSaertilskuddPeriodeCore>, samvaersfradragPeriodeListe: List<SamvaersfradragPeriodeCore>,
-      sjablonPeriodeListe: List<SjablonPeriodeCore>) = BeregnSaertilskuddGrunnlagCore(
+  fun saertilskuddTilCore(bidragsevnePeriodeListe: List<BidragsevnePeriodeCore>, bpAndelSaertilskuddPeriodeListe: List<BPsAndelSaertilskuddPeriodeCore>,
+      samvaersfradragPeriodeListe: List<SamvaersfradragPeriodeCore>) = BeregnSaertilskuddGrunnlagCore(
 
       beregnDatoFra = beregnDatoFra!!,
       beregnDatoTil = beregnDatoTil!!,
       soknadsbarnPersonId = 1,
 
       bidragsevnePeriodeListe = bidragsevnePeriodeListe,
-      bPsAndelSaertilskuddPeriodeListe = bPAndelSaertilskuddPeriodeListe,
+      bPsAndelSaertilskuddPeriodeListe = bpAndelSaertilskuddPeriodeListe,
       samvaersfradragPeriodeListe = samvaersfradragPeriodeListe,
 
       lopendeBidragPeriodeListe =
       if (beregnSaertilskuddGrunnlag!!.lopendeBidragBPPeriodeListe != null)
         beregnSaertilskuddGrunnlag!!.lopendeBidragBPPeriodeListe!!.map { it.tilCore() }
-      else throw UgyldigInputException("lopendeBidragBPPeriodeListe kan ikke være null"),
-
-      sjablonPeriodeListe = sjablonPeriodeListe
+      else throw UgyldigInputException("lopendeBidragBPPeriodeListe kan ikke være null")
   )
 }
 
