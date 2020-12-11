@@ -28,8 +28,7 @@ data class LopendeBidragBPPeriode(
     @ApiModelProperty(value = "Løpende bidrag beløp") var lopendeBidragBelop: BigDecimal? = null,
     @ApiModelProperty(value = "Opprinnelig BP andel av underholdskostnad beløp") var opprinneligBPAndelUnderholdskostnadBelop: BigDecimal? = null,
     @ApiModelProperty(value = "Opprinnelig samværsfradrag beløp") var opprinneligSamvaersfradragBelop: BigDecimal? = null,
-    @ApiModelProperty(value = "Opprinnelig bidrag beløp") var opprinneligBidragBelop: BigDecimal? = null,
-    @ApiModelProperty(value = "Løpende bidrag resultatkode") var lopendeBidragResultatkode: String? = null
+    @ApiModelProperty(value = "Opprinnelig bidrag beløp") var opprinneligBidragBelop: BigDecimal? = null
 ) {
 
   fun tilCore() = LopendeBidragPeriodeCore(
@@ -44,9 +43,7 @@ data class LopendeBidragBPPeriode(
       opprinneligSamvaersfradragBelop = if (opprinneligSamvaersfradragBelop != null) opprinneligSamvaersfradragBelop!!
       else throw UgyldigInputException("opprinneligSamvaersfradragBelop kan ikke være null"),
       opprinneligBidragBelop = if (opprinneligBidragBelop != null) opprinneligBidragBelop!!  else throw UgyldigInputException(
-          "opprinneligBidragBelop kan ikke være null"),
-      resultatkode = if (lopendeBidragResultatkode != null) lopendeBidragResultatkode!! else throw UgyldigInputException(
-          "lopendeBidragResultatkode kan ikke være null")
+          "opprinneligBidragBelop kan ikke være null")
   )
 }
 
@@ -107,13 +104,11 @@ data class ResultatGrunnlagSaertilskudd(
 
 @ApiModel(value = "Grunnlaget for beregning - bidragsevne")
 data class BidragsevneGrunnlag(
-    @ApiModelProperty(value = "Bidragsevne beløp") var bidragsevneBelop: BigDecimal = BigDecimal.ZERO,
-    @ApiModelProperty(value = "Bidragsevne 25 prosent inntekt") var bidragsevne25ProsentInntekt: BigDecimal = BigDecimal.ZERO
+    @ApiModelProperty(value = "Bidragsevne beløp") var bidragsevneBelop: BigDecimal = BigDecimal.ZERO
 ) {
 
   constructor(bidragsevne: BidragsevneCore) : this(
-      bidragsevneBelop = bidragsevne.bidragsevneBelop,
-      bidragsevne25ProsentInntekt = bidragsevne.tjuefemProsentInntekt
+      bidragsevneBelop = bidragsevne.bidragsevneBelop
   )
 }
 
@@ -149,8 +144,7 @@ data class LopendeBidragGrunnlag(
     @ApiModelProperty(value = "Løpende bidrag beløp") var lopendeBidragBelop: BigDecimal = BigDecimal.ZERO,
     @ApiModelProperty(value = "Opprinnelig BP andel av underholdskostnad beløp") var opprinneligBPAndelUnderholdskostnadBelop: BigDecimal? = BigDecimal.ZERO,
     @ApiModelProperty(value = "Opprinnelig samværsfradrag beløp") var opprinneligSamvaersfradragBelop: BigDecimal? = BigDecimal.ZERO,
-    @ApiModelProperty(value = "Opprinnelig bidrag beløp") var opprinneligBidragBelop: BigDecimal? = BigDecimal.ZERO,
-    @ApiModelProperty(value = "Løpende bidrag resultatkode") var lopendeBidragResultatkode: String
+    @ApiModelProperty(value = "Opprinnelig bidrag beløp") var opprinneligBidragBelop: BigDecimal? = BigDecimal.ZERO
 ) {
 
   constructor(lopendeBidrag: LopendeBidragCore) : this(
@@ -158,7 +152,6 @@ data class LopendeBidragGrunnlag(
       lopendeBidragBelop = lopendeBidrag.lopendeBidragBelop,
       opprinneligBPAndelUnderholdskostnadBelop = lopendeBidrag.opprinneligBPsAndelUnderholdskostnadBelop,
       opprinneligSamvaersfradragBelop = lopendeBidrag.opprinneligSamvaersfradragBelop,
-      opprinneligBidragBelop = lopendeBidrag.opprinneligBidragBelop,
-      lopendeBidragResultatkode = lopendeBidrag.resultatkode
+      opprinneligBidragBelop = lopendeBidrag.opprinneligBidragBelop
   )
 }

@@ -122,12 +122,13 @@ data class BeregnTotalSaertilskuddGrunnlag(
       sjablonPeriodeListe = sjablonPeriodeListe
   )
 
-  fun saertilskuddTilCore(bidragsevnePeriodeListe: List<BidragsevnePeriodeCore>, bpAndelSaertilskuddPeriodeListe: List<BPsAndelSaertilskuddPeriodeCore>,
-      samvaersfradragPeriodeListe: List<SamvaersfradragPeriodeCore>) = BeregnSaertilskuddGrunnlagCore(
+  fun saertilskuddTilCore(soknadsbarnPersonId: Int, bidragsevnePeriodeListe: List<BidragsevnePeriodeCore>,
+      bpAndelSaertilskuddPeriodeListe: List<BPsAndelSaertilskuddPeriodeCore>, samvaersfradragPeriodeListe: List<SamvaersfradragPeriodeCore>) =
+      BeregnSaertilskuddGrunnlagCore(
 
       beregnDatoFra = beregnDatoFra!!,
       beregnDatoTil = beregnDatoTil!!,
-      soknadsbarnPersonId = 1,
+      soknadsbarnPersonId = soknadsbarnPersonId,
 
       bidragsevnePeriodeListe = bidragsevnePeriodeListe,
       bPsAndelSaertilskuddPeriodeListe = bpAndelSaertilskuddPeriodeListe,

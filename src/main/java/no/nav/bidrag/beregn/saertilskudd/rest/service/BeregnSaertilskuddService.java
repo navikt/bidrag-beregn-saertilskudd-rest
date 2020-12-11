@@ -175,14 +175,15 @@ public class BeregnSaertilskuddService {
       BeregnBidragsevneResultatCore bidragsevneResultatFraCore, BeregnBPsAndelSaertilskuddResultatCore bpAndelSaertilskuddResultatFraCore,
       BeregnSamvaersfradragResultatCore samvaersfradragResultatFraCore) {
 
+    var soknadsbarnPersonId = beregnTotalSaertilskuddGrunnlag.getSoknadsbarnGrunnlag().getSoknadsbarnPersonId();
+
     // Løp gjennom output fra beregning av bidragsevne og bygg opp ny input-liste til core
     var bidragsevnePeriodeCoreListe =
         bidragsevneResultatFraCore.getResultatPeriodeListe()
             .stream()
             .map(resultat -> new BidragsevnePeriodeCore(
-                new PeriodeCore(resultat.getResultatDatoFraTil().getPeriodeDatoFra(),
-                    resultat.getResultatDatoFraTil().getPeriodeDatoTil()),
-                resultat.getResultatBeregning().getResultatEvneBelop(), resultat.getResultatBeregning().getResultat25ProsentInntekt()))
+                new PeriodeCore(resultat.getResultatDatoFraTil().getPeriodeDatoFra(), resultat.getResultatDatoFraTil().getPeriodeDatoTil()),
+                resultat.getResultatBeregning().getResultatEvneBelop()))
             .collect(toList());
 
     // Løp gjennom output fra beregning av BPs andel særtilskudd og bygg opp ny input-liste til core
@@ -199,7 +200,7 @@ public class BeregnSaertilskuddService {
     var samvaersfradragPeriodeCoreListe =
         samvaersfradragResultatFraCore.getResultatPeriodeListe()
             .stream()
-            .flatMap(resultatperiode -> resultatperiode.getResultatBeregning()
+            .flatMap(resultatperiode -> resultatperiode.getResultatBeregningListe()
                 .stream()
                 .map(resultatberegning ->
                     new SamvaersfradragPeriodeCore(
@@ -210,7 +211,7 @@ public class BeregnSaertilskuddService {
             .collect(toList());
 
     // Bygg grunnlag for beregning av barnebidrag. Her gjøres også kontroll av inputdata
-    return beregnTotalSaertilskuddGrunnlag.saertilskuddTilCore(bidragsevnePeriodeCoreListe, bpAndelSaertilskuddPeriodeCoreListe,
+    return beregnTotalSaertilskuddGrunnlag.saertilskuddTilCore(soknadsbarnPersonId, bidragsevnePeriodeCoreListe, bpAndelSaertilskuddPeriodeCoreListe,
         samvaersfradragPeriodeCoreListe);
   }
 
