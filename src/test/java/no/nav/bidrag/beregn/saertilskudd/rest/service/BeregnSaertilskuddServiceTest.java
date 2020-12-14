@@ -116,8 +116,8 @@ class BeregnSaertilskuddServiceTest {
 
     // Bidragsevne: Sjablontall (0004, 0017, 0019, 0023, 0025, 0027, 0028, 0039, 0040) + Bidragsevne + TrinnvisSkattesats
     var forventetAntallSjablonElementerBidragsevne = 25 + 8 + 8;
-    // BPsAndelSaertilskudd: Sjablontall (0005)
-    var forventetAntallSjablonElementerBPsAndelSaertilskudd = 4;
+    // BPsAndelSaertilskudd: Sjablontall (0004, 0005, 0030, 0031, 0039)
+    var forventetAntallSjablonElementerBPsAndelSaertilskudd = 14;
     // Samvaersfradrag: Samvaersfradrag
     var forventetAntallSjablonElementerSamvaersfradrag = 8;
     // Saertilskudd: Ingenting

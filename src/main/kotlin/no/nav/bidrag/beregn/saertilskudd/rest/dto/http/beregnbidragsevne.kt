@@ -103,12 +103,10 @@ data class ResultatPeriodeBidragsevne(
 
 @ApiModel(value = "Resultatet av en beregning")
 data class ResultatBeregningBidragsevne(
-    @ApiModelProperty(value = "Resultat 25 prosent inntekt") var resultat25ProsentInntekt: BigDecimal = BigDecimal.ZERO,
     @ApiModelProperty(value = "Resultatevne beløp") var resultatEvneBelop: BigDecimal = BigDecimal.ZERO
 ) {
 
   constructor(resultatBeregning: ResultatBeregningCore) : this(
-      resultat25ProsentInntekt = resultatBeregning.resultat25ProsentInntekt,
       resultatEvneBelop = resultatBeregning.resultatEvneBelop
   )
 }

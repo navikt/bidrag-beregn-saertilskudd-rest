@@ -393,10 +393,6 @@ public class TestUtil {
     return byggSaertilskuddGrunnlag("opprinneligBidragBelop");
   }
 
-  public static BeregnSaertilskuddGrunnlag byggSaertilskuddGrunnlagUtenLopendeBidragResultatKode() {
-    return byggSaertilskuddGrunnlag("lopendeBidragResultatKode");
-  }
-
 
   // Bygger opp BeregnTotalSaertilskuddGrunnlag (felles grunnlag for alle delberegninger)
   private static BeregnTotalSaertilskuddGrunnlag byggTotalSaertilskuddGrunnlag(String nullVerdi) {
@@ -640,11 +636,10 @@ public class TestUtil {
       LopendeBidragBPPeriode lopendeBidragBPPeriode;
       if (nullVerdi.equals("lopendeBidragDatoFraTil")) {
         lopendeBidragBPPeriode = new LopendeBidragBPPeriode(null, lopendeBidragBarnPersonId, lopendeBidragBelop,
-            opprinneligBPAndelUnderholdskostnadBelop, opprinneligSamvaersfradragBelop, opprinneligBidragBelop, lopendeBidragResultatKode);
+            opprinneligBPAndelUnderholdskostnadBelop, opprinneligSamvaersfradragBelop, opprinneligBidragBelop);
       } else {
         lopendeBidragBPPeriode = new LopendeBidragBPPeriode(new Periode(lopendeBidragDatoFra, lopendeBidragDatoTil), lopendeBidragBarnPersonId,
-            lopendeBidragBelop, opprinneligBPAndelUnderholdskostnadBelop, opprinneligSamvaersfradragBelop, opprinneligBidragBelop,
-            lopendeBidragResultatKode);
+            lopendeBidragBelop, opprinneligBPAndelUnderholdskostnadBelop, opprinneligSamvaersfradragBelop, opprinneligBidragBelop);
       }
       lopendeBidragBPPeriodeListe = singletonList(lopendeBidragBPPeriode);
     }
@@ -656,7 +651,7 @@ public class TestUtil {
   public static BeregnBPBidragsevneResultat dummyBidragsevneResultat() {
     var bidragPeriodeResultatListe = new ArrayList<ResultatPeriodeBidragsevne>();
     bidragPeriodeResultatListe.add(new ResultatPeriodeBidragsevne(new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2019-01-01")),
-        new ResultatBeregningBidragsevne(BigDecimal.valueOf(100), BigDecimal.valueOf(100)),
+        new ResultatBeregningBidragsevne(BigDecimal.valueOf(100)),
         new ResultatGrunnlagBidragsevne(singletonList(new Inntekt("INNTEKTSOPPL_ARBEIDSGIVER", BigDecimal.valueOf(500000))), 1, "MED_ANDRE",
             BigDecimal.ONE, "HELT", emptyList())));
     return new BeregnBPBidragsevneResultat(bidragPeriodeResultatListe);
@@ -667,7 +662,7 @@ public class TestUtil {
     var bidragPeriodeResultatListe = new ArrayList<no.nav.bidrag.beregn.bidragsevne.dto.ResultatPeriodeCore>();
     bidragPeriodeResultatListe.add(new no.nav.bidrag.beregn.bidragsevne.dto.ResultatPeriodeCore(
         new PeriodeCore(LocalDate.parse("2017-01-01"), LocalDate.parse("2019-01-01")),
-        new no.nav.bidrag.beregn.bidragsevne.dto.ResultatBeregningCore(BigDecimal.valueOf(100), BigDecimal.valueOf(100)),
+        new no.nav.bidrag.beregn.bidragsevne.dto.ResultatBeregningCore(BigDecimal.valueOf(100)),
         new no.nav.bidrag.beregn.bidragsevne.dto.ResultatGrunnlagCore(
             singletonList(new InntektCore("INNTEKTSOPPL_ARBEIDSGIVER", BigDecimal.valueOf(500000))), 1, "MED_ANDRE", BigDecimal.ONE, "HELT",
             emptyList())));
@@ -761,11 +756,11 @@ public class TestUtil {
     bidragPeriodeResultatListe.add(new ResultatPeriodeSaertilskudd(
         new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2019-01-01")),
         new ResultatBeregningSaertilskudd(BigDecimal.valueOf(100), "RESULTATKODE"),
-        new ResultatGrunnlagSaertilskudd(new BidragsevneGrunnlag(BigDecimal.valueOf(100), BigDecimal.valueOf(100)),
+        new ResultatGrunnlagSaertilskudd(new BidragsevneGrunnlag(BigDecimal.valueOf(100)),
             new BPAndelSaertilskuddGrunnlag(BigDecimal.valueOf(100), BigDecimal.valueOf(100), false),
             singletonList(new SamvaersfradragGrunnlag(1, BigDecimal.valueOf(100))),
             singletonList(new LopendeBidragGrunnlag(1, BigDecimal.valueOf(100), BigDecimal.valueOf(100), BigDecimal.valueOf(100),
-                BigDecimal.valueOf(100), "RESULTATKODE")))));
+                BigDecimal.valueOf(100))))));
     return new BeregnSaertilskuddResultat(bidragPeriodeResultatListe);
   }
 
@@ -775,10 +770,10 @@ public class TestUtil {
     bidragPeriodeResultatListe.add(new no.nav.bidrag.beregn.saertilskudd.dto.ResultatPeriodeCore(
         new PeriodeCore(LocalDate.parse("2017-01-01"), LocalDate.parse("2019-01-01")), 1,
         new no.nav.bidrag.beregn.saertilskudd.dto.ResultatBeregningCore(BigDecimal.valueOf(100), "RESULTATKODE"),
-        new no.nav.bidrag.beregn.saertilskudd.dto.ResultatGrunnlagCore(new BidragsevneCore(BigDecimal.valueOf(100), BigDecimal.valueOf(100)),
+        new no.nav.bidrag.beregn.saertilskudd.dto.ResultatGrunnlagCore(new BidragsevneCore(BigDecimal.valueOf(100)),
             new BPsAndelSaertilskuddCore(BigDecimal.valueOf(100), BigDecimal.valueOf(100), false),
-            singletonList(new LopendeBidragCore(1, BigDecimal.valueOf(100), BigDecimal.valueOf(100), BigDecimal.valueOf(100), BigDecimal.valueOf(100),
-                "RESULTATKODE")),
+            singletonList(new LopendeBidragCore(1, BigDecimal.valueOf(100), BigDecimal.valueOf(100), BigDecimal.valueOf(100),
+                BigDecimal.valueOf(100))),
             singletonList(new SamvaersfradragCore(1, BigDecimal.valueOf(100))))));
     return new BeregnSaertilskuddResultatCore(bidragPeriodeResultatListe, emptyList());
   }
@@ -866,6 +861,18 @@ public class TestUtil {
     sjablonSjablontallListe.add(new Sjablontall("0028", LocalDate.parse("2018-07-01"), LocalDate.parse("2019-06-30"), BigDecimal.valueOf(54750)));
     sjablonSjablontallListe.add(new Sjablontall("0028", LocalDate.parse("2019-07-01"), LocalDate.parse("2020-06-30"), BigDecimal.valueOf(56550)));
     sjablonSjablontallListe.add(new Sjablontall("0028", LocalDate.parse("2020-07-01"), LocalDate.parse("9999-12-31"), BigDecimal.valueOf(51300)));
+
+    sjablonSjablontallListe.add(new Sjablontall("0030", LocalDate.parse("2016-01-01"), LocalDate.parse("2016-12-31"), BigDecimal.valueOf(90850)));
+    sjablonSjablontallListe.add(new Sjablontall("0030", LocalDate.parse("2017-01-01"), LocalDate.parse("2017-12-31"), BigDecimal.valueOf(94850)));
+    sjablonSjablontallListe.add(new Sjablontall("0030", LocalDate.parse("2018-01-01"), LocalDate.parse("2018-12-31"), BigDecimal.valueOf(99540)));
+    sjablonSjablontallListe.add(new Sjablontall("0030", LocalDate.parse("2019-01-01"), LocalDate.parse("2019-12-31"), BigDecimal.valueOf(102820)));
+    sjablonSjablontallListe.add(new Sjablontall("0030", LocalDate.parse("2020-01-01"), LocalDate.parse("9999-12-31"), BigDecimal.valueOf(93273)));
+
+    sjablonSjablontallListe.add(new Sjablontall("0031", LocalDate.parse("2016-01-01"), LocalDate.parse("2016-12-31"), BigDecimal.valueOf(112350)));
+    sjablonSjablontallListe.add(new Sjablontall("0031", LocalDate.parse("2017-01-01"), LocalDate.parse("2017-12-31"), BigDecimal.valueOf(117350)));
+    sjablonSjablontallListe.add(new Sjablontall("0031", LocalDate.parse("2018-01-01"), LocalDate.parse("2018-12-31"), BigDecimal.valueOf(99540)));
+    sjablonSjablontallListe.add(new Sjablontall("0031", LocalDate.parse("2019-01-01"), LocalDate.parse("2019-12-31"), BigDecimal.valueOf(102820)));
+    sjablonSjablontallListe.add(new Sjablontall("0031", LocalDate.parse("2020-01-01"), LocalDate.parse("9999-12-31"), BigDecimal.valueOf(93273)));
 
     sjablonSjablontallListe.add(new Sjablontall("0039", LocalDate.parse("2016-01-01"), LocalDate.parse("2016-12-31"), BigDecimal.valueOf(13505)));
     sjablonSjablontallListe.add(new Sjablontall("0039", LocalDate.parse("2017-01-01"), LocalDate.parse("2017-12-31"), BigDecimal.valueOf(13298)));

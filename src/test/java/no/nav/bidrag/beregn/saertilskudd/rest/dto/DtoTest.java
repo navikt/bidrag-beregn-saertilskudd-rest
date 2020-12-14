@@ -145,7 +145,7 @@ class DtoTest {
   @DisplayName("Skal kaste IllegalArgumentException når lopendeBidragBPPeriodeListe er null")
   void skalKasteIllegalArgumentExceptionNaarLopendeBidragBPPeriodeListeErNull() {
     var grunnlag = TestUtil.byggSaertilskuddGrunnlagUtenLopendeBidragBPPeriodeListe();
-    assertThatExceptionOfType(UgyldigInputException.class).isThrownBy(() -> grunnlag.saertilskuddTilCore(emptyList(), emptyList(), emptyList()))
+    assertThatExceptionOfType(UgyldigInputException.class).isThrownBy(() -> grunnlag.saertilskuddTilCore(1, emptyList(), emptyList(), emptyList()))
         .withMessage("lopendeBidragBPPeriodeListe kan ikke være null");
   }
 
@@ -591,13 +591,5 @@ class DtoTest {
     var grunnlag = TestUtil.byggSaertilskuddGrunnlagUtenOpprinneligBidragBelop().getLopendeBidragBPPeriodeListe();
     assertThatExceptionOfType(UgyldigInputException.class).isThrownBy(() -> grunnlag.get(0).tilCore())
         .withMessage("opprinneligBidragBelop kan ikke være null");
-  }
-
-  @Test
-  @DisplayName("Skal kaste IllegalArgumentException når lopendeBidragResultatKode er null")
-  void skalKasteIllegalArgumentExceptionNaarSTLopendeBidragResultatKodeErNull() {
-    var grunnlag = TestUtil.byggSaertilskuddGrunnlagUtenLopendeBidragResultatKode().getLopendeBidragBPPeriodeListe();
-    assertThatExceptionOfType(UgyldigInputException.class).isThrownBy(() -> grunnlag.get(0).tilCore())
-        .withMessage("lopendeBidragResultatkode kan ikke være null");
   }
 }

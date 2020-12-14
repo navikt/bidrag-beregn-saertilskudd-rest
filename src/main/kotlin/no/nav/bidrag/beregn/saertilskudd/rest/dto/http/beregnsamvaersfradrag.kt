@@ -60,7 +60,7 @@ data class ResultatPeriodeSamvaersfradrag(
 
   constructor(resultatPeriode: ResultatPeriodeCore) : this(
       resultatDatoFraTil = Periode(resultatPeriode.resultatDatoFraTil),
-      resultatBeregningListe = resultatPeriode.resultatBeregning.map { ResultatBeregningSamvaersfradrag(it) },
+      resultatBeregningListe = resultatPeriode.resultatBeregningListe.map { ResultatBeregningSamvaersfradrag(it) },
       resultatGrunnlag = ResultatGrunnlagSamvaersfradrag(resultatPeriode.resultatGrunnlag)
   )
 }
@@ -84,7 +84,7 @@ data class ResultatGrunnlagSamvaersfradrag(
 ) {
 
   constructor(resultatGrunnlag: GrunnlagBeregningPeriodisertCore) : this(
-      grunnlagBarnListe = resultatGrunnlag.samvaersfradragGrunnlagPerBarnListeCore.map { GrunnlagBarn(it) },
+      grunnlagBarnListe = resultatGrunnlag.samvaersfradragGrunnlagPerBarnListe.map { GrunnlagBarn(it) },
       sjablonListe = resultatGrunnlag.sjablonListe.map { Sjablon(it) }
   )
 }
