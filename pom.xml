@@ -5,11 +5,11 @@
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>2.3.5.RELEASE</version>
-		<relativePath/> <!-- lookup parent from repository -->
+		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>no.nav.bidrag</groupId>
 	<artifactId>bidrag-beregn-saertilskudd-rest</artifactId>
-	<version>0.0.5-SNAPSHOT</version>
+	<version>0.0.6-SNAPSHOT</version>
 	<name>bidrag-beregn-saertilskudd-rest</name>
 	<description>Bidrag beregning særtilskudd</description>
 
