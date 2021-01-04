@@ -62,9 +62,9 @@ data class BeregnSaertilskuddResultat(
 
 @ApiModel(value = "Resultatet av beregning av særtilskudd for en gitt periode")
 data class ResultatPeriodeSaertilskudd(
-    @ApiModelProperty(value = "Beregning resultat fra-til-dato") var resultatDatoFraTil: Periode,
-    @ApiModelProperty(value = "Beregning resultat innhold liste") var resultatBeregning: ResultatBeregningSaertilskudd,
-    @ApiModelProperty(value = "Beregning grunnlag innhold") var resultatGrunnlag: ResultatGrunnlagSaertilskudd
+  @ApiModelProperty(value = "Beregning resultat fra-til-dato") var resultatDatoFraTil: Periode = Periode(),
+  @ApiModelProperty(value = "Beregning resultat innhold liste") var resultatBeregning: ResultatBeregningSaertilskudd = ResultatBeregningSaertilskudd(),
+  @ApiModelProperty(value = "Beregning grunnlag innhold") var resultatGrunnlag: ResultatGrunnlagSaertilskudd = ResultatGrunnlagSaertilskudd()
 ) {
 
   constructor(resultatPeriode: ResultatPeriodeCore) : this(
@@ -77,7 +77,7 @@ data class ResultatPeriodeSaertilskudd(
 @ApiModel(value = "Resultatet av beregning av særtilskudd")
 data class ResultatBeregningSaertilskudd(
     @ApiModelProperty(value = "Beløp særtilskudd") var resultatBelop: BigDecimal = BigDecimal.ZERO,
-    @ApiModelProperty(value = "Resultatkode særtilskudd") var resultatKode: String
+    @ApiModelProperty(value = "Resultatkode særtilskudd") var resultatKode: String = ""
 ) {
 
   constructor(resultatBeregning: ResultatBeregningCore) : this(
@@ -88,10 +88,10 @@ data class ResultatBeregningSaertilskudd(
 
 @ApiModel(value = "Grunnlaget for beregning av særtilskudd")
 data class ResultatGrunnlagSaertilskudd(
-    @ApiModelProperty(value = "Bidragsevne") var bidragsevneGrunnlag: BidragsevneGrunnlag,
-    @ApiModelProperty(value = "BPs andel særtilskudd") var bpAndelSaertilskuddGrunnlag: BPAndelSaertilskuddGrunnlag,
-    @ApiModelProperty(value = "Liste over samværsfradrag") var samvaersfradragGrunnlagListe: List<SamvaersfradragGrunnlag> = emptyList(),
-    @ApiModelProperty(value = "Liste over løpende bidrag") var lopendeBidragGrunnlagListe: List<LopendeBidragGrunnlag> = emptyList()
+  @ApiModelProperty(value = "Bidragsevne") var bidragsevneGrunnlag: BidragsevneGrunnlag = BidragsevneGrunnlag(),
+  @ApiModelProperty(value = "BPs andel særtilskudd") var bpAndelSaertilskuddGrunnlag: BPAndelSaertilskuddGrunnlag = BPAndelSaertilskuddGrunnlag(),
+  @ApiModelProperty(value = "Liste over samværsfradrag") var samvaersfradragGrunnlagListe: List<SamvaersfradragGrunnlag> = emptyList(),
+  @ApiModelProperty(value = "Liste over løpende bidrag") var lopendeBidragGrunnlagListe: List<LopendeBidragGrunnlag> = emptyList()
 ) {
 
   constructor(resultatGrunnlag: ResultatGrunnlagCore) : this(

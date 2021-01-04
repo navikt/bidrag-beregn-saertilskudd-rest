@@ -45,9 +45,9 @@ data class BeregnBPAndelSaertilskuddResultat(
 
 @ApiModel(value = "Resultatet av beregning av bidragspliktiges andel av særtilskudd for en gitt periode")
 data class ResultatPeriodeBPAndelSaertilskudd(
-    @ApiModelProperty(value = "Beregning resultat fra-til-dato") var resultatDatoFraTil: Periode,
-    @ApiModelProperty(value = "Beregning resultat innhold") var resultatBeregning: ResultatBeregningBPAndelSaertilskudd,
-    @ApiModelProperty(value = "Beregning grunnlag innhold") var resultatGrunnlag: ResultatGrunnlagBPAndelSaertilskudd
+  @ApiModelProperty(value = "Beregning resultat fra-til-dato") var resultatDatoFraTil: Periode = Periode(),
+  @ApiModelProperty(value = "Beregning resultat innhold") var resultatBeregning: ResultatBeregningBPAndelSaertilskudd = ResultatBeregningBPAndelSaertilskudd(),
+  @ApiModelProperty(value = "Beregning grunnlag innhold") var resultatGrunnlag: ResultatGrunnlagBPAndelSaertilskudd = ResultatGrunnlagBPAndelSaertilskudd()
 ) {
 
   constructor(resultatPeriode: ResultatPeriodeCore) : this(

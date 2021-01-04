@@ -89,9 +89,9 @@ data class BeregnBPBidragsevneResultat(
 
 @ApiModel(value = "Resultatet av en beregning for en gitt periode")
 data class ResultatPeriodeBidragsevne(
-    @ApiModelProperty(value = "Beregning resultat fra-til-dato") var resultatDatoFraTil: Periode,
-    @ApiModelProperty(value = "Beregning resultat innhold") var resultatBeregning: ResultatBeregningBidragsevne,
-    @ApiModelProperty(value = "Beregning grunnlag innhold") var resultatGrunnlag: ResultatGrunnlagBidragsevne
+  @ApiModelProperty(value = "Beregning resultat fra-til-dato") var resultatDatoFraTil: Periode = Periode(),
+  @ApiModelProperty(value = "Beregning resultat innhold") var resultatBeregning: ResultatBeregningBidragsevne = ResultatBeregningBidragsevne(),
+  @ApiModelProperty(value = "Beregning grunnlag innhold") var resultatGrunnlag: ResultatGrunnlagBidragsevne = ResultatGrunnlagBidragsevne()
 ) {
 
   constructor(resultatPeriode: ResultatPeriodeCore) : this(
@@ -115,9 +115,9 @@ data class ResultatBeregningBidragsevne(
 data class ResultatGrunnlagBidragsevne(
     @ApiModelProperty(value = "Liste over bidragspliktiges inntekter") var inntektListe: List<Inntekt> = emptyList(),
     @ApiModelProperty(value = "Bidragspliktiges skatteklasse") var skatteklasse: Int = 0,
-    @ApiModelProperty(value = "Bidragspliktiges bostatuskode") var bostatusKode: String,
+    @ApiModelProperty(value = "Bidragspliktiges bostatuskode") var bostatusKode: String = "",
     @ApiModelProperty(value = "Antall egne barn i bidragspliktiges husstand") var antallEgneBarnIHusstand: BigDecimal = BigDecimal.ZERO,
-    @ApiModelProperty(value = "Bidragspliktiges særfradragkode") var saerfradragKode: String,
+    @ApiModelProperty(value = "Bidragspliktiges særfradragkode") var saerfradragKode: String = "",
     @ApiModelProperty(value = "Liste over sjablonperioder") var sjablonListe: List<Sjablon> = emptyList()
 ) {
 

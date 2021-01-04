@@ -53,9 +53,9 @@ data class BeregnBPSamvaersfradragResultat(
 
 @ApiModel(value = "Resultatet av beregning av samværsfradrag for et søknadsbarn for en gitt periode")
 data class ResultatPeriodeSamvaersfradrag(
-    @ApiModelProperty(value = "Beregning resultat fra-til-dato") var resultatDatoFraTil: Periode,
-    @ApiModelProperty(value = "Beregning resultat innhold liste") var resultatBeregningListe: List<ResultatBeregningSamvaersfradrag> = emptyList(),
-    @ApiModelProperty(value = "Beregning grunnlag innhold") var resultatGrunnlag: ResultatGrunnlagSamvaersfradrag
+  @ApiModelProperty(value = "Beregning resultat fra-til-dato") var resultatDatoFraTil: Periode = Periode(),
+  @ApiModelProperty(value = "Beregning resultat innhold liste") var resultatBeregningListe: List<ResultatBeregningSamvaersfradrag> = emptyList(),
+  @ApiModelProperty(value = "Beregning grunnlag innhold") var resultatGrunnlag: ResultatGrunnlagSamvaersfradrag = ResultatGrunnlagSamvaersfradrag()
 ) {
 
   constructor(resultatPeriode: ResultatPeriodeCore) : this(
@@ -93,7 +93,7 @@ data class ResultatGrunnlagSamvaersfradrag(
 data class GrunnlagBarn(
     @ApiModelProperty(value = "Barn person-id") var barnPersonId: Int = 0,
     @ApiModelProperty(value = "Barn alder") var barnAlder: Int = 0,
-    @ApiModelProperty(value = "Samværsklasse Id") var samvaersklasseId: String
+    @ApiModelProperty(value = "Samværsklasse Id") var samvaersklasseId: String = ""
 ) {
 
   constructor(resultatGrunnlagBarn: SamvaersfradragGrunnlagPerBarnCore) : this(

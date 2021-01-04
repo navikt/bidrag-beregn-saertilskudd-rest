@@ -144,8 +144,12 @@ data class BeregnTotalSaertilskuddGrunnlag(
 // Resultat
 @ApiModel(value = "Totalresultatet av en særtilskuddsberegning")
 data class BeregnTotalSaertilskuddResultat(
-    @ApiModelProperty(value = "Beregn BP bidragsevne resultat") var beregnBPBidragsevneResultat: BeregnBPBidragsevneResultat,
-    @ApiModelProperty(value = "Beregn BP andel av særtilskudd resultat") var beregnBPAndelSaertilskuddResultat: BeregnBPAndelSaertilskuddResultat,
-    @ApiModelProperty(value = "Beregn BP samværsfradrag resultat") var beregnBPSamvaersfradragResultat: BeregnBPSamvaersfradragResultat,
-    @ApiModelProperty(value = "Beregn særtilskudd resultat") var beregnSaertilskuddResultat: BeregnSaertilskuddResultat
+  @ApiModelProperty(value = "Beregn BP bidragsevne resultat") var beregnBPBidragsevneResultat: BeregnBPBidragsevneResultat
+    = BeregnBPBidragsevneResultat(),
+  @ApiModelProperty(value = "Beregn BP andel av særtilskudd resultat") var beregnBPAndelSaertilskuddResultat: BeregnBPAndelSaertilskuddResultat
+    = BeregnBPAndelSaertilskuddResultat(),
+  @ApiModelProperty(value = "Beregn BP samværsfradrag resultat") var beregnBPSamvaersfradragResultat: BeregnBPSamvaersfradragResultat
+  = BeregnBPSamvaersfradragResultat(),
+  @ApiModelProperty(value = "Beregn særtilskudd resultat") var beregnSaertilskuddResultat: BeregnSaertilskuddResultat
+  = BeregnSaertilskuddResultat()
 )

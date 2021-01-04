@@ -7,7 +7,7 @@ import java.math.BigDecimal
 
 @ApiModel(value = "Sjabloner brukt i beregning")
 data class Sjablon(
-    @ApiModelProperty(value = "Sjablonnavn") var sjablonNavn: String,
+    @ApiModelProperty(value = "Sjablonnavn") var sjablonNavn: String = "",
     @ApiModelProperty(value = "Sjablonverdi") var sjablonVerdi: BigDecimal = BigDecimal.ZERO
 ) {
 
