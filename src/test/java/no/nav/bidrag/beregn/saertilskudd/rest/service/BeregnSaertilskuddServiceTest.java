@@ -119,7 +119,7 @@ class BeregnSaertilskuddServiceTest {
     // BPsAndelSaertilskudd: Sjablontall (0004, 0005, 0030, 0031, 0039)
     var forventetAntallSjablonElementerBPsAndelSaertilskudd = 14;
     // Samvaersfradrag: Samvaersfradrag
-    var forventetAntallSjablonElementerSamvaersfradrag = 8;
+    var forventetAntallSjablonElementerSamvaersfradrag = 81;
     // Saertilskudd: Ingenting
 
     assertAll(
