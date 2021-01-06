@@ -69,10 +69,10 @@ class BeregnSaertilskuddControllerTest {
         () -> assertThat(totalSaertilskuddResultat.getBeregnBPBidragsevneResultat().getResultatPeriodeListe().size()).isEqualTo(1),
         () -> assertThat(
             totalSaertilskuddResultat.getBeregnBPBidragsevneResultat().getResultatPeriodeListe().get(0).getResultatDatoFraTil().getPeriodeDatoFra())
-            .isEqualTo(LocalDate.parse("2017-01-01")),
+            .isEqualTo(LocalDate.parse("2020-08-01")),
         () -> assertThat(
             totalSaertilskuddResultat.getBeregnBPBidragsevneResultat().getResultatPeriodeListe().get(0).getResultatDatoFraTil().getPeriodeDatoTil())
-            .isEqualTo(LocalDate.parse("2019-01-01")),
+            .isEqualTo(LocalDate.parse("2020-09-01")),
         () -> assertThat(
             totalSaertilskuddResultat.getBeregnBPBidragsevneResultat().getResultatPeriodeListe().get(0).getResultatBeregning().getResultatEvneBelop())
             .isEqualTo(BigDecimal.valueOf(100)),
@@ -82,10 +82,10 @@ class BeregnSaertilskuddControllerTest {
         () -> assertThat(totalSaertilskuddResultat.getBeregnBPAndelSaertilskuddResultat().getResultatPeriodeListe().size()).isEqualTo(1),
         () -> assertThat(
             totalSaertilskuddResultat.getBeregnBPAndelSaertilskuddResultat().getResultatPeriodeListe().get(0).getResultatDatoFraTil()
-                .getPeriodeDatoFra()).isEqualTo(LocalDate.parse("2017-01-01")),
+                .getPeriodeDatoFra()).isEqualTo(LocalDate.parse("2020-08-01")),
         () -> assertThat(
             totalSaertilskuddResultat.getBeregnBPAndelSaertilskuddResultat().getResultatPeriodeListe().get(0).getResultatDatoFraTil()
-                .getPeriodeDatoTil()).isEqualTo(LocalDate.parse("2019-01-01")),
+                .getPeriodeDatoTil()).isEqualTo(LocalDate.parse("2020-09-01")),
         () -> assertThat(totalSaertilskuddResultat.getBeregnBPAndelSaertilskuddResultat().getResultatPeriodeListe().get(0).getResultatBeregning()
             .getResultatAndelProsent()).isEqualTo(BigDecimal.valueOf(10)),
         () -> assertThat(totalSaertilskuddResultat.getBeregnBPAndelSaertilskuddResultat().getResultatPeriodeListe().get(0).getResultatBeregning()
@@ -96,10 +96,10 @@ class BeregnSaertilskuddControllerTest {
         () -> assertThat(totalSaertilskuddResultat.getBeregnBPSamvaersfradragResultat().getResultatPeriodeListe().size()).isEqualTo(1),
         () -> assertThat(
             totalSaertilskuddResultat.getBeregnBPSamvaersfradragResultat().getResultatPeriodeListe().get(0).getResultatDatoFraTil().getPeriodeDatoFra())
-            .isEqualTo(LocalDate.parse("2017-01-01")),
+            .isEqualTo(LocalDate.parse("2020-08-01")),
         () -> assertThat(
             totalSaertilskuddResultat.getBeregnBPSamvaersfradragResultat().getResultatPeriodeListe().get(0).getResultatDatoFraTil().getPeriodeDatoTil())
-            .isEqualTo(LocalDate.parse("2019-01-01")),
+            .isEqualTo(LocalDate.parse("2020-09-01")),
         () -> assertThat(totalSaertilskuddResultat.getBeregnBPSamvaersfradragResultat().getResultatPeriodeListe().get(0).getResultatBeregningListe()
             .get(0).getResultatBelop()).isEqualTo(BigDecimal.valueOf(100)),
 
@@ -107,9 +107,9 @@ class BeregnSaertilskuddControllerTest {
         () -> assertThat(totalSaertilskuddResultat.getBeregnSaertilskuddResultat().getResultatPeriodeListe()).isNotNull(),
         () -> assertThat(totalSaertilskuddResultat.getBeregnSaertilskuddResultat().getResultatPeriodeListe().size()).isEqualTo(1),
         () -> assertThat(totalSaertilskuddResultat.getBeregnSaertilskuddResultat().getResultatPeriodeListe().get(0).getResultatDatoFraTil()
-            .getPeriodeDatoFra()).isEqualTo(LocalDate.parse("2017-01-01")),
+            .getPeriodeDatoFra()).isEqualTo(LocalDate.parse("2020-08-01")),
         () -> assertThat(totalSaertilskuddResultat.getBeregnSaertilskuddResultat().getResultatPeriodeListe().get(0).getResultatDatoFraTil()
-            .getPeriodeDatoTil()).isEqualTo(LocalDate.parse("2019-01-01")),
+            .getPeriodeDatoTil()).isEqualTo(LocalDate.parse("2020-09-01")),
         () -> assertThat(totalSaertilskuddResultat.getBeregnSaertilskuddResultat().getResultatPeriodeListe().get(0).getResultatBeregning()
             .getResultatBelop()).isEqualTo(BigDecimal.valueOf(100)),
         () -> assertThat(totalSaertilskuddResultat.getBeregnSaertilskuddResultat().getResultatPeriodeListe().get(0).getResultatBeregning()
