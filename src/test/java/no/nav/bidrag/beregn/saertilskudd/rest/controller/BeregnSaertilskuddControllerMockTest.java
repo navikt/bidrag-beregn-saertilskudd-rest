@@ -54,7 +54,7 @@ class BeregnSaertilskuddControllerMockTest {
         new BeregnTotalSaertilskuddResultat(TestUtil.dummyBidragsevneResultat(), TestUtil.dummyBPsAndelSaertilskuddResultat(),
             TestUtil.dummySamvaersfradragResultat(), TestUtil.dummySaertilskuddResultat())));
 
-    var url = "http://localhost:" + port + "/bidrag-beregn-saertilskudd-rest/beregn/aertilskudd";
+    var url = "http://localhost:" + port + "/bidrag-beregn-saertilskudd-rest/beregn/saertilskudd";
     var request = initHttpEntity(TestUtil.byggTotalSaertilskuddGrunnlag());
     var responseEntity = httpHeaderTestRestTemplate.exchange(url, HttpMethod.POST, request, BeregnTotalSaertilskuddResultat.class);
     var totalSaertilskuddResultat = responseEntity.getBody();
@@ -74,7 +74,7 @@ class BeregnSaertilskuddControllerMockTest {
             .isEqualTo(LocalDate.parse("2020-09-01")),
         () -> assertThat(
             totalSaertilskuddResultat.getBeregnBPBidragsevneResultat().getResultatPeriodeListe().get(0).getResultatBeregning().getResultatEvneBelop())
-            .isEqualTo(BigDecimal.valueOf(11069)),
+            .isEqualTo(BigDecimal.valueOf(100)),
 
 
         () -> assertThat(totalSaertilskuddResultat.getBeregnBPAndelSaertilskuddResultat()).isNotNull(),
@@ -102,7 +102,7 @@ class BeregnSaertilskuddControllerMockTest {
             totalSaertilskuddResultat.getBeregnBPSamvaersfradragResultat().getResultatPeriodeListe().get(0).getResultatDatoFraTil().getPeriodeDatoTil())
             .isEqualTo(LocalDate.parse("2020-09-01")),
         () -> assertThat(totalSaertilskuddResultat.getBeregnBPSamvaersfradragResultat().getResultatPeriodeListe().get(0).getResultatBeregningListe()
-            .get(0).getResultatBelop()).isEqualTo(BigDecimal.valueOf(457)),
+            .get(0).getResultatBelop()).isEqualTo(BigDecimal.valueOf(100)),
         () -> assertThat(totalSaertilskuddResultat.getBeregnBPSamvaersfradragResultat().getResultatPeriodeListe().get(0).getResultatBeregningListe()
             .get(0).getBarnPersonId()).isEqualTo(1),
 
@@ -128,7 +128,7 @@ class BeregnSaertilskuddControllerMockTest {
 
     when(beregnSaertilskuddServiceMock.beregn(any(BeregnTotalSaertilskuddGrunnlag.class))).thenReturn(HttpResponse.from(BAD_REQUEST));
 
-    var url = "http://localhost:" + port + "/bidrag-beregn-Saertilskudd-rest/beregn/Saertilskudd";
+    var url = "http://localhost:" + port + "/bidrag-beregn-saertilskudd-rest/beregn/saertilskudd";
     var request = initHttpEntity(TestUtil.byggTotalSaertilskuddGrunnlag());
     var responseEntity = httpHeaderTestRestTemplate.exchange(url, HttpMethod.POST, request, BeregnTotalSaertilskuddResultat.class);
     var totalSaertilskuddResultat = responseEntity.getBody();
@@ -145,7 +145,7 @@ class BeregnSaertilskuddControllerMockTest {
 
     when(beregnSaertilskuddServiceMock.beregn(any(BeregnTotalSaertilskuddGrunnlag.class))).thenReturn(HttpResponse.from(INTERNAL_SERVER_ERROR));
 
-    var url = "http://localhost:" + port + "/bidrag-beregn-Saertilskudd-rest/beregn/Saertilskudd";
+    var url = "http://localhost:" + port + "/bidrag-beregn-saertilskudd-rest/beregn/saertilskudd";
     var request = initHttpEntity(TestUtil.byggTotalSaertilskuddGrunnlag());
     var responseEntity = httpHeaderTestRestTemplate.exchange(url, HttpMethod.POST, request, BeregnTotalSaertilskuddResultat.class);
     var totalSaertilskuddResultat = responseEntity.getBody();
