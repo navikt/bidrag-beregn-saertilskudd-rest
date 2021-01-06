@@ -44,18 +44,12 @@ public class BeregnSaertilskuddControllerIntegrationTest {
   private String filnavn;
 
   private BigDecimal forventetBidragsevneBelop;
-  private BigDecimal forventetBPAndelSaertilskuddProsentBarn1;
-  private BigDecimal forventetBPAndelSaertilskuddBelopBarn1;
-  private BigDecimal forventetBPAndelSaertilskuddBarnetErSelvforsorgetBarn1;
+  private BigDecimal forventetBPAndelSaertilskuddProsentBarn;
+  private BigDecimal forventetBPAndelSaertilskuddBelopBarn;
   private BigDecimal forventetSamvaersfradragBelopBarn1;
-  private BigDecimal forventetSaertilskuddBelopBarn1;
-  private String forventetSaertilskuddResultatkodeBarn1;
-  private BigDecimal forventetBPAndelSaertilskuddBelopBarn2;
-  private BigDecimal forventetBPAndelSaertilskuddProsentBarn2;
-  private BigDecimal forventetBPAndelSaertilskuddBarnetErSelvforsorgetBarn2;
   private BigDecimal forventetSamvaersfradragBelopBarn2;
-  private BigDecimal forventetSaertilskuddBelopBarn2;
-  private String forventetSaertilskuddResultatkodeBarn2;
+  private BigDecimal forventetSaertilskuddBelopBarn;
+  private String forventetSaertilskuddResultatkodeBarn;
 
 
   @BeforeEach
@@ -74,15 +68,133 @@ public class BeregnSaertilskuddControllerIntegrationTest {
     filnavn = "src/test/resources/testfiler/saertilskudd_eksempel1.json";
 
     forventetBidragsevneBelop = BigDecimal.valueOf(11069);
-    forventetBPAndelSaertilskuddProsentBarn1 = BigDecimal.valueOf(60.6);
-    forventetBPAndelSaertilskuddBelopBarn1 = BigDecimal.valueOf(4242);
+    forventetBPAndelSaertilskuddProsentBarn = BigDecimal.valueOf(60.6);
+    forventetBPAndelSaertilskuddBelopBarn = BigDecimal.valueOf(4242);
     forventetSamvaersfradragBelopBarn1 = BigDecimal.valueOf(457);
-    forventetSaertilskuddBelopBarn1 = BigDecimal.valueOf(4242);
-    forventetSaertilskuddResultatkodeBarn1 = "SAERTILSKUDD_INNVILGET";
+    forventetSaertilskuddBelopBarn = BigDecimal.valueOf(4242);
+    forventetSaertilskuddResultatkodeBarn = "SAERTILSKUDD_INNVILGET";
 
     utfoerBeregningerOgEvaluerResultat_EttSoknadsbarn();
   }
 
+  @Test
+  @DisplayName("skal kalle core og returnere et resultat - eksempel 2")
+  void skalKalleCoreOgReturnereEtResultat_Eksempel02() {
+    // Enkel beregning med full evne, to barn
+    filnavn = "src/test/resources/testfiler/saertilskudd_eksempel2.json";
+
+    forventetBidragsevneBelop = BigDecimal.valueOf(6696);
+    forventetBPAndelSaertilskuddProsentBarn = BigDecimal.valueOf(49.7);
+    forventetBPAndelSaertilskuddBelopBarn = BigDecimal.valueOf(2982);
+    forventetSamvaersfradragBelopBarn1 = BigDecimal.valueOf(1513);
+    forventetSamvaersfradragBelopBarn2 = BigDecimal.valueOf(1513);
+    forventetSaertilskuddBelopBarn = BigDecimal.valueOf(2982);
+    forventetSaertilskuddResultatkodeBarn = "SAERTILSKUDD_INNVILGET";
+
+    utfoerBeregningerOgEvaluerResultat_ToSoknadsbarn();
+  }
+
+  @Test
+  @DisplayName("skal kalle core og returnere et resultat - eksempel 3")
+  void skalKalleCoreOgReturnereEtResultat_Eksempel03() {
+    // Enkel beregning med full evne, to barn
+    filnavn = "src/test/resources/testfiler/saertilskudd_eksempel3.json";
+
+    forventetBidragsevneBelop = BigDecimal.valueOf(6149);
+    forventetBPAndelSaertilskuddProsentBarn = BigDecimal.valueOf(55.7);
+    forventetBPAndelSaertilskuddBelopBarn = BigDecimal.valueOf(6684);
+    forventetSamvaersfradragBelopBarn1 = BigDecimal.valueOf(1513);
+    forventetSamvaersfradragBelopBarn2 = BigDecimal.valueOf(1513);
+    forventetSaertilskuddBelopBarn = BigDecimal.valueOf(6684);
+    forventetSaertilskuddResultatkodeBarn = "SAERTILSKUDD_INNVILGET";
+
+    utfoerBeregningerOgEvaluerResultat_ToSoknadsbarn();
+  }
+
+  @Test
+  @DisplayName("skal kalle core og returnere et resultat - eksempel 4")
+  void skalKalleCoreOgReturnereEtResultat_Eksempel04() {
+    // Beregning med manglende evne, to barn
+    filnavn = "src/test/resources/testfiler/saertilskudd_eksempel4.json";
+
+    forventetBidragsevneBelop = BigDecimal.valueOf(6149);
+    forventetBPAndelSaertilskuddProsentBarn = BigDecimal.valueOf(55.7);
+    forventetBPAndelSaertilskuddBelopBarn = BigDecimal.valueOf(6684);
+    forventetSamvaersfradragBelopBarn1 = BigDecimal.valueOf(1513);
+    forventetSamvaersfradragBelopBarn2 = BigDecimal.valueOf(1513);
+    forventetSaertilskuddBelopBarn = BigDecimal.valueOf(6684);
+    forventetSaertilskuddResultatkodeBarn = "SAERTILSKUDD_IKKE_FULL_BIDRAGSEVNE";
+
+    utfoerBeregningerOgEvaluerResultat_ToSoknadsbarn();
+  }
+
+  @Test
+  @DisplayName("skal kalle core og returnere et resultat - eksempel 5")
+  void skalKalleCoreOgReturnereEtResultat_Eksempel05() {
+    // Beregning med manglende evne, to barn
+    filnavn = "src/test/resources/testfiler/saertilskudd_eksempel5.json";
+
+    forventetBidragsevneBelop = BigDecimal.valueOf(9962);
+    forventetBPAndelSaertilskuddProsentBarn = BigDecimal.valueOf(62.8);
+    forventetBPAndelSaertilskuddBelopBarn = BigDecimal.valueOf(7536);
+    forventetSamvaersfradragBelopBarn1 = BigDecimal.valueOf(1513);
+    forventetSamvaersfradragBelopBarn2 = BigDecimal.valueOf(1513);
+    forventetSaertilskuddBelopBarn = BigDecimal.valueOf(7536);
+    forventetSaertilskuddResultatkodeBarn = "SAERTILSKUDD_IKKE_FULL_BIDRAGSEVNE";
+
+    utfoerBeregningerOgEvaluerResultat_ToSoknadsbarn();
+  }
+
+  @Test
+  @DisplayName("skal kalle core og returnere et resultat - eksempel 6")
+  void skalKalleCoreOgReturnereEtResultat_Eksempel06() {
+    // Enkel beregning med full evne, to barn
+    filnavn = "src/test/resources/testfiler/saertilskudd_eksempel6.json";
+
+    forventetBidragsevneBelop = BigDecimal.valueOf(10891);
+    forventetBPAndelSaertilskuddProsentBarn = BigDecimal.valueOf(55.1);
+    forventetBPAndelSaertilskuddBelopBarn = BigDecimal.valueOf(6612);
+    forventetSamvaersfradragBelopBarn1 = BigDecimal.valueOf(1513);
+    forventetSamvaersfradragBelopBarn2 = BigDecimal.valueOf(1513);
+    forventetSaertilskuddBelopBarn = BigDecimal.valueOf(6612);
+    forventetSaertilskuddResultatkodeBarn = "SAERTILSKUDD_INNVILGET";
+
+    utfoerBeregningerOgEvaluerResultat_ToSoknadsbarn();
+  }
+
+  @Test
+  @DisplayName("skal kalle core og returnere et resultat - eksempel 7")
+  void skalKalleCoreOgReturnereEtResultat_Eksempel07() {
+    // Beregning med manglende evne, to barn
+    filnavn = "src/test/resources/testfiler/saertilskudd_eksempel7.json";
+
+    forventetBidragsevneBelop = BigDecimal.valueOf(6149);
+    forventetBPAndelSaertilskuddProsentBarn = BigDecimal.valueOf(55.7);
+    forventetBPAndelSaertilskuddBelopBarn = BigDecimal.valueOf(6684);
+    forventetSamvaersfradragBelopBarn1 = BigDecimal.valueOf(1513);
+    forventetSamvaersfradragBelopBarn2 = BigDecimal.valueOf(1513);
+    forventetSaertilskuddBelopBarn = BigDecimal.valueOf(6684);
+    forventetSaertilskuddResultatkodeBarn = "SAERTILSKUDD_IKKE_FULL_BIDRAGSEVNE";
+
+    utfoerBeregningerOgEvaluerResultat_ToSoknadsbarn();
+  }
+
+  @Test
+  @DisplayName("skal kalle core og returnere et resultat - eksempel 8")
+  void skalKalleCoreOgReturnereEtResultat_Eksempel08() {
+    // Beregning med manglende evne, to barn
+    filnavn = "src/test/resources/testfiler/saertilskudd_eksempel8.json";
+
+    forventetBidragsevneBelop = BigDecimal.valueOf(6149);
+    forventetBPAndelSaertilskuddProsentBarn = BigDecimal.valueOf(55.7);
+    forventetBPAndelSaertilskuddBelopBarn = BigDecimal.valueOf(6684);
+    forventetSamvaersfradragBelopBarn1 = BigDecimal.valueOf(1513);
+    forventetSamvaersfradragBelopBarn2 = BigDecimal.valueOf(1513);
+    forventetSaertilskuddBelopBarn = BigDecimal.valueOf(6684);
+    forventetSaertilskuddResultatkodeBarn = "SAERTILSKUDD_IKKE_FULL_BIDRAGSEVNE";
+
+    utfoerBeregningerOgEvaluerResultat_ToSoknadsbarn();
+  }
 
 
   private void utfoerBeregningerOgEvaluerResultat_EttSoknadsbarn() {
@@ -108,9 +220,9 @@ public class BeregnSaertilskuddControllerIntegrationTest {
         () -> assertThat(totalSaertilskuddResultat.getBeregnBPAndelSaertilskuddResultat().getResultatPeriodeListe()).isNotNull(),
         () -> assertThat(totalSaertilskuddResultat.getBeregnBPAndelSaertilskuddResultat().getResultatPeriodeListe().size()).isEqualTo(1),
         () -> assertThat(totalSaertilskuddResultat.getBeregnBPAndelSaertilskuddResultat().getResultatPeriodeListe().get(0).getResultatBeregning()
-            .getResultatAndelProsent()).isEqualTo(forventetBPAndelSaertilskuddProsentBarn1),
+            .getResultatAndelProsent()).isEqualTo(forventetBPAndelSaertilskuddProsentBarn),
         () -> assertThat(totalSaertilskuddResultat.getBeregnBPAndelSaertilskuddResultat().getResultatPeriodeListe().get(0).getResultatBeregning()
-            .getResultatAndelBelop()).isEqualTo(forventetBPAndelSaertilskuddBelopBarn1),
+            .getResultatAndelBelop()).isEqualTo(forventetBPAndelSaertilskuddBelopBarn),
 
         // Sjekk BeregnBPSamvaersfradragResultat
         () -> assertThat(totalSaertilskuddResultat.getBeregnBPSamvaersfradragResultat()).isNotNull(),
@@ -124,9 +236,10 @@ public class BeregnSaertilskuddControllerIntegrationTest {
         () -> assertThat(totalSaertilskuddResultat.getBeregnSaertilskuddResultat().getResultatPeriodeListe()).isNotNull(),
         () -> assertThat(totalSaertilskuddResultat.getBeregnSaertilskuddResultat().getResultatPeriodeListe().size()).isEqualTo(1),
         () -> assertThat(totalSaertilskuddResultat.getBeregnSaertilskuddResultat().getResultatPeriodeListe().get(0)
-            .getResultatBeregning().getResultatBelop().compareTo(forventetSaertilskuddBelopBarn1)).isZero(),
+            .getResultatBeregning().getResultatBelop().compareTo(forventetSaertilskuddBelopBarn)).isZero(),
         () -> assertThat(totalSaertilskuddResultat.getBeregnSaertilskuddResultat().getResultatPeriodeListe().get(0)
-            .getResultatBeregning().getResultatKode()).isEqualTo(forventetSaertilskuddResultatkodeBarn1)
+            .getResultatBeregning().getResultatKode()).isEqualTo(
+            forventetSaertilskuddResultatkodeBarn)
     );
   }
 
@@ -151,25 +264,20 @@ public class BeregnSaertilskuddControllerIntegrationTest {
         // Sjekk BeregnBPAndelSaertilskuddResultat
         () -> assertThat(totalSaertilskuddResultat.getBeregnBPAndelSaertilskuddResultat()).isNotNull(),
         () -> assertThat(totalSaertilskuddResultat.getBeregnBPAndelSaertilskuddResultat().getResultatPeriodeListe()).isNotNull(),
-        () -> assertThat(totalSaertilskuddResultat.getBeregnBPAndelSaertilskuddResultat().getResultatPeriodeListe().size()).isEqualTo(2),
+        () -> assertThat(totalSaertilskuddResultat.getBeregnBPAndelSaertilskuddResultat().getResultatPeriodeListe().size()).isEqualTo(1),
         () -> assertThat(totalSaertilskuddResultat.getBeregnBPAndelSaertilskuddResultat().getResultatPeriodeListe().get(0).getResultatBeregning()
-            .getResultatAndelBelop()).isEqualTo(forventetBPAndelSaertilskuddBelopBarn1),
+            .getResultatAndelBelop()).isEqualTo(forventetBPAndelSaertilskuddBelopBarn),
         () -> assertThat(totalSaertilskuddResultat.getBeregnBPAndelSaertilskuddResultat().getResultatPeriodeListe().get(0).getResultatBeregning()
-            .getResultatAndelProsent()).isEqualTo(forventetBPAndelSaertilskuddProsentBarn1),
-        () -> assertThat(totalSaertilskuddResultat.getBeregnBPAndelSaertilskuddResultat().getResultatPeriodeListe().get(1).getResultatBeregning()
-            .getResultatAndelBelop()).isEqualTo(forventetBPAndelSaertilskuddBelopBarn2),
-        () -> assertThat(totalSaertilskuddResultat.getBeregnBPAndelSaertilskuddResultat().getResultatPeriodeListe().get(1).getResultatBeregning()
-            .getResultatAndelProsent()).isEqualTo(forventetBPAndelSaertilskuddProsentBarn2),
-
+            .getResultatAndelProsent()).isEqualTo(forventetBPAndelSaertilskuddProsentBarn),
 
         // Sjekk BeregnBPSamvaersfradragResultat
         () -> assertThat(totalSaertilskuddResultat.getBeregnBPSamvaersfradragResultat()).isNotNull(),
         () -> assertThat(totalSaertilskuddResultat.getBeregnBPSamvaersfradragResultat().getResultatPeriodeListe()).isNotNull(),
-        () -> assertThat(totalSaertilskuddResultat.getBeregnBPSamvaersfradragResultat().getResultatPeriodeListe().size()).isEqualTo(2),
+        () -> assertThat(totalSaertilskuddResultat.getBeregnBPSamvaersfradragResultat().getResultatPeriodeListe().size()).isEqualTo(1),
         () -> assertThat(totalSaertilskuddResultat.getBeregnBPSamvaersfradragResultat().getResultatPeriodeListe().get(0).getResultatBeregningListe()
             .get(0).getResultatBelop()).isEqualTo(forventetSamvaersfradragBelopBarn1),
-        () -> assertThat(totalSaertilskuddResultat.getBeregnBPSamvaersfradragResultat().getResultatPeriodeListe().get(1).getResultatBeregningListe()
-            .get(0).getResultatBelop()).isEqualTo(forventetSamvaersfradragBelopBarn2),
+        () -> assertThat(totalSaertilskuddResultat.getBeregnBPSamvaersfradragResultat().getResultatPeriodeListe().get(0).getResultatBeregningListe()
+            .get(1).getResultatBelop()).isEqualTo(forventetSamvaersfradragBelopBarn2),
 
         // Sjekk BeregnSaertilskuddResultat
         () -> assertThat(totalSaertilskuddResultat.getBeregnSaertilskuddResultat()).isNotNull(),
@@ -177,9 +285,9 @@ public class BeregnSaertilskuddControllerIntegrationTest {
         () -> assertThat(totalSaertilskuddResultat.getBeregnSaertilskuddResultat().getResultatPeriodeListe().size()).isEqualTo(1),
 
         () -> assertThat(totalSaertilskuddResultat.getBeregnSaertilskuddResultat().getResultatPeriodeListe().get(0).getResultatBeregning()
-            .getResultatBelop().compareTo(forventetSaertilskuddBelopBarn1)).isZero(),
+            .getResultatBelop().compareTo(forventetSaertilskuddBelopBarn)).isZero(),
         () -> assertThat(totalSaertilskuddResultat.getBeregnSaertilskuddResultat().getResultatPeriodeListe().get(0).getResultatBeregning()
-            .getResultatKode()).isEqualTo(forventetSaertilskuddResultatkodeBarn1)
+            .getResultatKode()).isEqualTo(forventetSaertilskuddResultatkodeBarn)
 
     );
   }
