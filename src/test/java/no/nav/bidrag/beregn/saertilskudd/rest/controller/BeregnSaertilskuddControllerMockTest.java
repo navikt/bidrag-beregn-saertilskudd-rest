@@ -1,7 +1,7 @@
 package no.nav.bidrag.beregn.saertilskudd.rest.controller;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
@@ -12,7 +12,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import no.nav.bidrag.beregn.saertilskudd.rest.BidragBeregnSaertilskuddLocal;
 import no.nav.bidrag.beregn.saertilskudd.rest.TestUtil;
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BeregnSaertilskuddResultat;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BeregnTotalSaertilskuddGrunnlag;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BeregnTotalSaertilskuddResultat;
 import no.nav.bidrag.beregn.saertilskudd.rest.service.BeregnSaertilskuddService;
@@ -33,7 +32,7 @@ import org.springframework.http.HttpMethod;
 
 @DisplayName("BeregnSaertilskuddControllerTest")
 @SpringBootTest(classes = BidragBeregnSaertilskuddLocal.class, webEnvironment = WebEnvironment.RANDOM_PORT)
-class BeregnSaertilskuddControllerTest {
+class BeregnSaertilskuddControllerMockTest {
 
   @Autowired
   private HttpHeaderTestRestTemplate httpHeaderTestRestTemplate;
@@ -48,7 +47,7 @@ class BeregnSaertilskuddControllerTest {
   }
 
   @Test
-  @DisplayName("Skal returnere total særtilskudd resultat ved gyldig input")
+  @DisplayName("Skal returnere totalsaertilskuddresultat ved gyldig input")
   void skalReturnereTotalSaertilskuddResultatVedGyldigInput() {
 
     when(beregnSaertilskuddServiceMock.beregn(any(BeregnTotalSaertilskuddGrunnlag.class))).thenReturn(HttpResponse.from(OK,
@@ -77,9 +76,11 @@ class BeregnSaertilskuddControllerTest {
             totalSaertilskuddResultat.getBeregnBPBidragsevneResultat().getResultatPeriodeListe().get(0).getResultatBeregning().getResultatEvneBelop())
             .isEqualTo(BigDecimal.valueOf(100)),
 
+
         () -> assertThat(totalSaertilskuddResultat.getBeregnBPAndelSaertilskuddResultat()).isNotNull(),
         () -> assertThat(totalSaertilskuddResultat.getBeregnBPAndelSaertilskuddResultat().getResultatPeriodeListe()).isNotNull(),
         () -> assertThat(totalSaertilskuddResultat.getBeregnBPAndelSaertilskuddResultat().getResultatPeriodeListe().size()).isEqualTo(1),
+
         () -> assertThat(
             totalSaertilskuddResultat.getBeregnBPAndelSaertilskuddResultat().getResultatPeriodeListe().get(0).getResultatDatoFraTil()
                 .getPeriodeDatoFra()).isEqualTo(LocalDate.parse("2020-08-01")),
@@ -102,6 +103,8 @@ class BeregnSaertilskuddControllerTest {
             .isEqualTo(LocalDate.parse("2020-09-01")),
         () -> assertThat(totalSaertilskuddResultat.getBeregnBPSamvaersfradragResultat().getResultatPeriodeListe().get(0).getResultatBeregningListe()
             .get(0).getResultatBelop()).isEqualTo(BigDecimal.valueOf(100)),
+        () -> assertThat(totalSaertilskuddResultat.getBeregnBPSamvaersfradragResultat().getResultatPeriodeListe().get(0).getResultatBeregningListe()
+            .get(0).getBarnPersonId()).isEqualTo(1),
 
         () -> assertThat(totalSaertilskuddResultat.getBeregnSaertilskuddResultat()).isNotNull(),
         () -> assertThat(totalSaertilskuddResultat.getBeregnSaertilskuddResultat().getResultatPeriodeListe()).isNotNull(),
@@ -110,6 +113,8 @@ class BeregnSaertilskuddControllerTest {
             .getPeriodeDatoFra()).isEqualTo(LocalDate.parse("2020-08-01")),
         () -> assertThat(totalSaertilskuddResultat.getBeregnSaertilskuddResultat().getResultatPeriodeListe().get(0).getResultatDatoFraTil()
             .getPeriodeDatoTil()).isEqualTo(LocalDate.parse("2020-09-01")),
+/*        () -> assertThat(totalSaertilskuddResultat.getBeregnSaertilskuddResultat().getResultatPeriodeListe().get(0).gettResultatBeregning()
+            .getResultatSoknadsbarnPersonId()).isEqualTo(1),*/
         () -> assertThat(totalSaertilskuddResultat.getBeregnSaertilskuddResultat().getResultatPeriodeListe().get(0).getResultatBeregning()
             .getResultatBelop()).isEqualTo(BigDecimal.valueOf(100)),
         () -> assertThat(totalSaertilskuddResultat.getBeregnSaertilskuddResultat().getResultatPeriodeListe().get(0).getResultatBeregning()
@@ -125,7 +130,7 @@ class BeregnSaertilskuddControllerTest {
 
     var url = "http://localhost:" + port + "/bidrag-beregn-saertilskudd-rest/beregn/saertilskudd";
     var request = initHttpEntity(TestUtil.byggTotalSaertilskuddGrunnlag());
-    var responseEntity = httpHeaderTestRestTemplate.exchange(url, HttpMethod.POST, request, BeregnSaertilskuddResultat.class);
+    var responseEntity = httpHeaderTestRestTemplate.exchange(url, HttpMethod.POST, request, BeregnTotalSaertilskuddResultat.class);
     var totalSaertilskuddResultat = responseEntity.getBody();
 
     assertAll(
@@ -142,7 +147,7 @@ class BeregnSaertilskuddControllerTest {
 
     var url = "http://localhost:" + port + "/bidrag-beregn-saertilskudd-rest/beregn/saertilskudd";
     var request = initHttpEntity(TestUtil.byggTotalSaertilskuddGrunnlag());
-    var responseEntity = httpHeaderTestRestTemplate.exchange(url, HttpMethod.POST, request, BeregnSaertilskuddResultat.class);
+    var responseEntity = httpHeaderTestRestTemplate.exchange(url, HttpMethod.POST, request, BeregnTotalSaertilskuddResultat.class);
     var totalSaertilskuddResultat = responseEntity.getBody();
 
     assertAll(

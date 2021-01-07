@@ -406,8 +406,8 @@ public class TestUtil {
 
   private static BeregnTotalSaertilskuddGrunnlag byggTotalSaertilskuddGrunnlag(String nullVerdi, String inntektVerdi,
       String bidragsevneVerdi, String bpAndelSaertilskuddVerdi, String samvaersfradragVerdi, String saertilskuddVerdi) {
-    var beregnDatoFra = (nullVerdi.equals("beregnDatoFra") ? null : LocalDate.parse("2017-01-01"));
-    var beregnDatoTil = (nullVerdi.equals("beregnDatoTil") ? null : LocalDate.parse("2020-01-01"));
+    var beregnDatoFra = (nullVerdi.equals("beregnDatoFra") ? null : LocalDate.parse("2020-08-01"));
+    var beregnDatoTil = (nullVerdi.equals("beregnDatoTil") ? null : LocalDate.parse("2020-09-01"));
     var soknadsbarnGrunnlag = (nullVerdi.equals("soknadsbarnGrunnlag") ? null : byggSoknadsbarnGrunnlag(""));
     var inntektGrunnlag = (nullVerdi.equals("inntektBPBMGrunnlag") ? null : byggInntektGrunnlag(inntektVerdi));
     var beregnBidragsevneGrunnlag = (nullVerdi.equals("beregnBPBidragsevneGrunnlag") ? null : byggBidragsevneGrunnlag(bidragsevneVerdi));
@@ -441,7 +441,7 @@ public class TestUtil {
   // Bygger opp InntektPeriode for søknadsbarn
   private static InntektPeriode byggSoknadsbarnInntektPeriode(String nullVerdi) {
     var inntektDatoFra = (nullVerdi.equals("inntektDatoFra") ? null : LocalDate.parse("2017-01-01"));
-    var inntektDatoTil = (nullVerdi.equals("inntektDatoTil") ? null : LocalDate.parse("2020-01-01"));
+    var inntektDatoTil = (nullVerdi.equals("inntektDatoTil") ? null : LocalDate.parse("2020-09-01"));
     var inntektType = (nullVerdi.equals("inntektType") ? null : "INNTEKTSOPPL_ARBEIDSGIVER");
     var inntektBelop = (nullVerdi.equals("inntektBelop") ? null : BigDecimal.valueOf(100));
 
@@ -458,11 +458,11 @@ public class TestUtil {
   // Bygger opp InntektBPBMGrunnlag
   private static InntektBPBMGrunnlag byggInntektGrunnlag(String nullVerdi) {
     var inntektBPDatoFra = (nullVerdi.equals("inntektBPDatoFra") ? null : LocalDate.parse("2017-01-01"));
-    var inntektBPDatoTil = (nullVerdi.equals("inntektBPDatoTil") ? null : LocalDate.parse("2020-01-01"));
+    var inntektBPDatoTil = (nullVerdi.equals("inntektBPDatoTil") ? null : LocalDate.parse("2020-09-01"));
     var inntektBPType = (nullVerdi.equals("inntektBPType") ? null : "INNTEKTSOPPL_ARBEIDSGIVER");
     var inntektBPBelop = (nullVerdi.equals("inntektBPBelop") ? null : BigDecimal.valueOf(100));
     var inntektBMDatoFra = (nullVerdi.equals("inntektBMDatoFra") ? null : LocalDate.parse("2017-01-01"));
-    var inntektBMDatoTil = (nullVerdi.equals("inntektBMDatoTil") ? null : LocalDate.parse("2020-01-01"));
+    var inntektBMDatoTil = (nullVerdi.equals("inntektBMDatoTil") ? null : LocalDate.parse("2020-09-01"));
     var inntektBMType = (nullVerdi.equals("inntektBMType") ? null : "INNTEKTSOPPL_ARBEIDSGIVER");
     var inntektBMBelop = (nullVerdi.equals("inntektBMBelop") ? null : BigDecimal.valueOf(100));
     var inntektBMDeltFordel = (nullVerdi.equals("inntektBMDeltFordel") ? null : false);
@@ -501,16 +501,16 @@ public class TestUtil {
   // Bygger opp BeregnBPBidragsevneGrunnlag
   private static BeregnBPBidragsevneGrunnlag byggBidragsevneGrunnlag(String nullVerdi) {
     var skatteklasseDatoFra = (nullVerdi.equals("skatteklasseDatoFra") ? null : LocalDate.parse("2017-01-01"));
-    var skatteklasseDatoTil = (nullVerdi.equals("skatteklasseDatoTil") ? null : LocalDate.parse("2020-01-01"));
+    var skatteklasseDatoTil = (nullVerdi.equals("skatteklasseDatoTil") ? null : LocalDate.parse("2020-09-01"));
     var skatteklasseId = (nullVerdi.equals("skatteklasseId") ? null : 1);
     var bostatusDatoFra = (nullVerdi.equals("bostatusDatoFra") ? null : LocalDate.parse("2017-01-01"));
-    var bostatusDatoTil = (nullVerdi.equals("bostatusDatoTil") ? null : LocalDate.parse("2020-01-01"));
+    var bostatusDatoTil = (nullVerdi.equals("bostatusDatoTil") ? null : LocalDate.parse("2020-09-01"));
     var bostatusKode = (nullVerdi.equals("bostatusKode") ? null : "MED_ANDRE");
     var antallBarnIEgetHusholdDatoFra = (nullVerdi.equals("antallBarnIEgetHusholdDatoFra") ? null : LocalDate.parse("2017-01-01"));
-    var antallBarnIEgetHusholdDatoTil = (nullVerdi.equals("antallBarnIEgetHusholdDatoTil") ? null : LocalDate.parse("2020-01-01"));
+    var antallBarnIEgetHusholdDatoTil = (nullVerdi.equals("antallBarnIEgetHusholdDatoTil") ? null : LocalDate.parse("2020-09-01"));
     var antallBarn = (nullVerdi.equals("antallBarn") ? null : BigDecimal.ONE);
     var saerfradragDatoFra = (nullVerdi.equals("saerfradragDatoFra") ? null : LocalDate.parse("2017-01-01"));
-    var saerfradragDatoTil = (nullVerdi.equals("saerfradragDatoTil") ? null : LocalDate.parse("2020-01-01"));
+    var saerfradragDatoTil = (nullVerdi.equals("saerfradragDatoTil") ? null : LocalDate.parse("2020-09-01"));
     var saerfradragKode = (nullVerdi.equals("saerfradragKode") ? null : "HELT");
 
     List<SkatteklassePeriode> skatteklassePeriodeListe;
@@ -573,7 +573,7 @@ public class TestUtil {
   // Bygger opp BeregnBPAndelSaertilskudd
   private static BeregnBPAndelSaertilskuddGrunnlag byggBPAndelSaertilskuddGrunnlag(String nullVerdi) {
     var nettoSaertilskuddDatoFra = (nullVerdi.equals("nettoSaertilskuddDatoFra") ? null : LocalDate.parse("2017-01-01"));
-    var nettoSaertilskuddDatoTil = (nullVerdi.equals("nettoSaertilskuddDatoTil") ? null : LocalDate.parse("2020-01-01"));
+    var nettoSaertilskuddDatoTil = (nullVerdi.equals("nettoSaertilskuddDatoTil") ? null : LocalDate.parse("2020-09-01"));
     var nettoSaertilskuddBelop = (nullVerdi.equals("nettoSaertilskuddBelop") ? null : BigDecimal.valueOf(100));
 
     List<NettoSaertilskuddPeriode> nettoSaertilskuddPeriodeListe;
@@ -596,7 +596,7 @@ public class TestUtil {
   // Bygger opp BeregnBPSamvaersfradragGrunnlag
   private static BeregnBPSamvaersfradragGrunnlag byggSamvaersfradragGrunnlag(String nullVerdi) {
     var samvaersklasseDatoFra = (nullVerdi.equals("samvaersklasseDatoFra") ? null : LocalDate.parse("2017-01-01"));
-    var samvaersklasseDatoTil = (nullVerdi.equals("samvaersklasseDatoTil") ? null : LocalDate.parse("2020-01-01"));
+    var samvaersklasseDatoTil = (nullVerdi.equals("samvaersklasseDatoTil") ? null : LocalDate.parse("2020-09-01"));
     var samvaersklasseBarnPersonId = (nullVerdi.equals("samvaersklasseBarnPersonId") ? null : 1);
     var samvaersklasseBarnFodselsdato = (nullVerdi.equals("samvaersklasseBarnFodselsdato") ? null : LocalDate.parse("2010-01-01"));
     var samvaersklasseId = (nullVerdi.equals("samvaersklasseId") ? null : "00");
@@ -621,7 +621,7 @@ public class TestUtil {
   // Bygger opp BeregnSaertilskuddGrunnlag
   private static BeregnSaertilskuddGrunnlag byggSaertilskuddGrunnlag(String nullVerdi) {
     var lopendeBidragDatoFra = (nullVerdi.equals("lopendeBidragDatoFra") ? null : LocalDate.parse("2017-01-01"));
-    var lopendeBidragDatoTil = (nullVerdi.equals("lopendeBidragDatoTil") ? null : LocalDate.parse("2020-01-01"));
+    var lopendeBidragDatoTil = (nullVerdi.equals("lopendeBidragDatoTil") ? null : LocalDate.parse("2020-09-01"));
     var lopendeBidragBarnPersonId = (nullVerdi.equals("lopendeBidragBarnPersonId") ? null : 1);
     var lopendeBidragBelop = (nullVerdi.equals("lopendeBidragBelop") ? null : BigDecimal.valueOf(100));
     var opprinneligBPAndelUnderholdskostnadBelop = (nullVerdi.equals("opprinneligBPAndelUnderholdskostnadBelop") ? null : BigDecimal.valueOf(100));
@@ -650,7 +650,7 @@ public class TestUtil {
   // Bygger opp BeregnBidragsevneResultat
   public static BeregnBPBidragsevneResultat dummyBidragsevneResultat() {
     var bidragPeriodeResultatListe = new ArrayList<ResultatPeriodeBidragsevne>();
-    bidragPeriodeResultatListe.add(new ResultatPeriodeBidragsevne(new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2019-01-01")),
+    bidragPeriodeResultatListe.add(new ResultatPeriodeBidragsevne(new Periode(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01")),
         new ResultatBeregningBidragsevne(BigDecimal.valueOf(100)),
         new ResultatGrunnlagBidragsevne(singletonList(new Inntekt("INNTEKTSOPPL_ARBEIDSGIVER", BigDecimal.valueOf(500000))), 1, "MED_ANDRE",
             BigDecimal.ONE, "HELT", emptyList())));
@@ -661,7 +661,7 @@ public class TestUtil {
   public static BeregnBidragsevneResultatCore dummyBidragsevneResultatCore() {
     var bidragPeriodeResultatListe = new ArrayList<no.nav.bidrag.beregn.bidragsevne.dto.ResultatPeriodeCore>();
     bidragPeriodeResultatListe.add(new no.nav.bidrag.beregn.bidragsevne.dto.ResultatPeriodeCore(
-        new PeriodeCore(LocalDate.parse("2017-01-01"), LocalDate.parse("2019-01-01")),
+        new PeriodeCore(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01")),
         new no.nav.bidrag.beregn.bidragsevne.dto.ResultatBeregningCore(BigDecimal.valueOf(100)),
         new no.nav.bidrag.beregn.bidragsevne.dto.ResultatGrunnlagCore(
             singletonList(new InntektCore("INNTEKTSOPPL_ARBEIDSGIVER", BigDecimal.valueOf(500000))), 1, "MED_ANDRE", BigDecimal.ONE, "HELT",
@@ -684,7 +684,7 @@ public class TestUtil {
     var bidragPeriodeResultatListe = new ArrayList<ResultatPeriodeBPAndelSaertilskudd>();
     bidragPeriodeResultatListe
         .add(new ResultatPeriodeBPAndelSaertilskudd(
-            new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2019-01-01")),
+            new Periode(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01")),
             new ResultatBeregningBPAndelSaertilskudd(BigDecimal.valueOf(10), BigDecimal.valueOf(100), false),
             new ResultatGrunnlagBPAndelSaertilskudd(BigDecimal.valueOf(100),
                 singletonList(new Inntekt("INNTEKTSOPPL_ARBEIDSGIVER", BigDecimal.valueOf(100000))),
@@ -698,7 +698,7 @@ public class TestUtil {
   public static BeregnBPsAndelSaertilskuddResultatCore dummyBPsAndelSaertilskuddResultatCore() {
     var bidragPeriodeResultatListe = new ArrayList<no.nav.bidrag.beregn.bpsandelsaertilskudd.dto.ResultatPeriodeCore>();
     bidragPeriodeResultatListe.add(new no.nav.bidrag.beregn.bpsandelsaertilskudd.dto.ResultatPeriodeCore(
-        new PeriodeCore(LocalDate.parse("2017-01-01"), LocalDate.parse("2019-01-01")),
+        new PeriodeCore(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01")),
         new no.nav.bidrag.beregn.bpsandelsaertilskudd.dto.ResultatBeregningCore(BigDecimal.valueOf(10), BigDecimal.valueOf(100), false),
         new no.nav.bidrag.beregn.bpsandelsaertilskudd.dto.ResultatGrunnlagCore(BigDecimal.valueOf(100),
             singletonList(
@@ -724,7 +724,7 @@ public class TestUtil {
   // Bygger opp BeregnSamvaersfradragResultat
   public static BeregnBPSamvaersfradragResultat dummySamvaersfradragResultat() {
     var bidragPeriodeResultatListe = new ArrayList<ResultatPeriodeSamvaersfradrag>();
-    bidragPeriodeResultatListe.add(new ResultatPeriodeSamvaersfradrag(new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2019-01-01")),
+    bidragPeriodeResultatListe.add(new ResultatPeriodeSamvaersfradrag(new Periode(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01")),
         singletonList(new ResultatBeregningSamvaersfradrag(1, BigDecimal.valueOf(100))),
         new ResultatGrunnlagSamvaersfradrag(singletonList(new GrunnlagBarn(1, 9, "00")), emptyList())));
     return new BeregnBPSamvaersfradragResultat(bidragPeriodeResultatListe);
@@ -734,7 +734,7 @@ public class TestUtil {
   public static BeregnSamvaersfradragResultatCore dummySamvaersfradragResultatCore() {
     var bidragPeriodeResultatListe = new ArrayList<no.nav.bidrag.beregn.samvaersfradrag.dto.ResultatPeriodeCore>();
     bidragPeriodeResultatListe.add(new no.nav.bidrag.beregn.samvaersfradrag.dto.ResultatPeriodeCore(
-        new PeriodeCore(LocalDate.parse("2017-01-01"), LocalDate.parse("2019-01-01")),
+        new PeriodeCore(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01")),
         singletonList(new no.nav.bidrag.beregn.samvaersfradrag.dto.ResultatBeregningCore(1, BigDecimal.valueOf(100))),
         new GrunnlagBeregningPeriodisertCore(singletonList(new SamvaersfradragGrunnlagPerBarnCore(1, 9, "00")), emptyList())));
     return new BeregnSamvaersfradragResultatCore(bidragPeriodeResultatListe, emptyList());
@@ -754,7 +754,7 @@ public class TestUtil {
   public static BeregnSaertilskuddResultat dummySaertilskuddResultat() {
     var bidragPeriodeResultatListe = new ArrayList<ResultatPeriodeSaertilskudd>();
     bidragPeriodeResultatListe.add(new ResultatPeriodeSaertilskudd(
-        new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2019-01-01")),
+        new Periode(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01")),
         new ResultatBeregningSaertilskudd(BigDecimal.valueOf(100), "RESULTATKODE"),
         new ResultatGrunnlagSaertilskudd(new BidragsevneGrunnlag(BigDecimal.valueOf(100)),
             new BPAndelSaertilskuddGrunnlag(BigDecimal.valueOf(100), BigDecimal.valueOf(100), false),
@@ -768,7 +768,7 @@ public class TestUtil {
   public static BeregnSaertilskuddResultatCore dummySaertilskuddResultatCore() {
     var bidragPeriodeResultatListe = new ArrayList<no.nav.bidrag.beregn.saertilskudd.dto.ResultatPeriodeCore>();
     bidragPeriodeResultatListe.add(new no.nav.bidrag.beregn.saertilskudd.dto.ResultatPeriodeCore(
-        new PeriodeCore(LocalDate.parse("2017-01-01"), LocalDate.parse("2019-01-01")), 1,
+        new PeriodeCore(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01")), 1,
         new no.nav.bidrag.beregn.saertilskudd.dto.ResultatBeregningCore(BigDecimal.valueOf(100), "RESULTATKODE"),
         new no.nav.bidrag.beregn.saertilskudd.dto.ResultatGrunnlagCore(new BidragsevneCore(BigDecimal.valueOf(100)),
             new BPsAndelSaertilskuddCore(BigDecimal.valueOf(100), BigDecimal.valueOf(100), false),
@@ -892,30 +892,267 @@ public class TestUtil {
     var sjablonSamvaersfradragListe = new ArrayList<Samvaersfradrag>();
 
     sjablonSamvaersfradragListe.add(
-        new Samvaersfradrag("01", 5, LocalDate.parse("2015-07-01"), LocalDate.parse("2016-06-30"), 3, 0, BigDecimal.valueOf(204)));
-    sjablonSamvaersfradragListe.add(
-        new Samvaersfradrag("01", 5, LocalDate.parse("2016-07-01"), LocalDate.parse("2017-06-30"), 3, 0, BigDecimal.valueOf(208)));
-    sjablonSamvaersfradragListe.add(
-        new Samvaersfradrag("01", 5, LocalDate.parse("2017-07-01"), LocalDate.parse("2018-06-30"), 3, 0, BigDecimal.valueOf(212)));
-    sjablonSamvaersfradragListe.add(
-        new Samvaersfradrag("01", 5, LocalDate.parse("2018-07-01"), LocalDate.parse("2019-06-30"), 3, 0, BigDecimal.valueOf(215)));
-    sjablonSamvaersfradragListe.add(
-        new Samvaersfradrag("01", 5, LocalDate.parse("2019-07-01"), LocalDate.parse("2020-06-30"), 3, 0, BigDecimal.valueOf(219)));
-    sjablonSamvaersfradragListe.add(
-        new Samvaersfradrag("01", 5, LocalDate.parse("2020-07-01"), LocalDate.parse("9999-12-31"), 3, 0, BigDecimal.valueOf(256)));
+        new Samvaersfradrag("00", 99, LocalDate.parse("2013-07-01"), LocalDate.parse("9999-12-31"), 1, 1, BigDecimal.valueOf(0)));
 
     sjablonSamvaersfradragListe.add(
-        new Samvaersfradrag("01", 5, LocalDate.parse("2015-07-01"), LocalDate.parse("2016-06-30"), 0, 8, BigDecimal.valueOf(674)));
+        new Samvaersfradrag("01", 5, LocalDate.parse("2015-07-01"), LocalDate.parse("2016-06-30"), 3, 3, BigDecimal.valueOf(204)));
     sjablonSamvaersfradragListe.add(
-        new Samvaersfradrag("01", 5, LocalDate.parse("2016-07-01"), LocalDate.parse("2017-06-30"), 0, 8, BigDecimal.valueOf(689)));
+        new Samvaersfradrag("01", 5, LocalDate.parse("2016-07-01"), LocalDate.parse("2017-06-30"), 3, 3, BigDecimal.valueOf(208)));
     sjablonSamvaersfradragListe.add(
-        new Samvaersfradrag("01", 5, LocalDate.parse("2017-07-01"), LocalDate.parse("2018-06-30"), 0, 8, BigDecimal.valueOf(701)));
+        new Samvaersfradrag("01", 5, LocalDate.parse("2017-07-01"), LocalDate.parse("2018-06-30"), 3, 3, BigDecimal.valueOf(212)));
     sjablonSamvaersfradragListe.add(
-        new Samvaersfradrag("01", 5, LocalDate.parse("2018-07-01"), LocalDate.parse("2019-06-30"), 0, 8, BigDecimal.valueOf(712)));
+        new Samvaersfradrag("01", 5, LocalDate.parse("2018-07-01"), LocalDate.parse("2019-06-30"), 3, 3, BigDecimal.valueOf(215)));
     sjablonSamvaersfradragListe.add(
-        new Samvaersfradrag("01", 5, LocalDate.parse("2019-07-01"), LocalDate.parse("2020-06-30"), 0, 8, BigDecimal.valueOf(727)));
+        new Samvaersfradrag("01", 5, LocalDate.parse("2019-07-01"), LocalDate.parse("2020-06-30"), 3, 3, BigDecimal.valueOf(219)));
     sjablonSamvaersfradragListe.add(
-        new Samvaersfradrag("01", 5, LocalDate.parse("2020-07-01"), LocalDate.parse("9999-12-31"), 0, 8, BigDecimal.valueOf(849)));
+        new Samvaersfradrag("01", 5, LocalDate.parse("2020-07-01"), LocalDate.parse("9999-12-31"), 3, 3, BigDecimal.valueOf(256)));
+
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("01", 10, LocalDate.parse("2015-07-01"), LocalDate.parse("2016-06-30"), 3, 3, BigDecimal.valueOf(296)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("01", 10, LocalDate.parse("2016-07-01"), LocalDate.parse("2017-06-30"), 3, 3, BigDecimal.valueOf(301)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("01", 10, LocalDate.parse("2017-07-01"), LocalDate.parse("2018-06-30"), 3, 3, BigDecimal.valueOf(306)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("01", 10, LocalDate.parse("2018-07-01"), LocalDate.parse("2019-06-30"), 3, 3, BigDecimal.valueOf(312)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("01", 10, LocalDate.parse("2019-07-01"), LocalDate.parse("2020-06-30"), 3, 3, BigDecimal.valueOf(318)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("01", 10, LocalDate.parse("2020-07-01"), LocalDate.parse("9999-12-31"), 3, 3, BigDecimal.valueOf(353)));
+
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("01", 14, LocalDate.parse("2015-07-01"), LocalDate.parse("2016-06-30"), 3, 3, BigDecimal.valueOf(358)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("01", 14, LocalDate.parse("2016-07-01"), LocalDate.parse("2017-06-30"), 3, 3, BigDecimal.valueOf(378)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("01", 14, LocalDate.parse("2017-07-01"), LocalDate.parse("2018-06-30"), 3, 3, BigDecimal.valueOf(385)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("01", 14, LocalDate.parse("2018-07-01"), LocalDate.parse("2019-06-30"), 3, 3, BigDecimal.valueOf(390)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("01", 14, LocalDate.parse("2019-07-01"), LocalDate.parse("2020-06-30"), 3, 3, BigDecimal.valueOf(400)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("01", 14, LocalDate.parse("2020-07-01"), LocalDate.parse("9999-12-31"), 3, 3, BigDecimal.valueOf(457)));
+
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("01", 18, LocalDate.parse("2015-07-01"), LocalDate.parse("2016-06-30"), 3, 3, BigDecimal.valueOf(422)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("01", 18, LocalDate.parse("2016-07-01"), LocalDate.parse("2017-06-30"), 3, 3, BigDecimal.valueOf(436)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("01", 18, LocalDate.parse("2017-07-01"), LocalDate.parse("2018-06-30"), 3, 3, BigDecimal.valueOf(443)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("01", 18, LocalDate.parse("2018-07-01"), LocalDate.parse("2019-06-30"), 3, 3, BigDecimal.valueOf(450)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("01", 18, LocalDate.parse("2019-07-01"), LocalDate.parse("2020-06-30"), 3, 3, BigDecimal.valueOf(460)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("01", 18, LocalDate.parse("2020-07-01"), LocalDate.parse("9999-12-31"), 3, 3, BigDecimal.valueOf(528)));
+
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("01", 99, LocalDate.parse("2015-07-01"), LocalDate.parse("2016-06-30"), 3, 3, BigDecimal.valueOf(422)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("01", 99, LocalDate.parse("2016-07-01"), LocalDate.parse("2017-06-30"), 3, 3, BigDecimal.valueOf(436)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("01", 99, LocalDate.parse("2017-07-01"), LocalDate.parse("2018-06-30"), 3, 3, BigDecimal.valueOf(443)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("01", 99, LocalDate.parse("2018-07-01"), LocalDate.parse("2019-06-30"), 3, 3, BigDecimal.valueOf(450)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("01", 99, LocalDate.parse("2019-07-01"), LocalDate.parse("2020-06-30"), 3, 3, BigDecimal.valueOf(460)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("01", 99, LocalDate.parse("2020-07-01"), LocalDate.parse("9999-12-31"), 3, 3, BigDecimal.valueOf(528)));
+
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("02", 5, LocalDate.parse("2015-07-01"), LocalDate.parse("2016-06-30"), 0, 8, BigDecimal.valueOf(674)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("02", 5, LocalDate.parse("2016-07-01"), LocalDate.parse("2017-06-30"), 0, 8, BigDecimal.valueOf(689)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("02", 5, LocalDate.parse("2017-07-01"), LocalDate.parse("2018-06-30"), 0, 8, BigDecimal.valueOf(701)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("02", 5, LocalDate.parse("2018-07-01"), LocalDate.parse("2019-06-30"), 0, 8, BigDecimal.valueOf(712)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("02", 5, LocalDate.parse("2019-07-01"), LocalDate.parse("2020-06-30"), 0, 8, BigDecimal.valueOf(727)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("02", 5, LocalDate.parse("2020-07-01"), LocalDate.parse("9999-12-31"), 0, 8, BigDecimal.valueOf(849)));
+
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("02", 10, LocalDate.parse("2015-07-01"), LocalDate.parse("2016-06-30"), 0, 8, BigDecimal.valueOf(979)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("02", 10, LocalDate.parse("2016-07-01"), LocalDate.parse("2017-06-30"), 0, 8, BigDecimal.valueOf(998)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("02", 10, LocalDate.parse("2017-07-01"), LocalDate.parse("2018-06-30"), 0, 8, BigDecimal.valueOf(1012)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("02", 10, LocalDate.parse("2018-07-01"), LocalDate.parse("2019-06-30"), 0, 8, BigDecimal.valueOf(1034)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("02", 10, LocalDate.parse("2019-07-01"), LocalDate.parse("2020-06-30"), 0, 8, BigDecimal.valueOf(1052)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("02", 10, LocalDate.parse("2020-07-01"), LocalDate.parse("9999-12-31"), 0, 8, BigDecimal.valueOf(1167)));
+
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("02", 14, LocalDate.parse("2015-07-01"), LocalDate.parse("2016-06-30"), 0, 8, BigDecimal.valueOf(1184)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("02", 14, LocalDate.parse("2016-07-01"), LocalDate.parse("2017-06-30"), 0, 8, BigDecimal.valueOf(1252)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("02", 14, LocalDate.parse("2017-07-01"), LocalDate.parse("2018-06-30"), 0, 8, BigDecimal.valueOf(1275)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("02", 14, LocalDate.parse("2018-07-01"), LocalDate.parse("2019-06-30"), 0, 8, BigDecimal.valueOf(1293)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("02", 14, LocalDate.parse("2019-07-01"), LocalDate.parse("2020-06-30"), 0, 8, BigDecimal.valueOf(1323)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("02", 14, LocalDate.parse("2020-07-01"), LocalDate.parse("9999-12-31"), 0, 8, BigDecimal.valueOf(1513)));
+
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("02", 18, LocalDate.parse("2015-07-01"), LocalDate.parse("2016-06-30"), 0, 8, BigDecimal.valueOf(1397)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("02", 18, LocalDate.parse("2016-07-01"), LocalDate.parse("2017-06-30"), 0, 8, BigDecimal.valueOf(1444)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("02", 18, LocalDate.parse("2017-07-01"), LocalDate.parse("2018-06-30"), 0, 8, BigDecimal.valueOf(1468)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("02", 18, LocalDate.parse("2018-07-01"), LocalDate.parse("2019-06-30"), 0, 8, BigDecimal.valueOf(1490)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("02", 18, LocalDate.parse("2019-07-01"), LocalDate.parse("2020-06-30"), 0, 8, BigDecimal.valueOf(1525)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("02", 18, LocalDate.parse("2020-07-01"), LocalDate.parse("9999-12-31"), 0, 8, BigDecimal.valueOf(1749)));
+
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("02", 99, LocalDate.parse("2015-07-01"), LocalDate.parse("2016-06-30"), 0, 8, BigDecimal.valueOf(1397)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("02", 99, LocalDate.parse("2016-07-01"), LocalDate.parse("2017-06-30"), 0, 8, BigDecimal.valueOf(1444)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("02", 99, LocalDate.parse("2017-07-01"), LocalDate.parse("2018-06-30"), 0, 8, BigDecimal.valueOf(1468)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("02", 99, LocalDate.parse("2018-07-01"), LocalDate.parse("2019-06-30"), 0, 8, BigDecimal.valueOf(1490)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("02", 99, LocalDate.parse("2019-07-01"), LocalDate.parse("2020-06-30"), 0, 8, BigDecimal.valueOf(1525)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("02", 99, LocalDate.parse("2020-07-01"), LocalDate.parse("9999-12-31"), 0, 8, BigDecimal.valueOf(1749)));
+
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("03", 5, LocalDate.parse("2015-07-01"), LocalDate.parse("2016-06-30"), 0, 13, BigDecimal.valueOf(1904)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("03", 5, LocalDate.parse("2016-07-01"), LocalDate.parse("2017-06-30"), 0, 13, BigDecimal.valueOf(1953)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("03", 5, LocalDate.parse("2017-07-01"), LocalDate.parse("2018-06-30"), 0, 13, BigDecimal.valueOf(1998)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("03", 5, LocalDate.parse("2018-07-01"), LocalDate.parse("2019-06-30"), 0, 13, BigDecimal.valueOf(2029)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("03", 5, LocalDate.parse("2019-07-01"), LocalDate.parse("2020-06-30"), 0, 13, BigDecimal.valueOf(2082)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("03", 5, LocalDate.parse("2020-07-01"), LocalDate.parse("9999-12-31"), 0, 13, BigDecimal.valueOf(2272)));
+
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("03", 10, LocalDate.parse("2015-07-01"), LocalDate.parse("2016-06-30"), 0, 13, BigDecimal.valueOf(2330)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("03", 10, LocalDate.parse("2016-07-01"), LocalDate.parse("2017-06-30"), 0, 13, BigDecimal.valueOf(2385)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("03", 10, LocalDate.parse("2017-07-01"), LocalDate.parse("2018-06-30"), 0, 13, BigDecimal.valueOf(2432)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("03", 10, LocalDate.parse("2018-07-01"), LocalDate.parse("2019-06-30"), 0, 13, BigDecimal.valueOf(2478)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("03", 10, LocalDate.parse("2019-07-01"), LocalDate.parse("2020-06-30"), 0, 13, BigDecimal.valueOf(2536)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("03", 10, LocalDate.parse("2020-07-01"), LocalDate.parse("9999-12-31"), 0, 13, BigDecimal.valueOf(2716)));
+
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("03", 14, LocalDate.parse("2015-07-01"), LocalDate.parse("2016-06-30"), 0, 13, BigDecimal.valueOf(2616)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("03", 14, LocalDate.parse("2016-07-01"), LocalDate.parse("2017-06-30"), 0, 13, BigDecimal.valueOf(2739)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("03", 14, LocalDate.parse("2017-07-01"), LocalDate.parse("2018-06-30"), 0, 13, BigDecimal.valueOf(2798)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("03", 14, LocalDate.parse("2018-07-01"), LocalDate.parse("2019-06-30"), 0, 13, BigDecimal.valueOf(2839)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("03", 14, LocalDate.parse("2019-07-01"), LocalDate.parse("2020-06-30"), 0, 13, BigDecimal.valueOf(2914)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("03", 14, LocalDate.parse("2020-07-01"), LocalDate.parse("9999-12-31"), 0, 13, BigDecimal.valueOf(3199)));
+
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("03", 18, LocalDate.parse("2015-07-01"), LocalDate.parse("2016-06-30"), 0, 13, BigDecimal.valueOf(2912)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("03", 18, LocalDate.parse("2016-07-01"), LocalDate.parse("2017-06-30"), 0, 13, BigDecimal.valueOf(3007)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("03", 18, LocalDate.parse("2017-07-01"), LocalDate.parse("2018-06-30"), 0, 13, BigDecimal.valueOf(3067)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("03", 18, LocalDate.parse("2018-07-01"), LocalDate.parse("2019-06-30"), 0, 13, BigDecimal.valueOf(3115)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("03", 18, LocalDate.parse("2019-07-01"), LocalDate.parse("2020-06-30"), 0, 13, BigDecimal.valueOf(3196)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("03", 18, LocalDate.parse("2020-07-01"), LocalDate.parse("9999-12-31"), 0, 13, BigDecimal.valueOf(3528)));
+
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("03", 99, LocalDate.parse("2015-07-01"), LocalDate.parse("2016-06-30"), 0, 13, BigDecimal.valueOf(2912)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("03", 99, LocalDate.parse("2016-07-01"), LocalDate.parse("2017-06-30"), 0, 13, BigDecimal.valueOf(3007)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("03", 99, LocalDate.parse("2017-07-01"), LocalDate.parse("2018-06-30"), 0, 13, BigDecimal.valueOf(3067)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("03", 99, LocalDate.parse("2018-07-01"), LocalDate.parse("2019-06-30"), 0, 13, BigDecimal.valueOf(3115)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("03", 99, LocalDate.parse("2019-07-01"), LocalDate.parse("2020-06-30"), 0, 13, BigDecimal.valueOf(3196)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("03", 99, LocalDate.parse("2020-07-01"), LocalDate.parse("9999-12-31"), 0, 13, BigDecimal.valueOf(3528)));
+
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("04", 5, LocalDate.parse("2015-07-01"), LocalDate.parse("2016-06-30"), 0, 15, BigDecimal.valueOf(2391)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("04", 5, LocalDate.parse("2016-07-01"), LocalDate.parse("2017-06-30"), 0, 15, BigDecimal.valueOf(2452)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("04", 5, LocalDate.parse("2017-07-01"), LocalDate.parse("2018-06-30"), 0, 15, BigDecimal.valueOf(2509)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("04", 5, LocalDate.parse("2018-07-01"), LocalDate.parse("2019-06-30"), 0, 15, BigDecimal.valueOf(2548)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("04", 5, LocalDate.parse("2019-07-01"), LocalDate.parse("2020-06-30"), 0, 15, BigDecimal.valueOf(2614)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("04", 5, LocalDate.parse("2020-07-01"), LocalDate.parse("9999-12-31"), 0, 15, BigDecimal.valueOf(2852)));
+
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("04", 10, LocalDate.parse("2015-07-01"), LocalDate.parse("2016-06-30"), 0, 15, BigDecimal.valueOf(2925)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("04", 10, LocalDate.parse("2016-07-01"), LocalDate.parse("2017-06-30"), 0, 15, BigDecimal.valueOf(2994)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("04", 10, LocalDate.parse("2017-07-01"), LocalDate.parse("2018-06-30"), 0, 15, BigDecimal.valueOf(3053)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("04", 10, LocalDate.parse("2018-07-01"), LocalDate.parse("2019-06-30"), 0, 15, BigDecimal.valueOf(3111)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("04", 10, LocalDate.parse("2019-07-01"), LocalDate.parse("2020-06-30"), 0, 15, BigDecimal.valueOf(3184)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("04", 10, LocalDate.parse("2020-07-01"), LocalDate.parse("9999-12-31"), 0, 15, BigDecimal.valueOf(3410)));
+
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("04", 14, LocalDate.parse("2015-07-01"), LocalDate.parse("2016-06-30"), 0, 15, BigDecimal.valueOf(3284)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("04", 14, LocalDate.parse("2016-07-01"), LocalDate.parse("2017-06-30"), 0, 15, BigDecimal.valueOf(3428)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("04", 14, LocalDate.parse("2017-07-01"), LocalDate.parse("2018-06-30"), 0, 15, BigDecimal.valueOf(3512)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("04", 14, LocalDate.parse("2018-07-01"), LocalDate.parse("2019-06-30"), 0, 15, BigDecimal.valueOf(3565)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("04", 14, LocalDate.parse("2019-07-01"), LocalDate.parse("2020-06-30"), 0, 15, BigDecimal.valueOf(3658)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("04", 14, LocalDate.parse("2020-07-01"), LocalDate.parse("9999-12-31"), 0, 15, BigDecimal.valueOf(4016)));
+
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("04", 18, LocalDate.parse("2015-07-01"), LocalDate.parse("2016-06-30"), 0, 15, BigDecimal.valueOf(3656)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("04", 18, LocalDate.parse("2016-07-01"), LocalDate.parse("2017-06-30"), 0, 15, BigDecimal.valueOf(3774)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("04", 18, LocalDate.parse("2017-07-01"), LocalDate.parse("2018-06-30"), 0, 15, BigDecimal.valueOf(3851)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("04", 18, LocalDate.parse("2018-07-01"), LocalDate.parse("2019-06-30"), 0, 15, BigDecimal.valueOf(3910)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("04", 18, LocalDate.parse("2019-07-01"), LocalDate.parse("2020-06-30"), 0, 15, BigDecimal.valueOf(4012)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("04", 18, LocalDate.parse("2020-07-01"), LocalDate.parse("9999-12-31"), 0, 15, BigDecimal.valueOf(4429)));
+
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("04", 99, LocalDate.parse("2015-07-01"), LocalDate.parse("2016-06-30"), 0, 15, BigDecimal.valueOf(3656)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("04", 99, LocalDate.parse("2016-07-01"), LocalDate.parse("2017-06-30"), 0, 15, BigDecimal.valueOf(3774)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("04", 99, LocalDate.parse("2017-07-01"), LocalDate.parse("2018-06-30"), 0, 15, BigDecimal.valueOf(3851)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("04", 99, LocalDate.parse("2018-07-01"), LocalDate.parse("2019-06-30"), 0, 15, BigDecimal.valueOf(3910)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("04", 99, LocalDate.parse("2019-07-01"), LocalDate.parse("2020-06-30"), 0, 15, BigDecimal.valueOf(4012)));
+    sjablonSamvaersfradragListe.add(
+        new Samvaersfradrag("04", 99, LocalDate.parse("2020-07-01"), LocalDate.parse("9999-12-31"), 0, 15, BigDecimal.valueOf(4429)));
 
     return sjablonSamvaersfradragListe;
   }

@@ -115,11 +115,11 @@ class BeregnSaertilskuddServiceTest {
     // For å finne riktig tall: Sjekk TestUtil.dummySjablonxxx; tell hvor mange sjabloner som er innefor dato og (for Sjablontall) av riktig type
 
     // Bidragsevne: Sjablontall (0004, 0017, 0019, 0023, 0025, 0027, 0028, 0039, 0040) + Bidragsevne + TrinnvisSkattesats
-    var forventetAntallSjablonElementerBidragsevne = 25 + 8 + 8;
+    var forventetAntallSjablonElementerBidragsevne = 15;
     // BPsAndelSaertilskudd: Sjablontall (0004, 0005, 0030, 0031, 0039)
-    var forventetAntallSjablonElementerBPsAndelSaertilskudd = 14;
+    var forventetAntallSjablonElementerBPsAndelSaertilskudd = 5;
     // Samvaersfradrag: Samvaersfradrag
-    var forventetAntallSjablonElementerSamvaersfradrag = 8;
+    var forventetAntallSjablonElementerSamvaersfradrag = 21;
     // Saertilskudd: Ingenting
 
     assertAll(
@@ -166,8 +166,8 @@ class BeregnSaertilskuddServiceTest {
         () -> assertThat(bidragsevneGrunnlagTilCore.getSjablonPeriodeListe().stream()
             .filter(sjablonPeriodeCore -> sjablonPeriodeCore.getSjablonNavn().equals(SjablonNavn.BIDRAGSEVNE.getNavn())).count())
             .isEqualTo(TestUtil.dummySjablonBidragsevneListe().stream()
-                .filter(sjablon -> ((!(sjablon.getDatoFom().isAfter(LocalDate.parse("2020-01-01")))) && (!(sjablon.getDatoTom()
-                    .isBefore(LocalDate.parse("2017-01-01")))))).count()),
+                .filter(sjablon -> ((!(sjablon.getDatoFom().isAfter(LocalDate.parse("2020-09-01")))) && (!(sjablon.getDatoTom()
+                    .isBefore(LocalDate.parse("2020-08-01")))))).count()),
 
         // Sjekk at det mappes ut riktig verdi for en gitt sjablon av type Sjablontall
         () -> assertThat(bidragsevneGrunnlagTilCore.getSjablonPeriodeListe().stream()
