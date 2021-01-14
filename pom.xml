@@ -11,7 +11,7 @@
 
 	<groupId>no.nav.bidrag</groupId>
 	<artifactId>bidrag-beregn-saertilskudd-rest</artifactId>
-	<version>0.0.10-SNAPSHOT</version>
+	<version>0.0.11-SNAPSHOT</version>
 	<name>bidrag-beregn-saertilskudd-rest</name>
 	<description>Bidrag beregning særtilskudd</description>
 
