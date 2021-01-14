@@ -11,14 +11,18 @@ management:
 
 ---
 # Profil for lokal kjøring
-spring.profiles: local
-
 # Lokal profil bruker selvstendige wiremocks
 wiremock.server:
   files: classpath:/__files
   stubs: classpath:/wiremock_stubs
-
+spring:
+  config:
+    activate:
+      on-profile: local
 ---
 # Profil for integrasjonstest
-spring.profiles: integrationtest
 SJABLON_URL: http://localhost:8096/bidrag-sjablon
+spring:
+  config:
+    activate:
+      on-profile: integrationtest
