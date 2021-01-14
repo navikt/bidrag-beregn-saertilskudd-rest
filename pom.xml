@@ -24,8 +24,8 @@
     <!-- dependencies -->
     <bidrag-commons.version>0.5.0</bidrag-commons.version>
     <bidrag-commons-test.version>0.2.1</bidrag-commons-test.version>
-    <bidrag-beregn-felles.version>0.14.5</bidrag-beregn-felles.version>
-    <bidrag-beregn-saertilskudd-core.version>0.5.2</bidrag-beregn-saertilskudd-core.version>
+    <bidrag-beregn-felles.version>0.14.7</bidrag-beregn-felles.version>
+    <bidrag-beregn-saertilskudd-core.version>0.5.5</bidrag-beregn-saertilskudd-core.version>
     <springfox-swagger.version>2.9.2</springfox-swagger.version>
     <wiremock-standalone.version>2.19.0</wiremock-standalone.version>
     <springframework-cloud.version>2.2.3.RELEASE</springframework-cloud.version>
@@ -153,11 +153,6 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.assertj</groupId>
-      <artifactId>assertj-core</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
       <scope>test</scope>
@@ -175,19 +170,9 @@
     </dependency>
     <dependency>
       <groupId>org.jetbrains.kotlin</groupId>
-      <artifactId>kotlin-stdlib-jdk8</artifactId>
-      <version>${kotlin.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.jetbrains.kotlin</groupId>
       <artifactId>kotlin-test</artifactId>
       <version>${kotlin.version}</version>
       <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.jetbrains.kotlin</groupId>
-      <artifactId>kotlin-stdlib-jdk8</artifactId>
-      <version>${kotlin.version}</version>
     </dependency>
   </dependencies>
 
