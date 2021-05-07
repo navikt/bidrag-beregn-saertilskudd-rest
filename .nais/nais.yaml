@@ -33,8 +33,6 @@ spec:
   {{/each}}
   env:
   {{#each env}}
-    - name: {{@key}}
-      value: "{{this}}"
+    - name: {{this.name}}
+      value: "{{this.value}}"
   {{/each}}
-  vault:
-    enabled: false
