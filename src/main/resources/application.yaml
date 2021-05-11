@@ -9,6 +9,9 @@ management:
       exposure:
         include: "*"
 
+springdoc:
+  packages-to-scan: no.nav.bidrag.beregn.saertilskudd.rest.controller
+
 ---
 # Profil for lokal kjøring
 # Lokal profil bruker selvstendige wiremocks
