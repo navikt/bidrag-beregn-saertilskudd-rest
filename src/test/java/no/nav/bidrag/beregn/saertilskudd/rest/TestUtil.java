@@ -33,6 +33,7 @@ import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BeregnBPSamvaersfradragRe
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BeregnSaertilskuddGrunnlag;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BeregnSaertilskuddResultat;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BeregnTotalSaertilskuddGrunnlag;
+import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BeregnTotalSaertilskuddGrunnlagOld;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BidragsevneGrunnlag;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BostatusPeriode;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.GrunnlagBarn;
@@ -69,75 +70,75 @@ import no.nav.bidrag.beregn.samvaersfradrag.dto.SamvaersfradragGrunnlagPerBarnCo
 public class TestUtil {
 
   // Total særtilskudd
-  public static BeregnTotalSaertilskuddGrunnlag byggTotalSaertilskuddGrunnlag() {
+  public static BeregnTotalSaertilskuddGrunnlagOld byggTotalSaertilskuddGrunnlag() {
     return byggTotalSaertilskuddGrunnlag("");
   }
 
-  public static BeregnTotalSaertilskuddGrunnlag byggTotalSaertilskuddGrunnlagUtenBeregnDatoFra() {
+  public static BeregnTotalSaertilskuddGrunnlagOld byggTotalSaertilskuddGrunnlagUtenBeregnDatoFra() {
     return byggTotalSaertilskuddGrunnlag("beregnDatoFra");
   }
 
-  public static BeregnTotalSaertilskuddGrunnlag byggTotalSaertilskuddGrunnlagUtenBeregnDatoTil() {
+  public static BeregnTotalSaertilskuddGrunnlagOld byggTotalSaertilskuddGrunnlagUtenBeregnDatoTil() {
     return byggTotalSaertilskuddGrunnlag("beregnDatoTil");
   }
 
-  public static BeregnTotalSaertilskuddGrunnlag byggTotalSaertilskuddGrunnlagUtenSoknadsbarnGrunnlag() {
+  public static BeregnTotalSaertilskuddGrunnlagOld byggTotalSaertilskuddGrunnlagUtenSoknadsbarnGrunnlag() {
     return byggTotalSaertilskuddGrunnlag("soknadsbarnGrunnlag");
   }
 
-  public static BeregnTotalSaertilskuddGrunnlag byggTotalSaertilskuddGrunnlagUtenInntektBPBMGrunnlag() {
+  public static BeregnTotalSaertilskuddGrunnlagOld byggTotalSaertilskuddGrunnlagUtenInntektBPBMGrunnlag() {
     return byggTotalSaertilskuddGrunnlag("inntektBPBMGrunnlag");
   }
 
-  public static BeregnTotalSaertilskuddGrunnlag byggTotalSaertilskuddGrunnlagUtenBeregnBPBidragsevneGrunnlag() {
+  public static BeregnTotalSaertilskuddGrunnlagOld byggTotalSaertilskuddGrunnlagUtenBeregnBPBidragsevneGrunnlag() {
     return byggTotalSaertilskuddGrunnlag("beregnBPBidragsevneGrunnlag");
   }
 
-  public static BeregnTotalSaertilskuddGrunnlag byggTotalSaertilskuddGrunnlagUtenBeregnBPAndelSaertilskuddGrunnlag() {
+  public static BeregnTotalSaertilskuddGrunnlagOld byggTotalSaertilskuddGrunnlagUtenBeregnBPAndelSaertilskuddGrunnlag() {
     return byggTotalSaertilskuddGrunnlag("beregnBPAndelSaertilskuddGrunnlag");
   }
 
-  public static BeregnTotalSaertilskuddGrunnlag byggTotalSaertilskuddGrunnlagUtenBeregnBPSamvaersfradragGrunnlag() {
+  public static BeregnTotalSaertilskuddGrunnlagOld byggTotalSaertilskuddGrunnlagUtenBeregnBPSamvaersfradragGrunnlag() {
     return byggTotalSaertilskuddGrunnlag("beregnBPSamvaersfradragGrunnlag");
   }
 
-  public static BeregnTotalSaertilskuddGrunnlag byggTotalSaertilskuddGrunnlagUtenBeregnSaertilskuddGrunnlag() {
+  public static BeregnTotalSaertilskuddGrunnlagOld byggTotalSaertilskuddGrunnlagUtenBeregnSaertilskuddGrunnlag() {
     return byggTotalSaertilskuddGrunnlag("beregnSaertilskuddGrunnlag");
   }
 
-  public static BeregnTotalSaertilskuddGrunnlag byggInntektBPBMGrunnlagUtenInntektBPPeriodeListe() {
+  public static BeregnTotalSaertilskuddGrunnlagOld byggInntektBPBMGrunnlagUtenInntektBPPeriodeListe() {
     return byggTotalSaertilskuddGrunnlag("", "inntektBPPeriodeListe", "", "", "", "");
   }
 
-  public static BeregnTotalSaertilskuddGrunnlag byggInntektBPBMGrunnlagUtenInntektBMPeriodeListe() {
+  public static BeregnTotalSaertilskuddGrunnlagOld byggInntektBPBMGrunnlagUtenInntektBMPeriodeListe() {
     return byggTotalSaertilskuddGrunnlag("", "inntektBMPeriodeListe", "", "", "", "");
   }
 
-  public static BeregnTotalSaertilskuddGrunnlag byggBidragsevneGrunnlagUtenSkatteklassePeriodeListe() {
+  public static BeregnTotalSaertilskuddGrunnlagOld byggBidragsevneGrunnlagUtenSkatteklassePeriodeListe() {
     return byggTotalSaertilskuddGrunnlag("", "", "skatteklassePeriodeListe", "", "", "");
   }
 
-  public static BeregnTotalSaertilskuddGrunnlag byggBidragsevneGrunnlagUtenBostatusPeriodeListe() {
+  public static BeregnTotalSaertilskuddGrunnlagOld byggBidragsevneGrunnlagUtenBostatusPeriodeListe() {
     return byggTotalSaertilskuddGrunnlag("", "", "bostatusPeriodeListe", "", "", "");
   }
 
-  public static BeregnTotalSaertilskuddGrunnlag byggBidragsevneGrunnlagUtenAntallBarnIEgetHusholdPeriodeListe() {
+  public static BeregnTotalSaertilskuddGrunnlagOld byggBidragsevneGrunnlagUtenAntallBarnIEgetHusholdPeriodeListe() {
     return byggTotalSaertilskuddGrunnlag("", "", "antallBarnIEgetHusholdPeriodeListe", "", "", "");
   }
 
-  public static BeregnTotalSaertilskuddGrunnlag byggBidragsevneGrunnlagUtenSaerfradragPeriodeListe() {
+  public static BeregnTotalSaertilskuddGrunnlagOld byggBidragsevneGrunnlagUtenSaerfradragPeriodeListe() {
     return byggTotalSaertilskuddGrunnlag("", "", "saerfradragPeriodeListe", "", "", "");
   }
 
-  public static BeregnTotalSaertilskuddGrunnlag byggBPAndelSaertilskuddGrunnlagUtenNettoSaertilskuddPeriodeListe() {
+  public static BeregnTotalSaertilskuddGrunnlagOld byggBPAndelSaertilskuddGrunnlagUtenNettoSaertilskuddPeriodeListe() {
     return byggTotalSaertilskuddGrunnlag("", "", "", "nettoSaertilskuddPeriodeListe", "", "");
   }
 
-  public static BeregnTotalSaertilskuddGrunnlag byggSamvaersfradragGrunnlagUtenSamvaersklassePeriodeListe() {
+  public static BeregnTotalSaertilskuddGrunnlagOld byggSamvaersfradragGrunnlagUtenSamvaersklassePeriodeListe() {
     return byggTotalSaertilskuddGrunnlag("", "", "", "", "samvaersklassePeriodeListe", "");
   }
 
-  public static BeregnTotalSaertilskuddGrunnlag byggSaertilskuddGrunnlagUtenLopendeBidragBPPeriodeListe() {
+  public static BeregnTotalSaertilskuddGrunnlagOld byggSaertilskuddGrunnlagUtenLopendeBidragBPPeriodeListe() {
     return byggTotalSaertilskuddGrunnlag("", "", "", "", "", "lopendeBidragBPPeriodeListe");
   }
 
@@ -395,7 +396,7 @@ public class TestUtil {
 
 
   // Bygger opp BeregnTotalSaertilskuddGrunnlag (felles grunnlag for alle delberegninger)
-  private static BeregnTotalSaertilskuddGrunnlag byggTotalSaertilskuddGrunnlag(String nullVerdi) {
+  private static BeregnTotalSaertilskuddGrunnlagOld byggTotalSaertilskuddGrunnlag(String nullVerdi) {
     // "Jukser" litt hvis nullVerdi er numerisk. Verdien brukes da til å knytte inntekt BM til nullVerdi (= søknadsbarn person-id)
     if (StringUtils.isNumeric(nullVerdi)) {
       return byggTotalSaertilskuddGrunnlag("", nullVerdi, "", "", "", "");
@@ -404,7 +405,7 @@ public class TestUtil {
     }
   }
 
-  private static BeregnTotalSaertilskuddGrunnlag byggTotalSaertilskuddGrunnlag(String nullVerdi, String inntektVerdi,
+  private static BeregnTotalSaertilskuddGrunnlagOld byggTotalSaertilskuddGrunnlag(String nullVerdi, String inntektVerdi,
       String bidragsevneVerdi, String bpAndelSaertilskuddVerdi, String samvaersfradragVerdi, String saertilskuddVerdi) {
     var beregnDatoFra = (nullVerdi.equals("beregnDatoFra") ? null : LocalDate.parse("2020-08-01"));
     var beregnDatoTil = (nullVerdi.equals("beregnDatoTil") ? null : LocalDate.parse("2020-09-01"));
@@ -418,7 +419,7 @@ public class TestUtil {
     var beregnSaertilskuddGrunnlag = (nullVerdi.equals("beregnSaertilskuddGrunnlag") ? null
         : byggSaertilskuddGrunnlag(saertilskuddVerdi));
 
-    return new BeregnTotalSaertilskuddGrunnlag(beregnDatoFra, beregnDatoTil, soknadsbarnGrunnlag, inntektGrunnlag, beregnBidragsevneGrunnlag,
+    return new BeregnTotalSaertilskuddGrunnlagOld(beregnDatoFra, beregnDatoTil, soknadsbarnGrunnlag, inntektGrunnlag, beregnBidragsevneGrunnlag,
         beregnBPAndelSaertilskuddGrunnlag, beregnSamvaersfradragGrunnlag, beregnSaertilskuddGrunnlag);
   }
 
@@ -751,32 +752,32 @@ public class TestUtil {
   }
 
   // Bygger opp BeregnSaertilskuddResultat
-  public static BeregnSaertilskuddResultat dummySaertilskuddResultat() {
-    var bidragPeriodeResultatListe = new ArrayList<ResultatPeriodeSaertilskudd>();
-    bidragPeriodeResultatListe.add(new ResultatPeriodeSaertilskudd(
-        new Periode(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01")),
-        new ResultatBeregningSaertilskudd(BigDecimal.valueOf(100), "RESULTATKODE"),
-        new ResultatGrunnlagSaertilskudd(new BidragsevneGrunnlag(BigDecimal.valueOf(100)),
-            new BPAndelSaertilskuddGrunnlag(BigDecimal.valueOf(100), BigDecimal.valueOf(100), false),
-            singletonList(new SamvaersfradragGrunnlag(1, BigDecimal.valueOf(100))),
-            singletonList(new LopendeBidragGrunnlag(1, BigDecimal.valueOf(100), BigDecimal.valueOf(100), BigDecimal.valueOf(100),
-                BigDecimal.valueOf(100))))));
-    return new BeregnSaertilskuddResultat(bidragPeriodeResultatListe);
-  }
-
-  // Bygger opp BeregnSaertilskuddResultatCore
-  public static BeregnSaertilskuddResultatCore dummySaertilskuddResultatCore() {
-    var bidragPeriodeResultatListe = new ArrayList<no.nav.bidrag.beregn.saertilskudd.dto.ResultatPeriodeCore>();
-    bidragPeriodeResultatListe.add(new no.nav.bidrag.beregn.saertilskudd.dto.ResultatPeriodeCore(
-        new PeriodeCore(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01")), 1,
-        new no.nav.bidrag.beregn.saertilskudd.dto.ResultatBeregningCore(BigDecimal.valueOf(100), "RESULTATKODE"),
-        new no.nav.bidrag.beregn.saertilskudd.dto.ResultatGrunnlagCore(new BidragsevneCore(BigDecimal.valueOf(100)),
-            new BPsAndelSaertilskuddCore(BigDecimal.valueOf(100), BigDecimal.valueOf(100), false),
-            singletonList(new LopendeBidragCore(1, BigDecimal.valueOf(100), BigDecimal.valueOf(100), BigDecimal.valueOf(100),
-                BigDecimal.valueOf(100))),
-            singletonList(new SamvaersfradragCore(1, BigDecimal.valueOf(100))))));
-    return new BeregnSaertilskuddResultatCore(bidragPeriodeResultatListe, emptyList());
-  }
+//  public static BeregnSaertilskuddResultat dummySaertilskuddResultat() {
+//    var bidragPeriodeResultatListe = new ArrayList<ResultatPeriodeSaertilskudd>();
+//    bidragPeriodeResultatListe.add(new ResultatPeriodeSaertilskudd(
+//        new Periode(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01")),
+//        new ResultatBeregningSaertilskudd(BigDecimal.valueOf(100), "RESULTATKODE"),
+//        new ResultatGrunnlagSaertilskudd(new BidragsevneGrunnlag(BigDecimal.valueOf(100)),
+//            new BPAndelSaertilskuddGrunnlag(BigDecimal.valueOf(100), BigDecimal.valueOf(100), false),
+//            singletonList(new SamvaersfradragGrunnlag(1, BigDecimal.valueOf(100))),
+//            singletonList(new LopendeBidragGrunnlag(1, BigDecimal.valueOf(100), BigDecimal.valueOf(100), BigDecimal.valueOf(100),
+//                BigDecimal.valueOf(100))))));
+//    return new BeregnSaertilskuddResultat(bidragPeriodeResultatListe);
+//  }
+//
+//  // Bygger opp BeregnSaertilskuddResultatCore
+//  public static BeregnSaertilskuddResultatCore dummySaertilskuddResultatCore() {
+//    var bidragPeriodeResultatListe = new ArrayList<no.nav.bidrag.beregn.saertilskudd.dto.ResultatPeriodeCore>();
+//    bidragPeriodeResultatListe.add(new no.nav.bidrag.beregn.saertilskudd.dto.ResultatPeriodeCore(
+//        new PeriodeCore(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01")), 1,
+//        new no.nav.bidrag.beregn.saertilskudd.dto.ResultatBeregningCore(BigDecimal.valueOf(100), "RESULTATKODE"),
+//        new no.nav.bidrag.beregn.saertilskudd.dto.ResultatGrunnlagCore(new BidragsevneCore(BigDecimal.valueOf(100)),
+//            new BPsAndelSaertilskuddCore(BigDecimal.valueOf(100), BigDecimal.valueOf(100), false),
+//            singletonList(new LopendeBidragCore(1, BigDecimal.valueOf(100), BigDecimal.valueOf(100), BigDecimal.valueOf(100),
+//                BigDecimal.valueOf(100))),
+//            singletonList(new SamvaersfradragCore(1, BigDecimal.valueOf(100))))));
+//    return new BeregnSaertilskuddResultatCore(bidragPeriodeResultatListe, emptyList());
+//  }
 
   // Bygger opp BeregnSaertilskuddResultatCore med avvik
   public static BeregnSaertilskuddResultatCore dummySaertilskuddResultatCoreMedAvvik() {

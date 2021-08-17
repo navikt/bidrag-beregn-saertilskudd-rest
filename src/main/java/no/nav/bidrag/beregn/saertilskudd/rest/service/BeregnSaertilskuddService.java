@@ -1,14 +1,7 @@
 package no.nav.bidrag.beregn.saertilskudd.rest.service;
 
-import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
-import static java.util.stream.Collectors.toList;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -19,33 +12,24 @@ import no.nav.bidrag.beregn.bpsandelsaertilskudd.BPsAndelSaertilskuddCore;
 import no.nav.bidrag.beregn.bpsandelsaertilskudd.dto.BeregnBPsAndelSaertilskuddGrunnlagCore;
 import no.nav.bidrag.beregn.bpsandelsaertilskudd.dto.BeregnBPsAndelSaertilskuddResultatCore;
 import no.nav.bidrag.beregn.felles.dto.AvvikCore;
-import no.nav.bidrag.beregn.felles.dto.PeriodeCore;
-import no.nav.bidrag.beregn.felles.dto.SjablonInnholdCore;
-import no.nav.bidrag.beregn.felles.dto.SjablonNokkelCore;
-import no.nav.bidrag.beregn.felles.dto.SjablonPeriodeCore;
-import no.nav.bidrag.beregn.felles.enums.SjablonInnholdNavn;
-import no.nav.bidrag.beregn.felles.enums.SjablonNavn;
-import no.nav.bidrag.beregn.felles.enums.SjablonNokkelNavn;
 import no.nav.bidrag.beregn.felles.enums.SjablonTallNavn;
 import no.nav.bidrag.beregn.saertilskudd.SaertilskuddCore;
-import no.nav.bidrag.beregn.saertilskudd.dto.BPsAndelSaertilskuddPeriodeCore;
 import no.nav.bidrag.beregn.saertilskudd.dto.BeregnSaertilskuddGrunnlagCore;
 import no.nav.bidrag.beregn.saertilskudd.dto.BeregnSaertilskuddResultatCore;
-import no.nav.bidrag.beregn.saertilskudd.dto.BidragsevnePeriodeCore;
-import no.nav.bidrag.beregn.saertilskudd.dto.SamvaersfradragPeriodeCore;
-import no.nav.bidrag.beregn.saertilskudd.rest.consumer.Bidragsevne;
-import no.nav.bidrag.beregn.saertilskudd.rest.consumer.Samvaersfradrag;
 import no.nav.bidrag.beregn.saertilskudd.rest.consumer.SjablonConsumer;
 import no.nav.bidrag.beregn.saertilskudd.rest.consumer.SjablonListe;
-import no.nav.bidrag.beregn.saertilskudd.rest.consumer.Sjablontall;
-import no.nav.bidrag.beregn.saertilskudd.rest.consumer.TrinnvisSkattesats;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BeregnBPAndelSaertilskuddResultat;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BeregnBPBidragsevneResultat;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BeregnBPSamvaersfradragResultat;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BeregnSaertilskuddResultat;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BeregnTotalSaertilskuddGrunnlag;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BeregnTotalSaertilskuddResultat;
+import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.Grunnlag;
 import no.nav.bidrag.beregn.saertilskudd.rest.exception.UgyldigInputException;
+import no.nav.bidrag.beregn.saertilskudd.rest.mapper.BPAndelSaertilskuddCoreMapper;
+import no.nav.bidrag.beregn.saertilskudd.rest.mapper.BidragsevneCoreMapper;
+import no.nav.bidrag.beregn.saertilskudd.rest.mapper.SaertilskuddCoreMapper;
+import no.nav.bidrag.beregn.saertilskudd.rest.mapper.SamvaersfradragCoreMapper;
 import no.nav.bidrag.beregn.samvaersfradrag.SamvaersfradragCore;
 import no.nav.bidrag.beregn.samvaersfradrag.dto.BeregnSamvaersfradragGrunnlagCore;
 import no.nav.bidrag.beregn.samvaersfradrag.dto.BeregnSamvaersfradragResultatCore;
@@ -60,30 +44,39 @@ public class BeregnSaertilskuddService {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(BeregnSaertilskuddService.class);
 
-  private static final String BIDRAGSEVNE = "Bidragsevne";
-  private static final String BP_ANDEL_SAERTILSKUDD = "BPsAndelSaertilskudd";
-
   private final SjablonConsumer sjablonConsumer;
   private final BidragsevneCore bidragsevneCore;
   private final BPsAndelSaertilskuddCore bpAndelSaertilskuddCore;
   private final SamvaersfradragCore samvaersfradragCore;
   private final SaertilskuddCore saertilskuddCore;
+  private final BidragsevneCoreMapper bidragsevneCoreMapper;
+  private final BPAndelSaertilskuddCoreMapper bpAndelSaertilskuddCoreMapper;
+  private final SamvaersfradragCoreMapper samvaersfradragCoreMapper;
+  private final SaertilskuddCoreMapper saertilskuddCoreMapper;
 
   public BeregnSaertilskuddService(SjablonConsumer sjablonConsumer, BidragsevneCore bidragsevneCore, BPsAndelSaertilskuddCore bpAndelSaertilskuddCore,
-      SamvaersfradragCore samvaersfradragCore, SaertilskuddCore saertilskuddCore) {
+      SamvaersfradragCore samvaersfradragCore, SaertilskuddCore saertilskuddCore, BidragsevneCoreMapper bidragsevneCoreMapper,
+      BPAndelSaertilskuddCoreMapper bpAndelSaertilskuddCoreMapper, SamvaersfradragCoreMapper samvaersfradragCoreMapper,
+      SaertilskuddCoreMapper saertilskuddCoreMapper) {
     this.sjablonConsumer = sjablonConsumer;
     this.bidragsevneCore = bidragsevneCore;
     this.bpAndelSaertilskuddCore = bpAndelSaertilskuddCore;
     this.samvaersfradragCore = samvaersfradragCore;
     this.saertilskuddCore = saertilskuddCore;
+    this.bidragsevneCoreMapper = bidragsevneCoreMapper;
+    this.bpAndelSaertilskuddCoreMapper = bpAndelSaertilskuddCoreMapper;
+    this.samvaersfradragCoreMapper = samvaersfradragCoreMapper;
+    this.saertilskuddCoreMapper = saertilskuddCoreMapper;
   }
 
   public HttpResponse<BeregnTotalSaertilskuddResultat> beregn(BeregnTotalSaertilskuddGrunnlag beregnTotalSaertilskuddGrunnlag) {
 
     // Kontroll av felles inputdata
-    beregnTotalSaertilskuddGrunnlag.validerTotalSaertilskuddGrunnlag();
-    beregnTotalSaertilskuddGrunnlag.getSoknadsbarnGrunnlag().validerSoknadsbarn();
-    beregnTotalSaertilskuddGrunnlag.validerInntekt();
+    beregnTotalSaertilskuddGrunnlag.valider();
+    // TODO: Skal vi validere soknadsbarn her?
+//    SoknadsbarnUtil.validerSoknadsbarnId(beregnTotalSaertilskuddGrunnlag);
+
+    Integer soknadsBarnId = getSoknadsBarnId(beregnTotalSaertilskuddGrunnlag);
 
     // Lager en map for sjablontall (id og navn)
     var sjablontallMap = new HashMap<String, SjablonTallNavn>();
@@ -95,30 +88,45 @@ public class BeregnSaertilskuddService {
     var sjablonListe = hentSjabloner();
 
     // Bygger grunnlag til core og utfører delberegninger
-    return utfoerDelberegninger(beregnTotalSaertilskuddGrunnlag, sjablontallMap, sjablonListe);
+    return utfoerDelberegninger(beregnTotalSaertilskuddGrunnlag, sjablontallMap, sjablonListe, soknadsBarnId);
+  }
+
+  private Integer getSoknadsBarnId(BeregnTotalSaertilskuddGrunnlag beregnTotalSaertilskuddGrunnlag) {
+    Integer soknadsbarnId = null;
+    for(Grunnlag grunnlag : beregnTotalSaertilskuddGrunnlag.getGrunnlagListe()) {
+      if (grunnlag.getType().equals("SoknadsbarnInfo") && grunnlag.getInnhold().has("id")) {
+          soknadsbarnId = Integer.parseInt(grunnlag.getInnhold().get("id").asText());
+      }
+    }
+    if (soknadsbarnId == null) {
+      throw new UgyldigInputException("Soknadsbarn id mangler");
+    }
+    return soknadsbarnId;
   }
 
   //==================================================================================================================================================
 
   // Bygger grunnlag til core og kaller delberegninger
   private HttpResponse<BeregnTotalSaertilskuddResultat> utfoerDelberegninger(BeregnTotalSaertilskuddGrunnlag beregnTotalSaertilskuddGrunnlag,
-      Map<String, SjablonTallNavn> sjablontallMap, SjablonListe sjablonListe) {
+      Map<String, SjablonTallNavn> sjablontallMap, SjablonListe sjablonListe, Integer soknadsBarnId) {
 
     // ++ Bidragsevne
-    var bidragsevneGrunnlagTilCore = byggBidragsevneGrunnlagTilCore(beregnTotalSaertilskuddGrunnlag, sjablontallMap, sjablonListe);
+    var bidragsevneGrunnlagTilCore = bidragsevneCoreMapper.mapBidragsevneGrunnlagTilCore(beregnTotalSaertilskuddGrunnlag, sjablontallMap,
+        sjablonListe);
     var bidragsevneResultatFraCore = beregnBidragsevne(bidragsevneGrunnlagTilCore);
 
     // ++ BPs andel av særtilskudd
-    var bpAndelSaertilskuddGrunnlagTilCore = byggBPAndelSaertilskuddGrunnlagTilCore(beregnTotalSaertilskuddGrunnlag, sjablontallMap, sjablonListe);
+    var bpAndelSaertilskuddGrunnlagTilCore = bpAndelSaertilskuddCoreMapper.mapBPsAndelSaertilskuddGrunnlagTilCore(beregnTotalSaertilskuddGrunnlag, sjablontallMap, sjablonListe);
     var bpAndelSaertilskuddResultatFraCore = beregnBPAndelSaertilskudd(bpAndelSaertilskuddGrunnlagTilCore);
 
+
     // ++ Samværsfradrag
-    var samvaersfradragGrunnlagTilCore = byggSamvaersfradragGrunnlagTilCore(beregnTotalSaertilskuddGrunnlag, sjablonListe);
+    var samvaersfradragGrunnlagTilCore = samvaersfradragCoreMapper.mapSamvaersfradragGrunnlagTilCore(beregnTotalSaertilskuddGrunnlag, sjablonListe);
     var samvaersfradragResultatFraCore = beregnSamvaersfradrag(samvaersfradragGrunnlagTilCore);
 
     // ++ Særtilskudd (totalberegning)
-    var saertilskuddGrunnlagTilCore = byggSaertilskuddGrunnlagTilCore(beregnTotalSaertilskuddGrunnlag, bidragsevneResultatFraCore,
-        bpAndelSaertilskuddResultatFraCore, samvaersfradragResultatFraCore);
+    var saertilskuddGrunnlagTilCore = saertilskuddCoreMapper.mapSaertilskuddGrunnlagTilCore(beregnTotalSaertilskuddGrunnlag, bidragsevneResultatFraCore,
+        bpAndelSaertilskuddResultatFraCore, samvaersfradragResultatFraCore, soknadsBarnId);
     var saertilskuddResultatFraCore = beregnSaertilskudd(saertilskuddGrunnlagTilCore);
 
     // Bygger responsobjekt
@@ -127,92 +135,6 @@ public class BeregnSaertilskuddService {
         new BeregnBPAndelSaertilskuddResultat(bpAndelSaertilskuddResultatFraCore),
         new BeregnBPSamvaersfradragResultat(samvaersfradragResultatFraCore),
         new BeregnSaertilskuddResultat(saertilskuddResultatFraCore)));
-  }
-
-  //==================================================================================================================================================
-
-  // Bygger grunnlag til core for beregning av bidragsevne
-  private BeregnBidragsevneGrunnlagCore byggBidragsevneGrunnlagTilCore(BeregnTotalSaertilskuddGrunnlag beregnTotalSaertilskuddGrunnlag,
-      Map<String, SjablonTallNavn> sjablontallMap, SjablonListe sjablonListe) {
-
-    // Hent aktuelle sjabloner
-    var sjablonPeriodeCoreListe = new ArrayList<SjablonPeriodeCore>();
-    sjablonPeriodeCoreListe.addAll(
-        mapSjablonSjablontall(sjablonListe.getSjablonSjablontallResponse(), BIDRAGSEVNE, beregnTotalSaertilskuddGrunnlag, sjablontallMap));
-    sjablonPeriodeCoreListe.addAll(mapSjablonBidragsevne(sjablonListe.getSjablonBidragsevneResponse(), beregnTotalSaertilskuddGrunnlag));
-    sjablonPeriodeCoreListe
-        .addAll(mapSjablonTrinnvisSkattesats(sjablonListe.getSjablonTrinnvisSkattesatsResponse(), beregnTotalSaertilskuddGrunnlag));
-
-    // Bygg grunnlag for beregning av bidragsevne. Her gjøres også kontroll av inputdata
-    return beregnTotalSaertilskuddGrunnlag.bidragsevneTilCore(sjablonPeriodeCoreListe);
-  }
-
-  // Bygger grunnlag til core for beregning av BPs andel av særtilskudd
-  private BeregnBPsAndelSaertilskuddGrunnlagCore byggBPAndelSaertilskuddGrunnlagTilCore(
-      BeregnTotalSaertilskuddGrunnlag beregnTotalSaertilskuddGrunnlag, Map<String, SjablonTallNavn> sjablontallMap, SjablonListe sjablonListe) {
-
-    // Hent aktuelle sjabloner
-    var sjablonPeriodeCoreListe = mapSjablonSjablontall(sjablonListe.getSjablonSjablontallResponse(), BP_ANDEL_SAERTILSKUDD,
-        beregnTotalSaertilskuddGrunnlag, sjablontallMap);
-
-    // Bygg grunnlag for beregning av BPs andel av særtilskudd. Her gjøres også kontroll av inputdata
-    return beregnTotalSaertilskuddGrunnlag.bpAndelSaertilskuddTilCore(sjablonPeriodeCoreListe);
-  }
-
-  // Bygger grunnlag til core for beregning av samværsfradrag
-  private BeregnSamvaersfradragGrunnlagCore byggSamvaersfradragGrunnlagTilCore(BeregnTotalSaertilskuddGrunnlag beregnTotalSaertilskuddGrunnlag,
-      SjablonListe sjablonListe) {
-
-    // Hent aktuelle sjabloner
-    var sjablonPeriodeCoreListe = mapSjablonSamvaersfradrag(sjablonListe.getSjablonSamvaersfradragResponse(), beregnTotalSaertilskuddGrunnlag);
-
-    // Bygg grunnlag for beregning av samværsfradrag. Her gjøres også kontroll av inputdata
-    return beregnTotalSaertilskuddGrunnlag.samvaersfradragTilCore(sjablonPeriodeCoreListe);
-  }
-
-  // Bygger grunnlag til core for beregning av særtilskudd
-  private BeregnSaertilskuddGrunnlagCore byggSaertilskuddGrunnlagTilCore(BeregnTotalSaertilskuddGrunnlag beregnTotalSaertilskuddGrunnlag,
-      BeregnBidragsevneResultatCore bidragsevneResultatFraCore, BeregnBPsAndelSaertilskuddResultatCore bpAndelSaertilskuddResultatFraCore,
-      BeregnSamvaersfradragResultatCore samvaersfradragResultatFraCore) {
-
-    var soknadsbarnPersonId = beregnTotalSaertilskuddGrunnlag.getSoknadsbarnGrunnlag().getSoknadsbarnPersonId();
-
-    // Løp gjennom output fra beregning av bidragsevne og bygg opp ny input-liste til core
-    var bidragsevnePeriodeCoreListe =
-        bidragsevneResultatFraCore.getResultatPeriodeListe()
-            .stream()
-            .map(resultat -> new BidragsevnePeriodeCore(
-                new PeriodeCore(resultat.getResultatDatoFraTil().getPeriodeDatoFra(), resultat.getResultatDatoFraTil().getPeriodeDatoTil()),
-                resultat.getResultatBeregning().getResultatEvneBelop()))
-            .collect(toList());
-
-    // Løp gjennom output fra beregning av BPs andel særtilskudd og bygg opp ny input-liste til core
-    var bpAndelSaertilskuddPeriodeCoreListe =
-        bpAndelSaertilskuddResultatFraCore.getResultatPeriodeListe()
-            .stream()
-            .map(resultat -> new BPsAndelSaertilskuddPeriodeCore(
-                new PeriodeCore(resultat.getResultatDatoFraTil().getPeriodeDatoFra(), resultat.getResultatDatoFraTil().getPeriodeDatoTil()),
-                resultat.getResultatBeregning().getResultatAndelProsent(), resultat.getResultatBeregning().getResultatAndelBelop(),
-                resultat.getResultatBeregning().getBarnetErSelvforsorget()))
-            .collect(toList());
-
-    // Løp gjennom output fra beregning av samværsfradrag og bygg opp ny input-liste til core
-    var samvaersfradragPeriodeCoreListe =
-        samvaersfradragResultatFraCore.getResultatPeriodeListe()
-            .stream()
-            .flatMap(resultatperiode -> resultatperiode.getResultatBeregningListe()
-                .stream()
-                .map(resultatberegning ->
-                    new SamvaersfradragPeriodeCore(
-                        new PeriodeCore(resultatperiode.getResultatDatoFraTil().getPeriodeDatoFra(),
-                            resultatperiode.getResultatDatoFraTil().getPeriodeDatoTil()),
-                        resultatberegning.getBarnPersonId(),
-                        resultatberegning.getResultatSamvaersfradragBelop())))
-            .collect(toList());
-
-    // Bygg grunnlag for beregning av barnebidrag. Her gjøres også kontroll av inputdata
-    return beregnTotalSaertilskuddGrunnlag.saertilskuddTilCore(soknadsbarnPersonId, bidragsevnePeriodeCoreListe, bpAndelSaertilskuddPeriodeCoreListe,
-        samvaersfradragPeriodeCoreListe);
   }
 
   //==================================================================================================================================================
@@ -344,97 +266,5 @@ public class BeregnSaertilskuddService {
     LOGGER.debug("Antall sjabloner hentet av type Trinnvis skattesats: {}", sjablonTrinnvisSkattesatsListe.size());
 
     return new SjablonListe(sjablonSjablontallListe, sjablonSamvaersfradragListe, sjablonBidragsevneListe, sjablonTrinnvisSkattesatsListe);
-  }
-
-  // Mapper sjabloner av typen sjablontall
-  // Filtrerer bort de sjablonene som ikke brukes i den aktuelle delberegningen og de som ikke er innenfor intervallet beregnDatoFra-beregnDatoTil
-  private List<SjablonPeriodeCore> mapSjablonSjablontall(List<Sjablontall> sjablonSjablontallListe, String delberegning,
-      BeregnTotalSaertilskuddGrunnlag beregnTotalSaertilskuddGrunnlag, Map<String, SjablonTallNavn> sjablontallMap) {
-
-    var beregnDatoFra = beregnTotalSaertilskuddGrunnlag.getBeregnDatoFra();
-    var beregnDatoTil = beregnTotalSaertilskuddGrunnlag.getBeregnDatoTil();
-
-    return sjablonSjablontallListe
-        .stream()
-        .filter(sjablon -> (sjablon.getDatoFom().isBefore(beregnDatoTil) && (!(sjablon.getDatoTom().isBefore(beregnDatoFra)))))
-        .filter(sjablon -> filtrerSjablonTall(sjablontallMap.getOrDefault(sjablon.getTypeSjablon(), SjablonTallNavn.DUMMY), delberegning))
-        .map(sjablon -> new SjablonPeriodeCore(
-            new PeriodeCore(sjablon.getDatoFom(), sjablon.getDatoTom()),
-            sjablontallMap.getOrDefault(sjablon.getTypeSjablon(), SjablonTallNavn.DUMMY).getNavn(),
-            emptyList(),
-            singletonList(new SjablonInnholdCore(SjablonInnholdNavn.SJABLON_VERDI.getNavn(), sjablon.getVerdi()))))
-        .collect(toList());
-  }
-
-  // Mapper sjabloner av typen samværsfradrag
-  // Filtrerer bort de sjablonene som ikke er innenfor intervallet beregnDatoFra-beregnDatoTil
-  private List<SjablonPeriodeCore> mapSjablonSamvaersfradrag(List<Samvaersfradrag> sjablonSamvaersfradragListe,
-      BeregnTotalSaertilskuddGrunnlag beregnTotalSaertilskuddGrunnlag) {
-
-    var beregnDatoFra = beregnTotalSaertilskuddGrunnlag.getBeregnDatoFra();
-    var beregnDatoTil = beregnTotalSaertilskuddGrunnlag.getBeregnDatoTil();
-
-    return sjablonSamvaersfradragListe
-        .stream()
-        .filter(sjablon -> (sjablon.getDatoFom().isBefore(beregnDatoTil) && (!(sjablon.getDatoTom().isBefore(beregnDatoFra)))))
-        .map(sjablon -> new SjablonPeriodeCore(
-            new PeriodeCore(sjablon.getDatoFom(), sjablon.getDatoTom()),
-            SjablonNavn.SAMVAERSFRADRAG.getNavn(),
-            asList(new SjablonNokkelCore(SjablonNokkelNavn.SAMVAERSKLASSE.getNavn(), sjablon.getSamvaersklasse()),
-                new SjablonNokkelCore(SjablonNokkelNavn.ALDER_TOM.getNavn(), String.valueOf(sjablon.getAlderTom()))),
-            asList(new SjablonInnholdCore(SjablonInnholdNavn.ANTALL_DAGER_TOM.getNavn(), BigDecimal.valueOf(sjablon.getAntDagerTom())),
-                new SjablonInnholdCore(SjablonInnholdNavn.ANTALL_NETTER_TOM.getNavn(), BigDecimal.valueOf(sjablon.getAntNetterTom())),
-                new SjablonInnholdCore(SjablonInnholdNavn.FRADRAG_BELOP.getNavn(), sjablon.getBelopFradrag()))))
-        .collect(toList());
-  }
-
-  // Mapper sjabloner av typen bidragsevne
-  // Filtrerer bort de sjablonene som ikke er innenfor intervallet beregnDatoFra-beregnDatoTil
-  private List<SjablonPeriodeCore> mapSjablonBidragsevne(List<Bidragsevne> sjablonBidragsevneListe,
-      BeregnTotalSaertilskuddGrunnlag beregnTotalSaertilskuddGrunnlag) {
-
-    var beregnDatoFra = beregnTotalSaertilskuddGrunnlag.getBeregnDatoFra();
-    var beregnDatoTil = beregnTotalSaertilskuddGrunnlag.getBeregnDatoTil();
-
-    return sjablonBidragsevneListe
-        .stream()
-        .filter(sjablon -> (sjablon.getDatoFom().isBefore(beregnDatoTil) && (!(sjablon.getDatoTom().isBefore(beregnDatoFra)))))
-        .map(sjablon -> new SjablonPeriodeCore(
-            new PeriodeCore(sjablon.getDatoFom(), sjablon.getDatoTom()),
-            SjablonNavn.BIDRAGSEVNE.getNavn(),
-            singletonList(new SjablonNokkelCore(SjablonNokkelNavn.BOSTATUS.getNavn(), sjablon.getBostatus())),
-            asList(new SjablonInnholdCore(SjablonInnholdNavn.BOUTGIFT_BELOP.getNavn(), sjablon.getBelopBoutgift()),
-                new SjablonInnholdCore(SjablonInnholdNavn.UNDERHOLD_BELOP.getNavn(), sjablon.getBelopUnderhold()))))
-        .collect(toList());
-  }
-
-  // Mapper sjabloner av typen trinnvis skattesats
-  // Filtrerer bort de sjablonene som ikke er innenfor intervallet beregnDatoFra-beregnDatoTil
-  private List<SjablonPeriodeCore> mapSjablonTrinnvisSkattesats(List<TrinnvisSkattesats> sjablonTrinnvisSkattesatsListe,
-      BeregnTotalSaertilskuddGrunnlag beregnTotalSaertilskuddGrunnlag) {
-
-    var beregnDatoFra = beregnTotalSaertilskuddGrunnlag.getBeregnDatoFra();
-    var beregnDatoTil = beregnTotalSaertilskuddGrunnlag.getBeregnDatoTil();
-
-    return sjablonTrinnvisSkattesatsListe
-        .stream()
-        .filter(sjablon -> (sjablon.getDatoFom().isBefore(beregnDatoTil) && (!(sjablon.getDatoTom().isBefore(beregnDatoFra)))))
-        .map(sjablon -> new SjablonPeriodeCore(
-            new PeriodeCore(sjablon.getDatoFom(), sjablon.getDatoTom()),
-            SjablonNavn.TRINNVIS_SKATTESATS.getNavn(),
-            emptyList(),
-            asList(new SjablonInnholdCore(SjablonInnholdNavn.INNTEKTSGRENSE_BELOP.getNavn(), sjablon.getInntektgrense()),
-                new SjablonInnholdCore(SjablonInnholdNavn.SKATTESATS_PROSENT.getNavn(), sjablon.getSats()))))
-        .collect(toList());
-  }
-
-  // Sjekker om en type SjablonTall er i bruk for en delberegning
-  private boolean filtrerSjablonTall(SjablonTallNavn sjablonTallNavn, String delberegning) {
-
-    return switch (delberegning) {
-      case BIDRAGSEVNE -> sjablonTallNavn.getBidragsevne();
-      case BP_ANDEL_SAERTILSKUDD -> sjablonTallNavn.getBpAndelSaertilskudd();
-      default -> false;
-    };
   }
 }

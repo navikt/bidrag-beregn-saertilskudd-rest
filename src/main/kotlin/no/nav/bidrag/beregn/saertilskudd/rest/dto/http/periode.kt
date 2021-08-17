@@ -8,22 +8,22 @@ import java.time.LocalDate
 // Felles
 @Schema(description = "Periode (fra-til dato)")
 data class Periode(
-    @Schema(description = "Fra-dato") var periodeDatoFra: LocalDate? = null,
-    @Schema(description = "Til-dato") var periodeDatoTil: LocalDate? = null
+        @Schema(description = "Fra-dato") var datoFom: LocalDate? = null,
+        @Schema(description = "Til-dato") var datoTil: LocalDate? = null
 ) {
 
     constructor(periode: PeriodeCore) : this(
-        periodeDatoFra = periode.periodeDatoFra,
-        periodeDatoTil = periode.periodeDatoTil
+        datoFom = periode.periodeDatoFra,
+        datoTil = periode.periodeDatoTil
     )
 
     fun tilCore(dataElement: String) = PeriodeCore(
-        periodeDatoFra = periodeDatoFra ?: throw UgyldigInputException(dataElement + "DatoFra kan ikke være null"),
-        periodeDatoTil = periodeDatoTil ?: throw UgyldigInputException(dataElement + "DatoTil kan ikke være null")
+        periodeDatoFra = datoFom ?: throw UgyldigInputException(dataElement + "DatoFra kan ikke være null"),
+        periodeDatoTil = datoTil ?: throw UgyldigInputException(dataElement + "DatoTil kan ikke være null")
     )
 
     fun valider(dataElement: String) {
-        if (periodeDatoFra == null) throw UgyldigInputException(dataElement + "DatoFra kan ikke være null")
-        if (periodeDatoTil == null) throw UgyldigInputException(dataElement + "DatoTil kan ikke være null")
+        if (datoFom == null) throw UgyldigInputException(dataElement + "DatoFra kan ikke være null")
+        if (datoTil == null) throw UgyldigInputException(dataElement + "DatoTil kan ikke være null")
     }
 }
