@@ -1,14 +1,9 @@
 package no.nav.bidrag.beregn.saertilskudd.rest.mapper;
 
-import static com.fasterxml.jackson.module.kotlin.ExtensionsKt.jacksonObjectMapper;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -38,7 +33,6 @@ import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.InntektRolle;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.Rolle;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.Saerfradrag;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.Skatteklasse;
-import no.nav.bidrag.beregn.saertilskudd.rest.exception.UgyldigInputException;
 
 public class BidragsevneCoreMapper extends CoreMapper {
 
@@ -55,43 +49,30 @@ public class BidragsevneCoreMapper extends CoreMapper {
     // Løper gjennom alle grunnlagene og identifiserer de som skal mappes til bidragsevne core
     for (Grunnlag grunnlag : beregnTotalSaertilskuddGrunnlag.getGrunnlagListe()) {
       switch (grunnlag.getType()) {
-        case INNTEKT_TYPE -> {
-          InntektRolle inntektRolle = jsonNodeTilObjekt(grunnlag.getInnhold(), InntektRolle.class);
+        case INNTEKT -> {
+          InntektRolle inntektRolle = grunnlagTilObjekt(grunnlag, InntektRolle.class);
           inntektRolle.valider();
           Rolle rolle = inntektRolle.getRolle();
-//          String rolle;
-//
-//          if (grunnlag.getInnhold().has("rolle")) {
-//            rolle = grunnlag.getInnhold().get("rolle").asText();
-//            evaluerStringType(rolle, "rolle", "Inntekt");
-//          } else {
-//            throw new UgyldigInputException("rolle i objekt av type Inntekt mangler");
-//          }
           if (rolle.equals(Rolle.BP)) {
-            BPInntekt bpInntekt = jsonNodeTilObjekt(grunnlag.getInnhold(), BPInntekt.class);
-            inntektBPPeriodeListe.add(bpInntekt.TilCore(grunnlag.getReferanse()));
-//            inntektBPPeriodeListe.add(mapInntektBidragsevne(bpInntekt));
+            BPInntekt bpInntekt = grunnlagTilObjekt(grunnlag, BPInntekt.class);
+            inntektBPPeriodeListe.add(bpInntekt.tilCore(grunnlag.getReferanse()));
           }
         }
-        case BARN_I_HUSSTAND_TYPE -> {
-          BarnIHusstand barnIHusstand = jsonNodeTilObjekt(grunnlag.getInnhold(), BarnIHusstand.class);
-          antallBarnIEgetHusholdPeriodeListe.add(barnIHusstand.TilCore(grunnlag.getReferanse()));
-//          antallBarnIEgetHusholdPeriodeListe.add(mapBarnIHusstand(grunnlag));
+        case BARN_I_HUSSTAND -> {
+          BarnIHusstand barnIHusstand = grunnlagTilObjekt(grunnlag, BarnIHusstand.class);
+          antallBarnIEgetHusholdPeriodeListe.add(barnIHusstand.tilCore(grunnlag.getReferanse()));
         }
-        case BOSTATUS_TYPE -> {
-          Bostatus bostatus = jsonNodeTilObjekt(grunnlag.getInnhold(), Bostatus.class);
-          bostatusPeriodeListe.add(bostatus.TilCore(grunnlag.getReferanse()));
-//          bostatusPeriodeListe.add(mapBostatus(grunnlag));
+        case BOSTATUS -> {
+          Bostatus bostatus = grunnlagTilObjekt(grunnlag, Bostatus.class);
+          bostatusPeriodeListe.add(bostatus.tilCore(grunnlag.getReferanse()));
         }
-        case SAERFRADRAG_TYPE -> {
-          Saerfradrag saerfradrag = jsonNodeTilObjekt(grunnlag.getInnhold(), Saerfradrag.class);
-          saerfradragPeriodeListe.add(saerfradrag.TilCore(grunnlag.getReferanse()));
-//          saerfradragPeriodeListe.add(mapSaerfradrag(grunnlag));
+        case SAERFRADRAG -> {
+          Saerfradrag saerfradrag = grunnlagTilObjekt(grunnlag, Saerfradrag.class);
+          saerfradragPeriodeListe.add(saerfradrag.tilCore(grunnlag.getReferanse()));
         }
-        case SKATTEKLASSE_TYPE -> {
-          Skatteklasse skatteklasse = jsonNodeTilObjekt(grunnlag.getInnhold(), Skatteklasse.class);
-          skatteklassePeriodeCoreListe.add(skatteklasse.TilCore(grunnlag.getReferanse()));
-//          skatteklassePeriodeCoreListe.add(mapSkatteklasse(grunnlag));
+        case SKATTEKLASSE -> {
+          Skatteklasse skatteklasse = grunnlagTilObjekt(grunnlag, Skatteklasse.class);
+          skatteklassePeriodeCoreListe.add(skatteklasse.tilCore(grunnlag.getReferanse()));
         }
       }
     }
@@ -106,44 +87,6 @@ public class BidragsevneCoreMapper extends CoreMapper {
         inntektBPPeriodeListe, skatteklassePeriodeCoreListe, bostatusPeriodeListe, antallBarnIEgetHusholdPeriodeListe, saerfradragPeriodeListe,
         sjablonPeriodeCoreListe);
   }
-
-//  private InntektPeriodeCore mapInntektBidragsevne(BPInntekt bpInntekt) {
-//    String inntektType = getNodeIfExists(grunnlag.getInnhold(), grunnlag.getType(), "inntektType").asText();
-//    evaluerStringType(inntektType, "inntektType", "Inntekt");
-//    JsonNode belopNode = getNodeIfExists(grunnlag.getInnhold(), grunnlag.getType(), "belop");
-//    evaluerNumberType(belopNode, "belop");
-//    String belop = belopNode.asText();
-//    return new InntektPeriodeCore(grunnlag.getReferanse(), mapPeriode(grunnlag.getInnhold(), grunnlag.getType()),
-//        inntektType, new BigDecimal(belop));
-//  }
-//
-//  private SkatteklassePeriodeCore mapSkatteklasse(Grunnlag grunnlag) {
-//    JsonNode skatteKlasseIdNode = getNodeIfExists(grunnlag.getInnhold(), grunnlag.getType(), "skatteklasseId");
-//    evaluerNumberType(skatteKlasseIdNode, "skatteklasseId");
-//    String skatteklasseId = skatteKlasseIdNode.asText();
-//    return new SkatteklassePeriodeCore(grunnlag.getReferanse(), mapPeriode(grunnlag.getInnhold(), grunnlag.getType()),
-//        Integer.parseInt(skatteklasseId));
-//  }
-//
-//  private SaerfradragPeriodeCore mapSaerfradrag(Grunnlag grunnlag) {
-//    String saerfradragKode = getNodeIfExists(grunnlag.getInnhold(), grunnlag.getType(), "saerfradragKode").asText();
-//    evaluerStringType(saerfradragKode, "saerfradragKode", "Saerfradrag");
-//    return new SaerfradragPeriodeCore(grunnlag.getReferanse(), mapPeriode(grunnlag.getInnhold(), grunnlag.getType()), saerfradragKode);
-//  }
-//
-//  private AntallBarnIEgetHusholdPeriodeCore mapBarnIHusstand(Grunnlag grunnlag) {
-//    JsonNode antallBarnNode = getNodeIfExists(grunnlag.getInnhold(), grunnlag.getType(), "antall");
-//    evaluerNumberType(antallBarnNode, "antall");
-//    String antallBarn = antallBarnNode.asText();
-//    return new AntallBarnIEgetHusholdPeriodeCore(grunnlag.getReferanse(), mapPeriode(grunnlag.getInnhold(), grunnlag.getType()),
-//        new BigDecimal(antallBarn));
-//  }
-//
-//  private BostatusPeriodeCore mapBostatus(Grunnlag grunnlag) {
-//    String bostatusKode = getNodeIfExists(grunnlag.getInnhold(), grunnlag.getType(), "bostatusKode").asText();
-//    evaluerStringType(bostatusKode, "bostatusKode", "Bostatus");
-//    return new BostatusPeriodeCore(grunnlag.getReferanse(), mapPeriode(grunnlag.getInnhold(), grunnlag.getType()), bostatusKode);
-//  }
 
   private List<SjablonPeriodeCore> mapSjablonBidragsevne(List<Bidragsevne> sjablonBidragsevneListe,
       BeregnTotalSaertilskuddGrunnlag beregnTotalSaertilskuddGrunnlag) {

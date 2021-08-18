@@ -171,7 +171,7 @@ data class BeregnTotalSaertilskuddGrunnlag(
 @Schema(description = "Grunnlag")
 data class Grunnlag(
         @Schema(description = "Referanse") val referanse: String? = null,
-        @Schema(description = "Type") val type: String? = null,
+        @Schema(description = "Type") val type: GrunnlagType? = null,
         @Schema(description = "Innhold") val innhold: JsonNode? = null
 ) {
     fun valider() {

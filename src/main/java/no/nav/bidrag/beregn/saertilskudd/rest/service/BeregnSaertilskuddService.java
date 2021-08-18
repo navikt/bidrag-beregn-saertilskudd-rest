@@ -25,6 +25,7 @@ import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BeregnSaertilskuddResulta
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BeregnTotalSaertilskuddGrunnlag;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BeregnTotalSaertilskuddResultat;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.Grunnlag;
+import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.GrunnlagType;
 import no.nav.bidrag.beregn.saertilskudd.rest.exception.UgyldigInputException;
 import no.nav.bidrag.beregn.saertilskudd.rest.mapper.BPAndelSaertilskuddCoreMapper;
 import no.nav.bidrag.beregn.saertilskudd.rest.mapper.BidragsevneCoreMapper;
@@ -94,7 +95,7 @@ public class BeregnSaertilskuddService {
   private Integer getSoknadsBarnId(BeregnTotalSaertilskuddGrunnlag beregnTotalSaertilskuddGrunnlag) {
     Integer soknadsbarnId = null;
     for(Grunnlag grunnlag : beregnTotalSaertilskuddGrunnlag.getGrunnlagListe()) {
-      if (grunnlag.getType().equals("SoknadsbarnInfo") && grunnlag.getInnhold().has("id")) {
+      if (grunnlag.getType().equals(GrunnlagType.SOKNADSBARN_INFO) && grunnlag.getInnhold().has("id")) {
           soknadsbarnId = Integer.parseInt(grunnlag.getInnhold().get("id").asText());
       }
     }

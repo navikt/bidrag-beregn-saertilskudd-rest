@@ -7,7 +7,6 @@ import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.validator.GenericValidator.isDate;
 
-import com.fasterxml.jackson.core.JsonGenerator.Feature;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -26,6 +25,7 @@ import no.nav.bidrag.beregn.saertilskudd.rest.consumer.Samvaersfradrag;
 import no.nav.bidrag.beregn.saertilskudd.rest.consumer.Sjablontall;
 import no.nav.bidrag.beregn.saertilskudd.rest.consumer.TrinnvisSkattesats;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BeregnTotalSaertilskuddGrunnlag;
+import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.Grunnlag;
 import no.nav.bidrag.beregn.saertilskudd.rest.exception.UgyldigInputException;
 
 
@@ -33,15 +33,6 @@ public abstract class CoreMapper {
 
   protected static final String BP_ANDEL_SAERTILSKUDD = "BPsAndelSaertilskudd";
   protected static final String BIDRAGSEVNE = "Bidragsevne";
-
-  protected static final String SAERFRADRAG_TYPE = "Saerfradrag";
-  protected static final String SKATTEKLASSE_TYPE = "Skatteklasse";
-  protected static final String BARN_I_HUSSTAND_TYPE = "BarnIHusstand";
-  protected static final String BOSTATUS_TYPE = "Bostatus";
-  protected static final String INNTEKT_TYPE = "Inntekt";
-  protected static final String NETTO_SAERTILSKUDD_TYPE= "NettoSaertilskudd";
-  protected static final String SAMVAERSKLASSE_TYPE = "Samvaersklasse";
-  protected static final String LOPENDE_BIDRAG_TYPE = "LopendeBidrag";
 
   // Mapper sjabloner av typen sjablontall
   // Filtrerer bort de sjablonene som ikke brukes i den aktuelle delberegningen og de som ikke er innenfor intervallet beregnDatoFra-beregnDatoTil
@@ -91,45 +82,6 @@ public abstract class CoreMapper {
     };
   }
 
-  // Sjekker om dataelement av typen String er null
-//  protected void evaluerStringType(String verdi, String dataElement, String grunnlagType) {
-//    if (null == verdi || ("null".equals(verdi))) {
-//      throw new UgyldigInputException(dataElement + " i objekt av type " + grunnlagType + " er null");
-//    }
-//  }
-//
-//  protected void evauluerBooleanType(JsonNode booleanNode, String fieldName) {
-//    if(!booleanNode.isBoolean()) {
-//      throw new UgyldigInputException(fieldName + "er ikke av type boolean");
-//    }
-//  }
-//
-//  protected void evaluerNumberType(JsonNode numberNode, String fieldName) {
-//    if(!numberNode.isNumber()) {
-//      throw new UgyldigInputException(fieldName + "er ikke av type number");
-//    }
-//  }
-
-
-//  protected PeriodeCore mapPeriode(JsonNode grunnlagInnhold, String grunnlagType) {
-//    String datoFom = getNodeIfExists(grunnlagInnhold, grunnlagType, "datoFom").asText();
-//    if (!gyldigDato(datoFom)) {
-//      throw new UgyldigInputException("datoFom i objekt av type " + grunnlagType + " mangler, er null eller har ugyldig verdi");
-//    }
-//    String datoTil = getNodeIfExists(grunnlagInnhold, grunnlagType, "datoTil").asText();
-//    if (!gyldigDato(datoTil)) {
-//      throw new UgyldigInputException("datoTil i objekt av type " + grunnlagType + " mangler, er null eller har ugyldig verdi");
-//    }
-//    return new PeriodeCore(LocalDate.parse(datoFom), LocalDate.parse(datoTil));
-//  }
-
-  protected JsonNode getNodeIfExists(JsonNode grunnlagInnhold, String grunnlagType, String fieldName) {
-    if (grunnlagInnhold.has(fieldName)) {
-      return grunnlagInnhold.get(fieldName);
-    }
-    throw new UgyldigInputException(fieldName + " i objekt av type " + grunnlagType + " mangler");
-  }
-
   // Sjekker om dato har gyldig format
   protected boolean gyldigDato(String dato) {
     if (null == dato) {
@@ -160,16 +112,10 @@ public abstract class CoreMapper {
         .collect(toList());
   }
 
-//  protected String hentSoknadsbarnId(JsonNode grunnlagInnhold, String grunnlagType) {
-//    String soknadsbarnId = getNodeIfExists(grunnlagInnhold, grunnlagType, "soknadsbarnId").asText();
-//    evaluerStringType(soknadsbarnId, "soknadsbarnId", grunnlagType);
-//    return soknadsbarnId;
-//  }
-
-  protected <T> T jsonNodeTilObjekt(JsonNode jsonNode, Class<T> contentClass) {
+  protected <T> T grunnlagTilObjekt(Grunnlag grunnlag, Class<T> contentClass) {
     try {
       jacksonObjectMapper().registerModule(new JavaTimeModule());
-      T objekt = jacksonObjectMapper().readValue(jsonNode.toString(), contentClass);
+      T objekt = jacksonObjectMapper().readValue(grunnlag.getInnhold().toString(), contentClass);
       return objekt;
     } catch (JsonProcessingException e) {
       throw new UgyldigInputException("Kunne ikke deserialisere " + contentClass.getName());

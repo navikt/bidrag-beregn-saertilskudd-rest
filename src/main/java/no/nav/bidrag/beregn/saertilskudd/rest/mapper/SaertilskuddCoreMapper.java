@@ -2,8 +2,6 @@ package no.nav.bidrag.beregn.saertilskudd.rest.mapper;
 
 import static java.util.stream.Collectors.toList;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import no.nav.bidrag.beregn.bidragsevne.dto.BeregnBidragsevneResultatCore;
 import no.nav.bidrag.beregn.bpsandelsaertilskudd.dto.BeregnBPsAndelSaertilskuddResultatCore;
@@ -15,6 +13,7 @@ import no.nav.bidrag.beregn.saertilskudd.dto.LopendeBidragPeriodeCore;
 import no.nav.bidrag.beregn.saertilskudd.dto.SamvaersfradragPeriodeCore;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BeregnTotalSaertilskuddGrunnlag;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.Grunnlag;
+import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.GrunnlagType;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.LopendeBidrag;
 import no.nav.bidrag.beregn.samvaersfradrag.dto.BeregnSamvaersfradragResultatCore;
 
@@ -59,34 +58,13 @@ public class SaertilskuddCoreMapper extends CoreMapper {
     var andreLopendeBidragListe = new ArrayList<LopendeBidragPeriodeCore>();
 
     for (Grunnlag grunnlag : beregnTotalSaertilskuddGrunnlag.getGrunnlagListe()) {
-      if (LOPENDE_BIDRAG_TYPE.equals(grunnlag.getType())) {
-        LopendeBidrag lopendeBidrag = jsonNodeTilObjekt(grunnlag.getInnhold(), LopendeBidrag.class);
-        andreLopendeBidragListe.add(lopendeBidrag.TilCore(grunnlag.getReferanse()));
-//        var soknadsbarnId = hentSoknadsbarnId(grunnlag.getInnhold(), grunnlag.getType());
-//        andreLopendeBidragListe.add(mapLopendeBidrag(grunnlag, Integer.parseInt(soknadsbarnId)));
+      if (GrunnlagType.LOPENDE_BIDRAG.equals(grunnlag.getType())) {
+        LopendeBidrag lopendeBidrag = grunnlagTilObjekt(grunnlag, LopendeBidrag.class);
+        andreLopendeBidragListe.add(lopendeBidrag.tilCore(grunnlag.getReferanse()));
       }
     }
 
     return new BeregnSaertilskuddGrunnlagCore(beregnTotalSaertilskuddGrunnlag.getBeregnDatoFra(), beregnTotalSaertilskuddGrunnlag.getBeregnDatoTil(),
         soknadsBarnId, bidragsevnePeriodeCoreListe, bpAndelSaertilskuddPeriodeCoreListe, andreLopendeBidragListe, samvaersfradragPeriodeCoreListe);
   }
-
-//  private LopendeBidragPeriodeCore mapLopendeBidrag(Grunnlag grunnlag, int barnPersonId) {
-//    JsonNode lopendeBidragBelopNode = getNodeIfExists(grunnlag.getInnhold(), grunnlag.getType(), "belop");
-//    evaluerNumberType(lopendeBidragBelopNode, "belop");
-//    String lopendeBidragBelop = lopendeBidragBelopNode.asText();
-//
-//    JsonNode opprinneligBPsAndelUnderholdsKostnadBelopNode = getNodeIfExists(grunnlag.getInnhold(), grunnlag.getType(), "opprinneligBPAndelUnderholdskostnadBelop");
-//    evaluerNumberType(opprinneligBPsAndelUnderholdsKostnadBelopNode, "opprinneligBPAndelUnderholdskostnadBelop");
-//    String opprinneligBPsAndelUnderholdsKostnadBelop = opprinneligBPsAndelUnderholdsKostnadBelopNode.asText();
-//
-//    JsonNode opprinneligSamvaersfradragBelopNode = getNodeIfExists(grunnlag.getInnhold(), grunnlag.getType(), "opprinneligSamvaersfradragBelop");
-//    evaluerNumberType(opprinneligSamvaersfradragBelopNode, "opprinneligSamvaersfradragBelop");
-//    String opprinneligSamvaersfradragBelop = opprinneligSamvaersfradragBelopNode.asText();
-//
-//    JsonNode opprinneligBidragBelopNode = getNodeIfExists(grunnlag.getInnhold(), grunnlag.getType(), "opprinneligBidragBelop");
-//    evaluerNumberType(opprinneligBidragBelopNode, "opprinneligBidragBelop");
-//    String opprinneligBidragBelop = opprinneligBidragBelopNode.asText();
-//    return new LopendeBidragPeriodeCore(grunnlag.getReferanse(), mapPeriode(grunnlag.getInnhold(), grunnlag.getType()), barnPersonId, new BigDecimal(lopendeBidragBelop), new BigDecimal(opprinneligBPsAndelUnderholdsKostnadBelop), new BigDecimal(opprinneligSamvaersfradragBelop), new BigDecimal(opprinneligBidragBelop));
-//  }
 }
