@@ -1,44 +1,12 @@
 package no.nav.bidrag.beregn.saertilskudd.rest.dto.http
 
 import io.swagger.v3.oas.annotations.media.Schema
-import no.nav.bidrag.beregn.saertilskudd.rest.exception.UgyldigInputException
 import no.nav.bidrag.beregn.samvaersfradrag.dto.BeregnSamvaersfradragResultatCore
 import no.nav.bidrag.beregn.samvaersfradrag.dto.GrunnlagBeregningPeriodisertCore
 import no.nav.bidrag.beregn.samvaersfradrag.dto.ResultatBeregningCore
 import no.nav.bidrag.beregn.samvaersfradrag.dto.ResultatPeriodeCore
 import no.nav.bidrag.beregn.samvaersfradrag.dto.SamvaersfradragGrunnlagPerBarnCore
-import no.nav.bidrag.beregn.samvaersfradrag.dto.SamvaersklassePeriodeCore
 import java.math.BigDecimal
-import java.time.LocalDate
-
-// Grunnlag
-@Schema(description = "Grunnlaget for en samværsfradragberegning for bidragspliktig")
-data class BeregnBPSamvaersfradragGrunnlag(
-    @Schema(description = "Periodisert liste over bidragspliktiges samværsklasser") val samvaersklassePeriodeListe: List<SamvaersklassePeriode>? = null
-)
-
-@Schema(description = "Bidragspliktiges samværsklasse")
-data class SamvaersklassePeriode(
-    @Schema(description = "Bidragspliktiges samværsklasse fra-til-dato") var samvaersklasseDatoFraTil: Periode? = null,
-    @Schema(description = "Barn person-id") var samvaersklasseBarnPersonId: Int? = null,
-    @Schema(description = "Barn fødselsdato") var samvaersklasseBarnFodselsdato: LocalDate? = null,
-    @Schema(description = "Bidragspliktiges samværsklasse id") var samvaersklasseId: String? = null
-) {
-
-    fun tilCore() = SamvaersklassePeriodeCore(
-        samvaersklassePeriodeDatoFraTil = if (samvaersklasseDatoFraTil != null) samvaersklasseDatoFraTil!!.tilCore(
-            "samvaersklasse"
-        ) else throw UgyldigInputException("samvaersklasseDatoFraTil kan ikke være null"),
-        barnPersonId = if (samvaersklasseBarnPersonId != null) samvaersklasseBarnPersonId!! else throw UgyldigInputException(
-            "samvaersklasseBarnPersonId kan ikke være null"
-        ),
-        barnFodselsdato = if (samvaersklasseBarnFodselsdato != null) samvaersklasseBarnFodselsdato!! else throw UgyldigInputException(
-            "samvaersklasseBarnFodselsdato kan ikke være null"
-        ),
-        samvaersklasse = if (samvaersklasseId != null) samvaersklasseId!! else throw UgyldigInputException("samvaersklasseId kan ikke være null")
-    )
-}
-
 
 // Resultat
 @Schema(description = "Resultatet av en samværsfradragberegning for bidragspliktig")

@@ -5,10 +5,8 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
-import static org.apache.commons.validator.GenericValidator.isDate;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import java.math.BigDecimal;
 import java.util.List;
@@ -80,14 +78,6 @@ public abstract class CoreMapper {
       case BP_ANDEL_SAERTILSKUDD -> sjablonTallNavn.getBpAndelSaertilskudd();
       default -> false;
     };
-  }
-
-  // Sjekker om dato har gyldig format
-  protected boolean gyldigDato(String dato) {
-    if (null == dato) {
-      return false;
-    }
-    return isDate(dato, "yyyy-MM-dd", true);
   }
 
   // Mapper sjabloner av typen samværsfradrag

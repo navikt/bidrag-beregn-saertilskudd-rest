@@ -51,9 +51,8 @@ public class BidragsevneCoreMapper extends CoreMapper {
       switch (grunnlag.getType()) {
         case INNTEKT -> {
           InntektRolle inntektRolle = grunnlagTilObjekt(grunnlag, InntektRolle.class);
-          inntektRolle.valider();
           Rolle rolle = inntektRolle.getRolle();
-          if (rolle.equals(Rolle.BP)) {
+          if (rolle.equals(rolle.BP)) {
             BPInntekt bpInntekt = grunnlagTilObjekt(grunnlag, BPInntekt.class);
             inntektBPPeriodeListe.add(bpInntekt.tilCore(grunnlag.getReferanse()));
           }

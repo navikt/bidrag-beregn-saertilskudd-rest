@@ -15,6 +15,7 @@ import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.Grunnlag;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.InntektRolle;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.NettoSaertilskudd;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.Rolle;
+import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.SBInntekt;
 
 public class BPAndelSaertilskuddCoreMapper extends CoreMapper {
 
@@ -31,17 +32,16 @@ public class BPAndelSaertilskuddCoreMapper extends CoreMapper {
       switch (grunnlag.getType()) {
         case INNTEKT -> {
           InntektRolle inntektRolle = grunnlagTilObjekt(grunnlag, InntektRolle.class);
-          inntektRolle.valider();
           Rolle rolle = inntektRolle.getRolle();
-          if (rolle.equals(Rolle.BP)) {
+          if (rolle.equals(rolle.BP)) {
             BPInntekt bpInntekt = grunnlagTilObjekt(grunnlag, BPInntekt.class);
             inntektBPPeriodeListe.add(bpInntekt.tilBPsAndelSaertilskuddCore(grunnlag.getReferanse()));
-          } else if (rolle.equals(Rolle.BM)) {
+          } else if (rolle.equals(rolle.BM)) {
             BMInntekt bmInntekt = grunnlagTilObjekt(grunnlag, BMInntekt.class);
             inntektBMPeriodeListe.add(bmInntekt.tilCore(grunnlag.getReferanse()));
-          } else if (rolle.equals(Rolle.BB)) {
-            BPInntekt bpInntekt = grunnlagTilObjekt(grunnlag, BPInntekt.class);
-            inntektBBPeriodeListe.add(bpInntekt.tilBPsAndelSaertilskuddCore(grunnlag.getReferanse()));
+          } else if (rolle.equals(rolle.SB)) {
+            SBInntekt sbInntekt = grunnlagTilObjekt(grunnlag, SBInntekt.class);
+            inntektBBPeriodeListe.add(sbInntekt.tilCore(grunnlag.getReferanse()));
           }
         }
         case NETTO_SAERTILSKUDD -> {

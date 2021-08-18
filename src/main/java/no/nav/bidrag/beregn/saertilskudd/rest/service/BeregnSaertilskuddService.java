@@ -75,7 +75,7 @@ public class BeregnSaertilskuddService {
     // Kontroll av felles inputdata
     beregnTotalSaertilskuddGrunnlag.valider();
     // TODO: Skal vi validere soknadsbarn her?
-//    SoknadsbarnUtil.validerSoknadsbarnId(beregnTotalSaertilskuddGrunnlag);
+    SoknadsbarnUtil.validerSoknadsbarnId(beregnTotalSaertilskuddGrunnlag);
 
     Integer soknadsBarnId = getSoknadsBarnId(beregnTotalSaertilskuddGrunnlag);
 

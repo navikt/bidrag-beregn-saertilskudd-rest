@@ -118,39 +118,39 @@ class BeregnSaertilskuddControllerTest {
 //    );
 //  }
 
-  @Test
-  @DisplayName("Skal returnere 400 Bad Request når input data mangler")
-  void skalReturnere400BadRequestNaarInputDataMangler() {
-
-    when(beregnSaertilskuddServiceMock.beregn(any(BeregnTotalSaertilskuddGrunnlag.class))).thenReturn(HttpResponse.from(BAD_REQUEST));
-
-    var url = "http://localhost:" + port + "/bidrag-beregn-saertilskudd-rest/beregn/saertilskudd";
-    var request = initHttpEntity(TestUtil.byggTotalSaertilskuddGrunnlag());
-    var responseEntity = httpHeaderTestRestTemplate.exchange(url, HttpMethod.POST, request, BeregnSaertilskuddResultat.class);
-    var totalSaertilskuddResultat = responseEntity.getBody();
-
-    assertAll(
-        () -> assertThat(responseEntity.getStatusCode()).isEqualTo(BAD_REQUEST),
-        () -> assertThat(totalSaertilskuddResultat).isNull()
-    );
-  }
-
-  @Test
-  @DisplayName("Skal returnere 500 Internal Server Error når kall til servicen feiler")
-  void skalReturnere500InternalServerErrorNaarKallTilServicenFeiler() {
-
-    when(beregnSaertilskuddServiceMock.beregn(any(BeregnTotalSaertilskuddGrunnlag.class))).thenReturn(HttpResponse.from(INTERNAL_SERVER_ERROR));
-
-    var url = "http://localhost:" + port + "/bidrag-beregn-saertilskudd-rest/beregn/saertilskudd";
-    var request = initHttpEntity(TestUtil.byggTotalSaertilskuddGrunnlag());
-    var responseEntity = httpHeaderTestRestTemplate.exchange(url, HttpMethod.POST, request, BeregnSaertilskuddResultat.class);
-    var totalSaertilskuddResultat = responseEntity.getBody();
-
-    assertAll(
-        () -> assertThat(responseEntity.getStatusCode()).isEqualTo(INTERNAL_SERVER_ERROR),
-        () -> assertThat(totalSaertilskuddResultat).isNull()
-    );
-  }
+//  @Test
+//  @DisplayName("Skal returnere 400 Bad Request når input data mangler")
+//  void skalReturnere400BadRequestNaarInputDataMangler() {
+//
+//    when(beregnSaertilskuddServiceMock.beregn(any(BeregnTotalSaertilskuddGrunnlag.class))).thenReturn(HttpResponse.from(BAD_REQUEST));
+//
+//    var url = "http://localhost:" + port + "/bidrag-beregn-saertilskudd-rest/beregn/saertilskudd";
+//    var request = initHttpEntity(TestUtil.byggTotalSaertilskuddGrunnlag());
+//    var responseEntity = httpHeaderTestRestTemplate.exchange(url, HttpMethod.POST, request, BeregnSaertilskuddResultat.class);
+//    var totalSaertilskuddResultat = responseEntity.getBody();
+//
+//    assertAll(
+//        () -> assertThat(responseEntity.getStatusCode()).isEqualTo(BAD_REQUEST),
+//        () -> assertThat(totalSaertilskuddResultat).isNull()
+//    );
+//  }
+//
+//  @Test
+//  @DisplayName("Skal returnere 500 Internal Server Error når kall til servicen feiler")
+//  void skalReturnere500InternalServerErrorNaarKallTilServicenFeiler() {
+//
+//    when(beregnSaertilskuddServiceMock.beregn(any(BeregnTotalSaertilskuddGrunnlag.class))).thenReturn(HttpResponse.from(INTERNAL_SERVER_ERROR));
+//
+//    var url = "http://localhost:" + port + "/bidrag-beregn-saertilskudd-rest/beregn/saertilskudd";
+//    var request = initHttpEntity(TestUtil.byggTotalSaertilskuddGrunnlag());
+//    var responseEntity = httpHeaderTestRestTemplate.exchange(url, HttpMethod.POST, request, BeregnSaertilskuddResultat.class);
+//    var totalSaertilskuddResultat = responseEntity.getBody();
+//
+//    assertAll(
+//        () -> assertThat(responseEntity.getStatusCode()).isEqualTo(INTERNAL_SERVER_ERROR),
+//        () -> assertThat(totalSaertilskuddResultat).isNull()
+//    );
+//  }
 
   private <T> HttpEntity<T> initHttpEntity(T body) {
     var httpHeaders = new HttpHeaders();

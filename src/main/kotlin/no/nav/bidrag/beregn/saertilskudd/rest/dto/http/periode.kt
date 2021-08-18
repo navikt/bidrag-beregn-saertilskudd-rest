@@ -16,14 +16,4 @@ data class Periode(
         datoFom = periode.periodeDatoFra,
         datoTil = periode.periodeDatoTil
     )
-
-    fun tilCore(dataElement: String) = PeriodeCore(
-        periodeDatoFra = datoFom ?: throw UgyldigInputException(dataElement + "DatoFra kan ikke være null"),
-        periodeDatoTil = datoTil ?: throw UgyldigInputException(dataElement + "DatoTil kan ikke være null")
-    )
-
-    fun valider(dataElement: String) {
-        if (datoFom == null) throw UgyldigInputException(dataElement + "DatoFra kan ikke være null")
-        if (datoTil == null) throw UgyldigInputException(dataElement + "DatoTil kan ikke være null")
-    }
 }

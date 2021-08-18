@@ -2,33 +2,10 @@ package no.nav.bidrag.beregn.saertilskudd.rest.dto.http
 
 import io.swagger.v3.oas.annotations.media.Schema
 import no.nav.bidrag.beregn.bpsandelsaertilskudd.dto.BeregnBPsAndelSaertilskuddResultatCore
-import no.nav.bidrag.beregn.bpsandelsaertilskudd.dto.NettoSaertilskuddPeriodeCore
 import no.nav.bidrag.beregn.bpsandelsaertilskudd.dto.ResultatBeregningCore
 import no.nav.bidrag.beregn.bpsandelsaertilskudd.dto.ResultatGrunnlagCore
 import no.nav.bidrag.beregn.bpsandelsaertilskudd.dto.ResultatPeriodeCore
-import no.nav.bidrag.beregn.saertilskudd.rest.exception.UgyldigInputException
 import java.math.BigDecimal
-
-// Grunnlag
-@Schema(description = "Grunnlaget for en beregning av bidragspliktiges andel av særtilskudd")
-data class BeregnBPAndelSaertilskuddGrunnlag(
-    @Schema(description = "Periodisert liste over bidragspliktiges netto særtilskudd") val nettoSaertilskuddPeriodeListe: List<NettoSaertilskuddPeriode>? = null
-)
-
-@Schema(description = "Bidragspliktiges netto særtilskudd")
-data class NettoSaertilskuddPeriode(
-    @Schema(description = "Bidragspliktiges netto særtilskudd fra-til-dato") var nettoSaertilskuddDatoFraTil: Periode? = null,
-    @Schema(description = "Bidragspliktiges netto særtilskudd beløp") var nettoSaertilskuddBelop: BigDecimal? = null
-) {
-
-    fun tilCore() = NettoSaertilskuddPeriodeCore(
-        periodeDatoFraTil = if (nettoSaertilskuddDatoFraTil != null) nettoSaertilskuddDatoFraTil!!.tilCore(
-            "nettoSaertilskudd"
-        ) else throw UgyldigInputException("nettoSaertilskuddDatoFraTil kan ikke være null"),
-        nettoSaertilskuddBelop = if (nettoSaertilskuddBelop != null)
-            nettoSaertilskuddBelop!! else throw UgyldigInputException("nettoSaertilskuddBelop kan ikke være null")
-    )
-}
 
 // Resultat
 @Schema(description = "Resultatet av en beregning av bidragspliktiges andel av særtilskudd")

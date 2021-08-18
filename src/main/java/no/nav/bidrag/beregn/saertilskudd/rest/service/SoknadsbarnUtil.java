@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Optional;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BeregnTotalSaertilskuddGrunnlag;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.Grunnlag;
+import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.GrunnlagType;
 import no.nav.bidrag.beregn.saertilskudd.rest.exception.UgyldigInputException;
 
 public class SoknadsbarnUtil {
@@ -22,7 +23,7 @@ public class SoknadsbarnUtil {
   protected static Map<Integer, String> mapSoknadsbarn(BeregnTotalSaertilskuddGrunnlag beregnTotalSaertilskuddGrunnlag) {
     var soknadsbarnMap = new HashMap<Integer, String>();
     beregnTotalSaertilskuddGrunnlag.getGrunnlagListe().stream()
-        .filter(grunnlag -> grunnlag.getType().equals(SOKNADSBARN_INFO_TYPE))
+        .filter(grunnlag -> grunnlag.getType().equals(GrunnlagType.SOKNADSBARN_INFO))
         .forEach(grunnlag -> soknadsbarnMap.putAll(mapSoknadsbarnInfo(grunnlag)));
     return soknadsbarnMap;
   }

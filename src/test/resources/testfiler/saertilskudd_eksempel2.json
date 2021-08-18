@@ -11,6 +11,14 @@
       }
     },
     {
+      "referanse": "Mottatt_SoknadsbarnInfo_SB_2",
+      "type": "SoknadsbarnInfo",
+      "innhold": {
+        "id": 2,
+        "fodselsdato": "2008-01-01"
+      }
+    },
+    {
       "referanse": "Mottatt_Inntekt_AG_20200801_SB_1",
       "type": "Inntekt",
       "innhold": {
@@ -122,7 +130,7 @@
         "datoFom": "2020-08-01",
         "datoTil": "2021-09-01",
         "soknadsbarnId": 2,
-        "soknadsbarnFodselsdato": "2006-02-01",
+        "soknadsbarnFodselsdato": "2008-01-01",
         "samvaersklasseId": "02"
       }
     },
