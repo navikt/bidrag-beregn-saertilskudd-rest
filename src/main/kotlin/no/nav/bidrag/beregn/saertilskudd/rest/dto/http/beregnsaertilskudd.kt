@@ -6,9 +6,26 @@ import no.nav.bidrag.beregn.saertilskudd.dto.BeregnSaertilskuddResultatCore
 import no.nav.bidrag.beregn.saertilskudd.dto.BidragsevneCore
 import no.nav.bidrag.beregn.saertilskudd.dto.LopendeBidragCore
 import no.nav.bidrag.beregn.saertilskudd.dto.ResultatBeregningCore
+import no.nav.bidrag.beregn.saertilskudd.dto.ResultatGrunnlagCore
 import no.nav.bidrag.beregn.saertilskudd.dto.ResultatPeriodeCore
 import no.nav.bidrag.beregn.saertilskudd.dto.SamvaersfradragCore
 import java.math.BigDecimal
+
+@Schema(description = "Grunnlaget for beregning av særtilskudd")
+data class ResultatGrunnlagSaertilskudd(
+        @Schema(description = "Bidragsevne") var bidragsevneGrunnlag: BidragsevneGrunnlag = BidragsevneGrunnlag(),
+        @Schema(description = "BPs andel særtilskudd") var bpAndelSaertilskuddGrunnlag: BPAndelSaertilskuddGrunnlag = BPAndelSaertilskuddGrunnlag(),
+        @Schema(description = "Liste over samværsfradrag") var samvaersfradragGrunnlagListe: List<SamvaersfradragGrunnlag> = emptyList(),
+        @Schema(description = "Liste over løpende bidrag") var lopendeBidragGrunnlagListe: List<LopendeBidragGrunnlag> = emptyList()
+) {
+
+    constructor(resultatGrunnlag: ResultatGrunnlagCore) : this(
+            bidragsevneGrunnlag = BidragsevneGrunnlag(resultatGrunnlag.bidragsevne),
+            bpAndelSaertilskuddGrunnlag = BPAndelSaertilskuddGrunnlag(resultatGrunnlag.bPsAndelSaertilskudd),
+            samvaersfradragGrunnlagListe = resultatGrunnlag.samvaersfradragListe.map { SamvaersfradragGrunnlag(it) },
+            lopendeBidragGrunnlagListe = resultatGrunnlag.lopendeBidragListe.map { LopendeBidragGrunnlag(it) }
+    )
+}
 
 // Resultat
 @Schema(description = "Resultatet av en beregning av særtilskudd")
@@ -25,13 +42,13 @@ data class BeregnSaertilskuddResultat(
 data class ResultatPeriodeSaertilskudd(
         @Schema(description = "Beregning resultat fra-til-dato") var resultatDatoFraTil: Periode = Periode(),
         @Schema(description = "Beregning resultat innhold liste") var resultatBeregning: ResultatBeregningSaertilskudd = ResultatBeregningSaertilskudd(),
-        @Schema(description = "Beregning grunnlag innhold") var resultatGrunnlag: List<String> = emptyList()
+        @Schema(description = "Beregning grunnlag innhold") var resultatGrunnlag: ResultatGrunnlagSaertilskudd = ResultatGrunnlagSaertilskudd()
 ) {
 
     constructor(resultatPeriode: ResultatPeriodeCore) : this(
             resultatDatoFraTil = Periode(resultatPeriode.periode),
-            resultatBeregning = ResultatBeregningSaertilskudd(resultatPeriode.resultatListe),
-            resultatGrunnlag = resultatPeriode.grunnlagReferanseListe
+            resultatBeregning = ResultatBeregningSaertilskudd(resultatPeriode.resultatBeregning),
+            resultatGrunnlag = ResultatGrunnlagSaertilskudd(resultatPeriode.resultatGrunnlag)
     )
 }
 
