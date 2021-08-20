@@ -104,13 +104,13 @@ public abstract class CoreMapper {
         .collect(toList());
   }
 
-  protected <T> T grunnlagTilObjekt(Grunnlag grunnlag, Class<T> contentClass) {
+  public static <T> T grunnlagTilObjekt(Grunnlag grunnlag, Class<T> contentClass) {
     try {
       jacksonObjectMapper().registerModule(new JavaTimeModule());
       T objekt = jacksonObjectMapper().readValue(grunnlag.getInnhold().toString(), contentClass);
       return objekt;
     } catch (JsonProcessingException e) {
-      throw new UgyldigInputException("Kunne ikke deserialisere " + contentClass.getName());
+      throw new UgyldigInputException("Kunne ikke deserialisere " + contentClass.getName() + ". " + e.getMessage());
     }
   }
 }

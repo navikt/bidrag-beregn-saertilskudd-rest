@@ -73,7 +73,6 @@ public class TestUtil {
   public static BeregnTotalSaertilskuddGrunnlag byggTotalSaertilskuddGrunnlag() {
     var grunnlagListe = new ArrayList<Grunnlag>();
     grunnlagListe.add(new Grunnlag("Mottatt_SoknadsbarnInfo_SB_1", GrunnlagType.SOKNADSBARN_INFO, tilJsonNodeInnhold(new SoknadsBarnInfo(1, LocalDate.parse("2006-08-19")))));
-    grunnlagListe.add(new Grunnlag("Mottatt_SoknadsbarnInfo_SB_2", GrunnlagType.SOKNADSBARN_INFO, tilJsonNodeInnhold(new SoknadsBarnInfo(2, LocalDate.parse("2008-08-19")))));
     grunnlagListe.add(new Grunnlag("Mottatt_Inntekt_AG_20200801_SB_1", GrunnlagType.INNTEKT, tilJsonNodeInnhold(new SBInntekt(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01"),
         Rolle.SB, "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER", BigDecimal.valueOf(0), 1))));
     grunnlagListe.add(new Grunnlag("Mottatt_Inntekt_AG_20200801_BM", GrunnlagType.INNTEKT, tilJsonNodeInnhold(new BMInntekt(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01"), "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER", BigDecimal.valueOf(300000),

@@ -1,8 +1,10 @@
 package no.nav.bidrag.beregn.saertilskudd.rest.service;
 
 import static java.util.Collections.emptyList;
+import static no.nav.bidrag.beregn.saertilskudd.rest.mapper.CoreMapper.grunnlagTilObjekt;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -27,6 +29,7 @@ import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BeregnTotalSaertilskuddGr
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BeregnTotalSaertilskuddResultat;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.Grunnlag;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.GrunnlagType;
+import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.SoknadsBarnInfo;
 import no.nav.bidrag.beregn.saertilskudd.rest.exception.UgyldigInputException;
 import no.nav.bidrag.beregn.saertilskudd.rest.mapper.BPAndelSaertilskuddCoreMapper;
 import no.nav.bidrag.beregn.saertilskudd.rest.mapper.BidragsevneCoreMapper;
@@ -75,10 +78,9 @@ public class BeregnSaertilskuddService {
 
     // Kontroll av felles inputdata
     beregnTotalSaertilskuddGrunnlag.valider();
-    // TODO: Skal vi validere soknadsbarn her?
-    SoknadsbarnUtil.validerSoknadsbarnId(beregnTotalSaertilskuddGrunnlag);
 
-    Integer soknadsBarnId = getSoknadsBarnId(beregnTotalSaertilskuddGrunnlag);
+    // Validerer og henter ut soknadsbarn
+    SoknadsBarnInfo soknadsBarnInfo = validerSoknadsbarnId(beregnTotalSaertilskuddGrunnlag);
 
     // Lager en map for sjablontall (id og navn)
     var sjablontallMap = new HashMap<String, SjablonTallNavn>();
@@ -90,20 +92,17 @@ public class BeregnSaertilskuddService {
     var sjablonListe = hentSjabloner();
 
     // Bygger grunnlag til core og utfører delberegninger
-    return utfoerDelberegninger(beregnTotalSaertilskuddGrunnlag, sjablontallMap, sjablonListe, soknadsBarnId);
+    return utfoerDelberegninger(beregnTotalSaertilskuddGrunnlag, sjablontallMap, sjablonListe, soknadsBarnInfo.getId());
   }
 
-  private Integer getSoknadsBarnId(BeregnTotalSaertilskuddGrunnlag beregnTotalSaertilskuddGrunnlag) {
-    Integer soknadsbarnId = null;
-    for (Grunnlag grunnlag : beregnTotalSaertilskuddGrunnlag.getGrunnlagListe()) {
-      if (grunnlag.getType().equals(GrunnlagType.SOKNADSBARN_INFO) && grunnlag.getInnhold().has("id")) {
-        soknadsbarnId = Integer.parseInt(grunnlag.getInnhold().get("id").asText());
-      }
+  //  Validerer at det kun er oppgitt ett SoknadsbarnInfo-grunnlag og at mapping til SoknadsBarnInfo objekt ikke feiler
+  protected static SoknadsBarnInfo validerSoknadsbarnId(BeregnTotalSaertilskuddGrunnlag beregnTotalSaertilskuddGrunnlag) {
+    List<Grunnlag> soknadsbarnInfoGrunnlag = beregnTotalSaertilskuddGrunnlag.getGrunnlagListe().stream()
+        .filter(grunnlag -> grunnlag.getType().equals(GrunnlagType.SOKNADSBARN_INFO)).toList();
+    if (soknadsbarnInfoGrunnlag.size() != 1) {
+      throw new UgyldigInputException("Det skal kun være ett soknadsbarn i beregningsgrunnlaget");
     }
-    if (soknadsbarnId == null) {
-      throw new UgyldigInputException("Soknadsbarn id mangler");
-    }
-    return soknadsbarnId;
+    return grunnlagTilObjekt(soknadsbarnInfoGrunnlag.get(0), SoknadsBarnInfo.class);
   }
 
   //==================================================================================================================================================

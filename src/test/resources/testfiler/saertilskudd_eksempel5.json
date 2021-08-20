@@ -11,14 +11,6 @@
       }
     },
     {
-      "referanse": "Mottatt_SoknadsbarnInfo_SB_2",
-      "type": "SoknadsbarnInfo",
-      "innhold": {
-        "id": 2,
-        "fodselsdato": "2008-01-01"
-      }
-    },
-    {
       "referanse": "Mottatt_Inntekt_AG_20200801_SB_1",
       "type": "Inntekt",
       "innhold": {
