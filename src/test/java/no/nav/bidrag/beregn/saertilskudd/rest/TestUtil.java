@@ -75,20 +75,20 @@ public class TestUtil {
     grunnlagListe.add(new Grunnlag("Mottatt_SoknadsbarnInfo_SB_1", GrunnlagType.SOKNADSBARN_INFO, tilJsonNodeInnhold(new SoknadsBarnInfo(1, LocalDate.parse("2006-08-19")))));
     grunnlagListe.add(new Grunnlag("Mottatt_SoknadsbarnInfo_SB_2", GrunnlagType.SOKNADSBARN_INFO, tilJsonNodeInnhold(new SoknadsBarnInfo(2, LocalDate.parse("2008-08-19")))));
     grunnlagListe.add(new Grunnlag("Mottatt_Inntekt_AG_20200801_SB_1", GrunnlagType.INNTEKT, tilJsonNodeInnhold(new SBInntekt(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01"),
-        Rolle.SB, "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER", new BigDecimal(0), 1))));
-    grunnlagListe.add(new Grunnlag("Mottatt_Inntekt_AG_20200801_BM", GrunnlagType.INNTEKT, tilJsonNodeInnhold(new BMInntekt(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01"), "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER", new BigDecimal(300000),
+        Rolle.SB, "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER", BigDecimal.valueOf(0), 1))));
+    grunnlagListe.add(new Grunnlag("Mottatt_Inntekt_AG_20200801_BM", GrunnlagType.INNTEKT, tilJsonNodeInnhold(new BMInntekt(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01"), "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER", BigDecimal.valueOf(300000),
         Rolle.BM, false, false))));
-    grunnlagListe.add(new Grunnlag("Mottatt_Inntekt_AG_20200801_BM", GrunnlagType.INNTEKT, tilJsonNodeInnhold(new BMInntekt(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01"), "UTVIDET_BARNETRYGD", new BigDecimal(12688),
+    grunnlagListe.add(new Grunnlag("Mottatt_Inntekt_AG_20200801_BM", GrunnlagType.INNTEKT, tilJsonNodeInnhold(new BMInntekt(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01"), "UTVIDET_BARNETRYGD", BigDecimal.valueOf(12688),
         Rolle.BM, false, false))));
     grunnlagListe.add(new Grunnlag("Mottatt_Inntekt_AG_20200801_BP", GrunnlagType.INNTEKT, tilJsonNodeInnhold(new BPInntekt(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01"),
-        Rolle.BP, "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER", new BigDecimal(500000)))));
-    grunnlagListe.add(new Grunnlag("Mottatt_BarnIHusstand_20200801", GrunnlagType.BARN_I_HUSSTAND, tilJsonNodeInnhold(new BarnIHusstand(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01"), new BigDecimal(0)))));
+        Rolle.BP, "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER", BigDecimal.valueOf(500000)))));
+    grunnlagListe.add(new Grunnlag("Mottatt_BarnIHusstand_20200801", GrunnlagType.BARN_I_HUSSTAND, tilJsonNodeInnhold(new BarnIHusstand(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01"), BigDecimal.valueOf(0)))));
     grunnlagListe.add(new Grunnlag("Mottatt_Bostatus_20200801", GrunnlagType.BOSTATUS, tilJsonNodeInnhold(new Bostatus(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01"), "ALENE"))));
     grunnlagListe.add(new Grunnlag("Mottatt_Saerfradrag_20200801", GrunnlagType.SAERFRADRAG, tilJsonNodeInnhold(new Saerfradrag(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01"), "INGEN"))));
     grunnlagListe.add(new Grunnlag("Mottatt_Skatteklasse_20200801", GrunnlagType.SKATTEKLASSE, tilJsonNodeInnhold(new Skatteklasse(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01"), 1))));
-    grunnlagListe.add(new Grunnlag("Mottatt_Netto_Saertilskudd_20200801", GrunnlagType.NETTO_SAERTILSKUDD, tilJsonNodeInnhold(new NettoSaertilskudd(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01"), new BigDecimal(7000)))));
+    grunnlagListe.add(new Grunnlag("Mottatt_Netto_Saertilskudd_20200801", GrunnlagType.NETTO_SAERTILSKUDD, tilJsonNodeInnhold(new NettoSaertilskudd(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01"), BigDecimal.valueOf(7000)))));
     grunnlagListe.add(new Grunnlag("Mottatt_Samvaersklasse_20200801_SB_1", GrunnlagType.SAMVAERSKLASSE, tilJsonNodeInnhold(new Samvaersklasse(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01"), 1, LocalDate.parse("2006-08-19"), "01"))));
-    grunnlagListe.add(new Grunnlag("Mottatt_LoependeBidrag_20200801_SB_1", GrunnlagType.LOPENDE_BIDRAG, tilJsonNodeInnhold(new LopendeBidrag(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01"), 1, new BigDecimal(2500), new BigDecimal(2957), new BigDecimal(2500), new BigDecimal(457)))));
+    grunnlagListe.add(new Grunnlag("Mottatt_LoependeBidrag_20200801_SB_1", GrunnlagType.LOPENDE_BIDRAG, tilJsonNodeInnhold(new LopendeBidrag(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01"), 1, BigDecimal.valueOf(2500), BigDecimal.valueOf(2957), BigDecimal.valueOf(2500), BigDecimal.valueOf(457)))));
 
     return new BeregnTotalSaertilskuddGrunnlag(LocalDate.parse("2021-08-19"), LocalDate.parse("2021-09-19"), grunnlagListe);
   }

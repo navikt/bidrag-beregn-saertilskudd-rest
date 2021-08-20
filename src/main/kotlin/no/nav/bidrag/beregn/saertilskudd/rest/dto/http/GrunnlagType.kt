@@ -18,12 +18,7 @@ enum class GrunnlagType(@get:JsonValue val value: String) {
 
         @JsonCreator
         fun fromString(value: String): GrunnlagType? {
-            for (grunnlagType in GrunnlagType.values()) {
-                if (grunnlagType.name.equals(value, true)) {
-                    return grunnlagType;
-                }
-            }
-            return null
+            return values().find { grunnlagType ->  grunnlagType.name.equals(value, true)}
         }
     }
 }

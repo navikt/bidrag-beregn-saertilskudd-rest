@@ -12,12 +12,7 @@ enum class Rolle(@get:JsonValue val value: String) {
 
         @JsonCreator
         fun fromString(value: String): Rolle? {
-            for (rolle in Rolle.values()) {
-                if (rolle.name.equals(value, true)) {
-                    return rolle;
-                }
-            }
-            return null
+            return values().find { rolle ->  rolle.name.equals(value, true)}
         }
     }
 }
