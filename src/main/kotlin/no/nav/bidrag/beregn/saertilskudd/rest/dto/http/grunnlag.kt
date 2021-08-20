@@ -70,8 +70,8 @@ open class InntektBase(datoFom: LocalDate, datoTil: LocalDate, val rolle: Rolle,
         tilPeriodeCore(),
         inntektType!!,
         belop!!,
-        false,
-        false
+        deltFordel = false,
+        skatteklasse2 = false
     )
   }
 }

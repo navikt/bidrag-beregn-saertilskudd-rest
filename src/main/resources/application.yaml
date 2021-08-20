@@ -1,4 +1,4 @@
-SJABLON_URL: https://bidrag-sjablon-q1.nais.preprod.local/bidrag-sjablon
+SJABLON_URL: https://bidrag-sjablon.dev-fss.nais.io/bidrag-sjablon
 
 server:
   servlet:

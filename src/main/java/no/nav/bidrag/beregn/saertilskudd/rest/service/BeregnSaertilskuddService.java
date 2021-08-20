@@ -29,6 +29,7 @@ import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BeregnTotalSaertilskuddGr
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BeregnTotalSaertilskuddResultat;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.Grunnlag;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.GrunnlagType;
+import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.Samvaersklasse;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.SoknadsBarnInfo;
 import no.nav.bidrag.beregn.saertilskudd.rest.exception.UgyldigInputException;
 import no.nav.bidrag.beregn.saertilskudd.rest.mapper.BPAndelSaertilskuddCoreMapper;
@@ -100,9 +101,21 @@ public class BeregnSaertilskuddService {
     List<Grunnlag> soknadsbarnInfoGrunnlag = beregnTotalSaertilskuddGrunnlag.getGrunnlagListe().stream()
         .filter(grunnlag -> grunnlag.getType().equals(GrunnlagType.SOKNADSBARN_INFO)).toList();
     if (soknadsbarnInfoGrunnlag.size() != 1) {
-      throw new UgyldigInputException("Det skal kun være ett soknadsbarn i beregningsgrunnlaget");
+      throw new UgyldigInputException("Det må være nøyaktig ett søknadsbarn i beregningsgrunnlaget");
     }
-    return grunnlagTilObjekt(soknadsbarnInfoGrunnlag.get(0), SoknadsBarnInfo.class);
+    SoknadsBarnInfo soknadsBarnInfo = grunnlagTilObjekt(soknadsbarnInfoGrunnlag.get(0), SoknadsBarnInfo.class);
+
+    beregnTotalSaertilskuddGrunnlag.getGrunnlagListe().stream()
+        .filter(grunnlag -> grunnlag.getType().equals(GrunnlagType.SAMVAERSKLASSE)).map(grunnlag -> grunnlagTilObjekt(grunnlag, Samvaersklasse.class))
+        .forEach(samvaersklasse -> {
+          if (samvaersklasse.getSoknadsbarnId() == soknadsBarnInfo.getId()) {
+            if (!samvaersklasse.getSoknadsbarnFodselsdato().equals(soknadsBarnInfo.getFodselsdato())) {
+              throw new UgyldigInputException(
+                  "Fødselsdato for søknadsbarn stemmer ikke overens med fødselsdato til barnet i Samværsklasse-grunnlaget");
+            }
+          }
+        });
+    return soknadsBarnInfo;
   }
 
   //==================================================================================================================================================
