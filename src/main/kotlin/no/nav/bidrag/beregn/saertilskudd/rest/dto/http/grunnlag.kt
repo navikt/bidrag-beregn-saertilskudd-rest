@@ -20,235 +20,238 @@ import java.math.BigDecimal
 import java.time.LocalDate
 
 open class BasePeriode {
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    @JsonDeserialize(using = LocalDateDeserializer::class)
-    @JsonSerialize(using = LocalDateSerializer::class)
-    val datoFom: LocalDate?;
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+  @JsonDeserialize(using = LocalDateDeserializer::class)
+  @JsonSerialize(using = LocalDateSerializer::class)
+  val datoFom: LocalDate?;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    @JsonDeserialize(using = LocalDateDeserializer::class)
-    @JsonSerialize(using = LocalDateSerializer::class)
-    val datoTil: LocalDate?;
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+  @JsonDeserialize(using = LocalDateDeserializer::class)
+  @JsonSerialize(using = LocalDateSerializer::class)
+  val datoTil: LocalDate?;
 
-    constructor(datoFom: LocalDate, datoTil: LocalDate) {
-        this.datoFom = datoFom;
-        this.datoTil = datoTil;
-    }
+  constructor(datoFom: LocalDate, datoTil: LocalDate) {
+    this.datoFom = datoFom;
+    this.datoTil = datoTil;
+  }
 
-    private fun valider() {
-        if (datoFom == null) throw UgyldigInputException("datoFom kan ikke være null")
-        if (datoTil == null) throw UgyldigInputException("datoTil kan ikke være null")
-    }
+  private fun valider() {
+    if (datoFom == null) throw UgyldigInputException("datoFom kan ikke være null")
+    if (datoTil == null) throw UgyldigInputException("datoTil kan ikke være null")
+  }
 
-    fun tilPeriodeCore(): PeriodeCore {
-        valider()
-        return PeriodeCore(datoFom!!, datoTil!!)
-    }
+  fun tilPeriodeCore(): PeriodeCore {
+    valider()
+    return PeriodeCore(datoFom!!, datoTil!!)
+  }
 }
 
 open class InntektBase(datoFom: LocalDate, datoTil: LocalDate, val rolle: Rolle, val inntektType: String?, val belop: BigDecimal?) : BasePeriode(datoFom, datoTil) {
 
-    fun validerInntekt() {
-        if (inntektType == null) throw UgyldigInputException("inntektType kan ikke være null")
-        if (belop == null) throw UgyldigInputException("belop kan ikke være null")
-    }
+  fun validerInntekt() {
+    if (inntektType == null) throw UgyldigInputException("inntektType kan ikke være null")
+    if (belop == null) throw UgyldigInputException("belop kan ikke være null")
+  }
 
-    fun tilInntektPeriodeCore(referanse: String): InntektPeriodeCore {
-        validerInntekt()
-        return InntektPeriodeCore(
-                referanse,
-                tilPeriodeCore(),
-                inntektType!!,
-                belop!!,
-        )
-    }
-    fun tilInntektPeriodeCoreBPsAndelSaertilskudd(referanse: String): no.nav.bidrag.beregn.bpsandelsaertilskudd.dto.InntektPeriodeCore {
-        validerInntekt()
-        return no.nav.bidrag.beregn.bpsandelsaertilskudd.dto.InntektPeriodeCore(
-                referanse,
-                tilPeriodeCore(),
-                inntektType!!,
-                belop!!,
-                false,
-                false
-        )
-    }
+  fun tilInntektPeriodeCore(referanse: String): InntektPeriodeCore {
+    validerInntekt()
+    return InntektPeriodeCore(
+        referanse,
+        tilPeriodeCore(),
+        inntektType!!,
+        belop!!,
+    )
+  }
+
+  fun tilInntektPeriodeCoreBPsAndelSaertilskudd(referanse: String): no.nav.bidrag.beregn.bpsandelsaertilskudd.dto.InntektPeriodeCore {
+    validerInntekt()
+    return no.nav.bidrag.beregn.bpsandelsaertilskudd.dto.InntektPeriodeCore(
+        referanse,
+        tilPeriodeCore(),
+        inntektType!!,
+        belop!!,
+        false,
+        false
+    )
+  }
 }
 
 class BPInntekt(datoFom: LocalDate, datoTil: LocalDate, rolle: Rolle, inntektType: String?, belop: BigDecimal?) : InntektBase(datoFom, datoTil, rolle, inntektType, belop) {
 
-    fun tilCore(referanse: String): InntektPeriodeCore = tilInntektPeriodeCore(referanse)
+  fun tilCore(referanse: String): InntektPeriodeCore = tilInntektPeriodeCore(referanse)
 
-    fun tilBPsAndelSaertilskuddCore(referanse: String) = tilInntektPeriodeCoreBPsAndelSaertilskudd(referanse)
+  fun tilBPsAndelSaertilskuddCore(referanse: String) = tilInntektPeriodeCoreBPsAndelSaertilskudd(referanse)
 }
 
 class BMInntekt(datoFom: LocalDate, datoTil: LocalDate, inntektType: String?, belop: BigDecimal?, rolle: Rolle, val deltFordel: Boolean?, val skatteklasse2: Boolean?) : InntektBase(datoFom, datoTil, rolle, inntektType, belop) {
 
-    fun valider() {
-        validerInntekt()
-        if (deltFordel == null) throw UgyldigInputException("deltFordel kan ikke være null")
-        if (skatteklasse2 == null) throw UgyldigInputException("skatteklasse2 kan ikke være null")
-    }
+  fun valider() {
+    validerInntekt()
+    if (deltFordel == null) throw UgyldigInputException("deltFordel kan ikke være null")
+    if (skatteklasse2 == null) throw UgyldigInputException("skatteklasse2 kan ikke være null")
+  }
 
-    fun tilCore(referanse: String): no.nav.bidrag.beregn.bpsandelsaertilskudd.dto.InntektPeriodeCore {
-        valider()
-        return no.nav.bidrag.beregn.bpsandelsaertilskudd.dto.InntektPeriodeCore(
-                referanse,
-                tilPeriodeCore(),
-                inntektType!!,
-                belop!!,
-                deltFordel!!,
-                skatteklasse2!!
-        )
-    }
+  fun tilCore(referanse: String): no.nav.bidrag.beregn.bpsandelsaertilskudd.dto.InntektPeriodeCore {
+    valider()
+    return no.nav.bidrag.beregn.bpsandelsaertilskudd.dto.InntektPeriodeCore(
+        referanse,
+        tilPeriodeCore(),
+        inntektType!!,
+        belop!!,
+        deltFordel!!,
+        skatteklasse2!!
+    )
+  }
 }
 
 class SBInntekt(datoFom: LocalDate, datoTil: LocalDate, rolle: Rolle, inntektType: String?, belop: BigDecimal?, val soknadsbarnId: Int?) : InntektBase(datoFom, datoTil, rolle, inntektType, belop) {
 
-    fun valider() {
-        validerInntekt()
-        if (soknadsbarnId == null) throw UgyldigInputException("soknadsbarnId kan ikke være null")
-    }
-    fun tilCore(referanse: String): no.nav.bidrag.beregn.bpsandelsaertilskudd.dto.InntektPeriodeCore {
-        valider()
-        return tilInntektPeriodeCoreBPsAndelSaertilskudd(referanse);
-    }
+  fun valider() {
+    validerInntekt()
+    if (soknadsbarnId == null) throw UgyldigInputException("soknadsbarnId kan ikke være null")
+  }
+
+  fun tilCore(referanse: String): no.nav.bidrag.beregn.bpsandelsaertilskudd.dto.InntektPeriodeCore {
+    valider()
+    return tilInntektPeriodeCoreBPsAndelSaertilskudd(referanse);
+  }
 }
 
 class BarnIHusstand(datoFom: LocalDate, datoTil: LocalDate, val antall: BigDecimal?) : BasePeriode(datoFom, datoTil) {
 
-    fun valider() {
-        if (antall == null) throw UgyldigInputException("antall kan ikke være null")
-    }
+  fun valider() {
+    if (antall == null) throw UgyldigInputException("antall kan ikke være null")
+  }
 
-    fun tilCore(referanse: String): AntallBarnIEgetHusholdPeriodeCore {
-        valider()
-        return AntallBarnIEgetHusholdPeriodeCore(
-                referanse,
-                tilPeriodeCore(),
-                antall!!
-        )
-    }
+  fun tilCore(referanse: String): AntallBarnIEgetHusholdPeriodeCore {
+    valider()
+    return AntallBarnIEgetHusholdPeriodeCore(
+        referanse,
+        tilPeriodeCore(),
+        antall!!
+    )
+  }
 }
 
 class Bostatus(datoFom: LocalDate, datoTil: LocalDate, val bostatusKode: String?) : BasePeriode(datoFom, datoTil) {
 
-    fun valider() {
-        if (bostatusKode == null) throw UgyldigInputException("bostatusKode kan ikke være null")
-    }
-    fun tilCore(referanse: String): BostatusPeriodeCore {
-        valider()
-        return BostatusPeriodeCore(
-                referanse,
-                tilPeriodeCore(),
-                bostatusKode!!
-        )
-    }
+  fun valider() {
+    if (bostatusKode == null) throw UgyldigInputException("bostatusKode kan ikke være null")
+  }
+
+  fun tilCore(referanse: String): BostatusPeriodeCore {
+    valider()
+    return BostatusPeriodeCore(
+        referanse,
+        tilPeriodeCore(),
+        bostatusKode!!
+    )
+  }
 }
 
 class Saerfradrag(datoFom: LocalDate, datoTil: LocalDate, val saerfradragKode: String?) : BasePeriode(datoFom, datoTil) {
 
-    fun valider() {
-        if (saerfradragKode == null) throw UgyldigInputException("saerfradragKode kan ikke være null")
-    }
+  fun valider() {
+    if (saerfradragKode == null) throw UgyldigInputException("saerfradragKode kan ikke være null")
+  }
 
-    fun tilCore(referanse: String): SaerfradragPeriodeCore {
-        valider()
-        return SaerfradragPeriodeCore(
-                referanse,
-                tilPeriodeCore(),
-                saerfradragKode!!
-        )
-    }
+  fun tilCore(referanse: String): SaerfradragPeriodeCore {
+    valider()
+    return SaerfradragPeriodeCore(
+        referanse,
+        tilPeriodeCore(),
+        saerfradragKode!!
+    )
+  }
 }
 
 class Skatteklasse(datoFom: LocalDate, datoTil: LocalDate, val skatteklasseId: Int?) : BasePeriode(datoFom, datoTil) {
 
-    fun valider() {
-        if (skatteklasseId == null) throw UgyldigInputException("skatteklasseId kan ikke være null")
-    }
+  fun valider() {
+    if (skatteklasseId == null) throw UgyldigInputException("skatteklasseId kan ikke være null")
+  }
 
-    fun tilCore(referanse: String): SkatteklassePeriodeCore {
-        valider()
-        return SkatteklassePeriodeCore(
-                referanse,
-                tilPeriodeCore(),
-                skatteklasseId!!
-        )
-    }
+  fun tilCore(referanse: String): SkatteklassePeriodeCore {
+    valider()
+    return SkatteklassePeriodeCore(
+        referanse,
+        tilPeriodeCore(),
+        skatteklasseId!!
+    )
+  }
 }
 
 class NettoSaertilskudd(datoFom: LocalDate, datoTil: LocalDate, val nettoSaertilskuddBelop: BigDecimal?) : BasePeriode(datoFom, datoTil) {
 
-    fun valider() {
-        if (nettoSaertilskuddBelop == null) throw UgyldigInputException("nettoSaertilskuddBelop kan ikke være null")
-    }
+  fun valider() {
+    if (nettoSaertilskuddBelop == null) throw UgyldigInputException("nettoSaertilskuddBelop kan ikke være null")
+  }
 
-    fun tilCore(referanse: String): NettoSaertilskuddPeriodeCore {
-        valider()
-        return NettoSaertilskuddPeriodeCore(
-                referanse,
-                tilPeriodeCore(),
-                nettoSaertilskuddBelop!!
-        )
-    }
+  fun tilCore(referanse: String): NettoSaertilskuddPeriodeCore {
+    valider()
+    return NettoSaertilskuddPeriodeCore(
+        referanse,
+        tilPeriodeCore(),
+        nettoSaertilskuddBelop!!
+    )
+  }
 }
 
-class Samvaersklasse(datoFom: LocalDate, datoTil: LocalDate, val soknadsbarnId: Int?,@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+class Samvaersklasse(datoFom: LocalDate, datoTil: LocalDate, val soknadsbarnId: Int?, @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 @JsonDeserialize(using = LocalDateDeserializer::class) @JsonSerialize(using = LocalDateSerializer::class)
 val soknadsbarnFodselsdato: LocalDate?, val samvaersklasseId: String?) : BasePeriode(datoFom, datoTil) {
 
-    fun valider() {
-        if (soknadsbarnId == null) throw UgyldigInputException("soknadsbarnId kan ikke være null")
-        if (soknadsbarnFodselsdato == null) throw UgyldigInputException("soknadsbarnFodselsdato kan ikke være null")
-        if (samvaersklasseId == null) throw UgyldigInputException("samvaersklasseId kan ikke være null")
-    }
+  fun valider() {
+    if (soknadsbarnId == null) throw UgyldigInputException("soknadsbarnId kan ikke være null")
+    if (soknadsbarnFodselsdato == null) throw UgyldigInputException("soknadsbarnFodselsdato kan ikke være null")
+    if (samvaersklasseId == null) throw UgyldigInputException("samvaersklasseId kan ikke være null")
+  }
 
-    fun tilCore(referanse: String): SamvaersklassePeriodeCore {
-        valider()
-        return SamvaersklassePeriodeCore(
-                referanse,
-                tilPeriodeCore(),
-                soknadsbarnId!!,
-                soknadsbarnFodselsdato!!,
-                samvaersklasseId!!
-        )
-    }
+  fun tilCore(referanse: String): SamvaersklassePeriodeCore {
+    valider()
+    return SamvaersklassePeriodeCore(
+        referanse,
+        tilPeriodeCore(),
+        soknadsbarnId!!,
+        soknadsbarnFodselsdato!!,
+        samvaersklasseId!!
+    )
+  }
 }
 
 class LopendeBidrag(datoFom: LocalDate, datoTil: LocalDate, val soknadsbarnId: Int?, val belop: BigDecimal?, val opprinneligBPAndelUnderholdskostnadBelop: BigDecimal?, val opprinneligBidragBelop: BigDecimal?, val opprinneligSamvaersfradragBelop: BigDecimal?) : BasePeriode(datoFom, datoTil) {
 
-    fun valider() {
-        if (soknadsbarnId == null) throw UgyldigInputException("soknadsbarnId kan ikke være null")
-        if (belop == null) throw UgyldigInputException("belop kan ikke være null")
-        if (opprinneligBPAndelUnderholdskostnadBelop == null) throw UgyldigInputException("opprinneligBPAndelUnderholdskostnadBelop kan ikke være null")
-        if (opprinneligBidragBelop == null) throw UgyldigInputException("opprinneligBidragBelop kan ikke være null")
-        if (opprinneligSamvaersfradragBelop == null) throw UgyldigInputException("opprinneligSamvaersfradragBelop kan ikke være null")
-    }
+  fun valider() {
+    if (soknadsbarnId == null) throw UgyldigInputException("soknadsbarnId kan ikke være null")
+    if (belop == null) throw UgyldigInputException("belop kan ikke være null")
+    if (opprinneligBPAndelUnderholdskostnadBelop == null) throw UgyldigInputException("opprinneligBPAndelUnderholdskostnadBelop kan ikke være null")
+    if (opprinneligBidragBelop == null) throw UgyldigInputException("opprinneligBidragBelop kan ikke være null")
+    if (opprinneligSamvaersfradragBelop == null) throw UgyldigInputException("opprinneligSamvaersfradragBelop kan ikke være null")
+  }
 
-    fun tilCore(referanse: String): LopendeBidragPeriodeCore {
-        valider()
-        return LopendeBidragPeriodeCore(
-                referanse,
-                tilPeriodeCore(),
-                soknadsbarnId!!,
-                belop!!,
-                opprinneligBPAndelUnderholdskostnadBelop!!,
-                opprinneligBidragBelop!!,
-                opprinneligSamvaersfradragBelop!!
-        )
-    }
+  fun tilCore(referanse: String): LopendeBidragPeriodeCore {
+    valider()
+    return LopendeBidragPeriodeCore(
+        referanse,
+        tilPeriodeCore(),
+        soknadsbarnId!!,
+        belop!!,
+        opprinneligBPAndelUnderholdskostnadBelop!!,
+        opprinneligBidragBelop!!,
+        opprinneligSamvaersfradragBelop!!
+    )
+  }
 }
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class InntektRolle(
-        val rolle: Rolle
+    val rolle: Rolle
 )
 
 data class SoknadsBarnInfo(
-        val id: Int,
-        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-        @JsonDeserialize(using = LocalDateDeserializer::class)
-        @JsonSerialize(using = LocalDateSerializer::class)
-        val fodselsdato: LocalDate
+    val id: Int,
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @JsonDeserialize(using = LocalDateDeserializer::class)
+    @JsonSerialize(using = LocalDateSerializer::class)
+    val fodselsdato: LocalDate
 )

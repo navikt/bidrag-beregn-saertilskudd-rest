@@ -7,12 +7,12 @@ import java.time.LocalDate
 // Felles
 @Schema(description = "Periode (fra-til dato)")
 data class Periode(
-        @Schema(description = "Fra-dato") var datoFom: LocalDate? = null,
-        @Schema(description = "Til-dato") var datoTil: LocalDate? = null
+    @Schema(description = "Fra-dato") var datoFom: LocalDate? = null,
+    @Schema(description = "Til-dato") var datoTil: LocalDate? = null
 ) {
 
-    constructor(periode: PeriodeCore) : this(
-        datoFom = periode.periodeDatoFra,
-        datoTil = periode.periodeDatoTil
-    )
+  constructor(periode: PeriodeCore) : this(
+      datoFom = periode.periodeDatoFra,
+      datoTil = periode.periodeDatoTil
+  )
 }

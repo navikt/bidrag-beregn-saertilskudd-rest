@@ -51,6 +51,7 @@ public abstract class CoreMapper {
             singletonList(new SjablonInnholdCore(SjablonInnholdNavn.SJABLON_VERDI.getNavn(), sjablon.getVerdi()))))
         .collect(toList());
   }
+
   // Mapper sjabloner av typen trinnvis skattesats
   // Filtrerer bort de sjablonene som ikke er innenfor intervallet beregnDatoFra-beregnDatoTil
   public List<SjablonPeriodeCore> mapSjablonTrinnvisSkattesats(List<TrinnvisSkattesats> sjablonTrinnvisSkattesatsListe,
@@ -70,6 +71,7 @@ public abstract class CoreMapper {
                 new SjablonInnholdCore(SjablonInnholdNavn.SKATTESATS_PROSENT.getNavn(), sjablon.getSats()))))
         .collect(toList());
   }
+
   // Sjekker om en type SjablonTall er i bruk for en delberegning
   private boolean filtrerSjablonTall(SjablonTallNavn sjablonTallNavn, String delberegning) {
 

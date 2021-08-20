@@ -10,54 +10,54 @@ import java.math.BigDecimal
 // Resultat
 @Schema(description = "Resultatet av en bidragsevnesberegning for bidragspliktig")
 data class BeregnBPBidragsevneResultat(
-        @Schema(description = "Periodisert liste over resultat av bidragsevnesberegning") var resultatPeriodeListe: List<ResultatPeriodeBidragsevne> = emptyList()
+    @Schema(description = "Periodisert liste over resultat av bidragsevnesberegning") var resultatPeriodeListe: List<ResultatPeriodeBidragsevne> = emptyList()
 ) {
 
-    constructor(beregnBidragsevneResultat: BeregnBidragsevneResultatCore) : this(
-            resultatPeriodeListe = beregnBidragsevneResultat.resultatPeriodeListe.map { ResultatPeriodeBidragsevne(it) }
-    )
+  constructor(beregnBidragsevneResultat: BeregnBidragsevneResultatCore) : this(
+      resultatPeriodeListe = beregnBidragsevneResultat.resultatPeriodeListe.map { ResultatPeriodeBidragsevne(it) }
+  )
 }
 
 @Schema(description = "Resultatet av en beregning for en gitt periode")
 data class ResultatPeriodeBidragsevne(
-        @Schema(description = "Beregning resultat fra-til-dato") var resultatDatoFraTil: Periode = Periode(),
-        @Schema(description = "Beregning resultat innhold") var resultatBeregning: ResultatBeregningBidragsevne = ResultatBeregningBidragsevne(),
-        @Schema(description = "Beregning grunnlag innhold") var resultatGrunnlag: ResultatGrunnlagBidragsevne = ResultatGrunnlagBidragsevne()
+    @Schema(description = "Beregning resultat fra-til-dato") var resultatDatoFraTil: Periode = Periode(),
+    @Schema(description = "Beregning resultat innhold") var resultatBeregning: ResultatBeregningBidragsevne = ResultatBeregningBidragsevne(),
+    @Schema(description = "Beregning grunnlag innhold") var resultatGrunnlag: ResultatGrunnlagBidragsevne = ResultatGrunnlagBidragsevne()
 ) {
 
-    constructor(resultatPeriode: ResultatPeriodeCore) : this(
-            resultatDatoFraTil = Periode(resultatPeriode.resultatDatoFraTil),
-            resultatBeregning = ResultatBeregningBidragsevne(resultatPeriode.resultatBeregning),
-            resultatGrunnlag = ResultatGrunnlagBidragsevne(resultatPeriode.resultatGrunnlag)
-    )
+  constructor(resultatPeriode: ResultatPeriodeCore) : this(
+      resultatDatoFraTil = Periode(resultatPeriode.resultatDatoFraTil),
+      resultatBeregning = ResultatBeregningBidragsevne(resultatPeriode.resultatBeregning),
+      resultatGrunnlag = ResultatGrunnlagBidragsevne(resultatPeriode.resultatGrunnlag)
+  )
 }
 
 @Schema(description = "Resultatet av en beregning")
 data class ResultatBeregningBidragsevne(
-        @Schema(description = "Resultatevne beløp") var resultatEvneBelop: BigDecimal = BigDecimal.ZERO
+    @Schema(description = "Resultatevne beløp") var resultatEvneBelop: BigDecimal = BigDecimal.ZERO
 ) {
 
-    constructor(resultatBeregning: ResultatBeregningCore) : this(
-            resultatEvneBelop = resultatBeregning.resultatEvneBelop
-    )
+  constructor(resultatBeregning: ResultatBeregningCore) : this(
+      resultatEvneBelop = resultatBeregning.resultatEvneBelop
+  )
 }
 
 @Schema(description = "Grunnlaget for en beregning")
 data class ResultatGrunnlagBidragsevne(
-        @Schema(description = "Liste over bidragspliktiges inntekter") var inntektListe: List<Inntekt> = emptyList(),
-        @Schema(description = "Bidragspliktiges skatteklasse") var skatteklasse: Int = 0,
-        @Schema(description = "Bidragspliktiges bostatuskode") var bostatusKode: String = "",
-        @Schema(description = "Antall egne barn i bidragspliktiges husstand") var antallEgneBarnIHusstand: BigDecimal = BigDecimal.ZERO,
-        @Schema(description = "Bidragspliktiges særfradragkode") var saerfradragKode: String = "",
-        @Schema(description = "Liste over sjablonperioder") var sjablonListe: List<Sjablon> = emptyList()
+    @Schema(description = "Liste over bidragspliktiges inntekter") var inntektListe: List<Inntekt> = emptyList(),
+    @Schema(description = "Bidragspliktiges skatteklasse") var skatteklasse: Int = 0,
+    @Schema(description = "Bidragspliktiges bostatuskode") var bostatusKode: String = "",
+    @Schema(description = "Antall egne barn i bidragspliktiges husstand") var antallEgneBarnIHusstand: BigDecimal = BigDecimal.ZERO,
+    @Schema(description = "Bidragspliktiges særfradragkode") var saerfradragKode: String = "",
+    @Schema(description = "Liste over sjablonperioder") var sjablonListe: List<Sjablon> = emptyList()
 ) {
 
-    constructor(resultatGrunnlag: ResultatGrunnlagCore) : this(
-            inntektListe = resultatGrunnlag.inntektListe.map { Inntekt(it) },
-            skatteklasse = resultatGrunnlag.skatteklasse,
-            bostatusKode = resultatGrunnlag.bostatusKode,
-            antallEgneBarnIHusstand = resultatGrunnlag.antallEgneBarnIHusstand,
-            saerfradragKode = resultatGrunnlag.saerfradragkode,
-            sjablonListe = resultatGrunnlag.sjablonListe.map { Sjablon(it) }
-    )
+  constructor(resultatGrunnlag: ResultatGrunnlagCore) : this(
+      inntektListe = resultatGrunnlag.inntektListe.map { Inntekt(it) },
+      skatteklasse = resultatGrunnlag.skatteklasse,
+      bostatusKode = resultatGrunnlag.bostatusKode,
+      antallEgneBarnIHusstand = resultatGrunnlag.antallEgneBarnIHusstand,
+      saerfradragKode = resultatGrunnlag.saerfradragkode,
+      sjablonListe = resultatGrunnlag.sjablonListe.map { Sjablon(it) }
+  )
 }

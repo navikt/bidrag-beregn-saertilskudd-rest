@@ -10,8 +10,8 @@ data class Sjablon(
     @Schema(description = "Sjablonverdi") var sjablonVerdi: BigDecimal = BigDecimal.ZERO
 ) {
 
-    constructor(sjablon: SjablonNavnVerdiCore) : this(
-        sjablonNavn = sjablon.sjablonNavn,
-        sjablonVerdi = sjablon.sjablonVerdi
-    )
+  constructor(sjablon: SjablonNavnVerdiCore) : this(
+      sjablonNavn = sjablon.sjablonNavn,
+      sjablonVerdi = sjablon.sjablonVerdi
+  )
 }

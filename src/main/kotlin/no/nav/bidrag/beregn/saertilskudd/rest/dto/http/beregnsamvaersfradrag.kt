@@ -14,9 +14,9 @@ data class BeregnBPSamvaersfradragResultat(
     @Schema(description = "Periodisert liste over resultat av beregning av samværsfradrag") var resultatPeriodeListe: List<ResultatPeriodeSamvaersfradrag> = emptyList()
 ) {
 
-    constructor(beregnSamvaersfradragResultat: BeregnSamvaersfradragResultatCore) : this(
-        resultatPeriodeListe = beregnSamvaersfradragResultat.resultatPeriodeListe.map { ResultatPeriodeSamvaersfradrag(it) }
-    )
+  constructor(beregnSamvaersfradragResultat: BeregnSamvaersfradragResultatCore) : this(
+      resultatPeriodeListe = beregnSamvaersfradragResultat.resultatPeriodeListe.map { ResultatPeriodeSamvaersfradrag(it) }
+  )
 }
 
 @Schema(description = "Resultatet av beregning av samværsfradrag for et søknadsbarn for en gitt periode")
@@ -26,11 +26,11 @@ data class ResultatPeriodeSamvaersfradrag(
     @Schema(description = "Beregning grunnlag innhold") var resultatGrunnlag: ResultatGrunnlagSamvaersfradrag = ResultatGrunnlagSamvaersfradrag()
 ) {
 
-    constructor(resultatPeriode: ResultatPeriodeCore) : this(
-        resultatDatoFraTil = Periode(resultatPeriode.resultatDatoFraTil),
-        resultatBeregningListe = resultatPeriode.resultatBeregningListe.map { ResultatBeregningSamvaersfradrag(it) },
-        resultatGrunnlag = ResultatGrunnlagSamvaersfradrag(resultatPeriode.resultatGrunnlag)
-    )
+  constructor(resultatPeriode: ResultatPeriodeCore) : this(
+      resultatDatoFraTil = Periode(resultatPeriode.resultatDatoFraTil),
+      resultatBeregningListe = resultatPeriode.resultatBeregningListe.map { ResultatBeregningSamvaersfradrag(it) },
+      resultatGrunnlag = ResultatGrunnlagSamvaersfradrag(resultatPeriode.resultatGrunnlag)
+  )
 }
 
 @Schema(description = "Resultatet av beregning av samværsfradrag")
@@ -39,10 +39,10 @@ data class ResultatBeregningSamvaersfradrag(
     @Schema(description = "Beløp samværsfradrag") var resultatBelop: BigDecimal = BigDecimal.ZERO
 ) {
 
-    constructor(resultatBeregning: ResultatBeregningCore) : this(
-        barnPersonId = resultatBeregning.barnPersonId,
-        resultatBelop = resultatBeregning.resultatSamvaersfradragBelop
-    )
+  constructor(resultatBeregning: ResultatBeregningCore) : this(
+      barnPersonId = resultatBeregning.barnPersonId,
+      resultatBelop = resultatBeregning.resultatSamvaersfradragBelop
+  )
 }
 
 @Schema(description = "Grunnlaget for beregning av samværsfradrag")
@@ -51,10 +51,10 @@ data class ResultatGrunnlagSamvaersfradrag(
     @Schema(description = "Liste over sjablonperioder") var sjablonListe: List<Sjablon> = emptyList()
 ) {
 
-    constructor(resultatGrunnlag: GrunnlagBeregningPeriodisertCore) : this(
-        grunnlagBarnListe = resultatGrunnlag.samvaersfradragGrunnlagPerBarnListe.map { GrunnlagBarn(it) },
-        sjablonListe = resultatGrunnlag.sjablonListe.map { Sjablon(it) }
-    )
+  constructor(resultatGrunnlag: GrunnlagBeregningPeriodisertCore) : this(
+      grunnlagBarnListe = resultatGrunnlag.samvaersfradragGrunnlagPerBarnListe.map { GrunnlagBarn(it) },
+      sjablonListe = resultatGrunnlag.sjablonListe.map { Sjablon(it) }
+  )
 }
 
 @Schema(description = "Grunnlaget for beregning av samværsfradrag - pr barn")
@@ -64,9 +64,9 @@ data class GrunnlagBarn(
     @Schema(description = "Samværsklasse Id") var samvaersklasseId: String = ""
 ) {
 
-    constructor(resultatGrunnlagBarn: SamvaersfradragGrunnlagPerBarnCore) : this(
-        barnPersonId = resultatGrunnlagBarn.barnPersonId,
-        barnAlder = resultatGrunnlagBarn.barnAlder,
-        samvaersklasseId = resultatGrunnlagBarn.samvaersklasse
-    )
+  constructor(resultatGrunnlagBarn: SamvaersfradragGrunnlagPerBarnCore) : this(
+      barnPersonId = resultatGrunnlagBarn.barnPersonId,
+      barnAlder = resultatGrunnlagBarn.barnAlder,
+      samvaersklasseId = resultatGrunnlagBarn.samvaersklasse
+  )
 }

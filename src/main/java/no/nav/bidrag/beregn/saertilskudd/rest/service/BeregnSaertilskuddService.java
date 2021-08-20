@@ -1,6 +1,7 @@
 package no.nav.bidrag.beregn.saertilskudd.rest.service;
 
 import static java.util.Collections.emptyList;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -94,9 +95,9 @@ public class BeregnSaertilskuddService {
 
   private Integer getSoknadsBarnId(BeregnTotalSaertilskuddGrunnlag beregnTotalSaertilskuddGrunnlag) {
     Integer soknadsbarnId = null;
-    for(Grunnlag grunnlag : beregnTotalSaertilskuddGrunnlag.getGrunnlagListe()) {
+    for (Grunnlag grunnlag : beregnTotalSaertilskuddGrunnlag.getGrunnlagListe()) {
       if (grunnlag.getType().equals(GrunnlagType.SOKNADSBARN_INFO) && grunnlag.getInnhold().has("id")) {
-          soknadsbarnId = Integer.parseInt(grunnlag.getInnhold().get("id").asText());
+        soknadsbarnId = Integer.parseInt(grunnlag.getInnhold().get("id").asText());
       }
     }
     if (soknadsbarnId == null) {
@@ -117,16 +118,17 @@ public class BeregnSaertilskuddService {
     var bidragsevneResultatFraCore = beregnBidragsevne(bidragsevneGrunnlagTilCore);
 
     // ++ BPs andel av særtilskudd
-    var bpAndelSaertilskuddGrunnlagTilCore = bpAndelSaertilskuddCoreMapper.mapBPsAndelSaertilskuddGrunnlagTilCore(beregnTotalSaertilskuddGrunnlag, sjablontallMap, sjablonListe);
+    var bpAndelSaertilskuddGrunnlagTilCore = bpAndelSaertilskuddCoreMapper.mapBPsAndelSaertilskuddGrunnlagTilCore(beregnTotalSaertilskuddGrunnlag,
+        sjablontallMap, sjablonListe);
     var bpAndelSaertilskuddResultatFraCore = beregnBPAndelSaertilskudd(bpAndelSaertilskuddGrunnlagTilCore);
-
 
     // ++ Samværsfradrag
     var samvaersfradragGrunnlagTilCore = samvaersfradragCoreMapper.mapSamvaersfradragGrunnlagTilCore(beregnTotalSaertilskuddGrunnlag, sjablonListe);
     var samvaersfradragResultatFraCore = beregnSamvaersfradrag(samvaersfradragGrunnlagTilCore);
 
     // ++ Særtilskudd (totalberegning)
-    var saertilskuddGrunnlagTilCore = saertilskuddCoreMapper.mapSaertilskuddGrunnlagTilCore(beregnTotalSaertilskuddGrunnlag, bidragsevneResultatFraCore,
+    var saertilskuddGrunnlagTilCore = saertilskuddCoreMapper.mapSaertilskuddGrunnlagTilCore(beregnTotalSaertilskuddGrunnlag,
+        bidragsevneResultatFraCore,
         bpAndelSaertilskuddResultatFraCore, samvaersfradragResultatFraCore, soknadsBarnId);
     var saertilskuddResultatFraCore = beregnSaertilskudd(saertilskuddGrunnlagTilCore);
 
