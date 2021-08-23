@@ -3,6 +3,10 @@ package no.nav.bidrag.beregn.saertilskudd.rest;
 import no.nav.bidrag.beregn.bidragsevne.BidragsevneCore;
 import no.nav.bidrag.beregn.bpsandelsaertilskudd.BPsAndelSaertilskuddCore;
 import no.nav.bidrag.beregn.saertilskudd.SaertilskuddCore;
+import no.nav.bidrag.beregn.saertilskudd.rest.mapper.BPAndelSaertilskuddCoreMapper;
+import no.nav.bidrag.beregn.saertilskudd.rest.mapper.BidragsevneCoreMapper;
+import no.nav.bidrag.beregn.saertilskudd.rest.mapper.SaertilskuddCoreMapper;
+import no.nav.bidrag.beregn.saertilskudd.rest.mapper.SamvaersfradragCoreMapper;
 import no.nav.bidrag.beregn.samvaersfradrag.SamvaersfradragCore;
 import no.nav.bidrag.beregn.saertilskudd.rest.consumer.SjablonConsumer;
 import no.nav.bidrag.commons.ExceptionLogger;
@@ -35,6 +39,25 @@ public class BeregnSaertilskuddConfig {
     return SamvaersfradragCore.getInstance();
   }
 
+  @Bean
+  public BidragsevneCoreMapper bidragsevneCoreMapper() {
+    return new BidragsevneCoreMapper();
+  }
+
+  @Bean
+  public BPAndelSaertilskuddCoreMapper bpAndelSaertilskuddCoreMapper() {
+    return new BPAndelSaertilskuddCoreMapper();
+  }
+
+  @Bean
+  public SamvaersfradragCoreMapper samvaersfradragCoreMapper() {
+    return new SamvaersfradragCoreMapper();
+  }
+
+  @Bean
+  public SaertilskuddCoreMapper saertilskuddCoreMapper() {
+    return new SaertilskuddCoreMapper();
+  }
 
   @Bean
   public SjablonConsumer sjablonConsumer(@Value("${SJABLON_URL}") String sjablonBaseUrl, RestTemplate restTemplate) {

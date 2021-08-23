@@ -10,6 +10,7 @@ import static org.springframework.http.HttpStatus.OK;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Collections;
 import no.nav.bidrag.beregn.saertilskudd.rest.BidragBeregnSaertilskuddLocal;
 import no.nav.bidrag.beregn.saertilskudd.rest.TestUtil;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BeregnSaertilskuddResultat;
@@ -68,10 +69,10 @@ class BeregnSaertilskuddControllerTest {
         () -> assertThat(totalSaertilskuddResultat.getBeregnBPBidragsevneResultat().getResultatPeriodeListe()).isNotNull(),
         () -> assertThat(totalSaertilskuddResultat.getBeregnBPBidragsevneResultat().getResultatPeriodeListe().size()).isEqualTo(1),
         () -> assertThat(
-            totalSaertilskuddResultat.getBeregnBPBidragsevneResultat().getResultatPeriodeListe().get(0).getResultatDatoFraTil().getPeriodeDatoFra())
+            totalSaertilskuddResultat.getBeregnBPBidragsevneResultat().getResultatPeriodeListe().get(0).getResultatDatoFraTil().getDatoFom())
             .isEqualTo(LocalDate.parse("2020-08-01")),
         () -> assertThat(
-            totalSaertilskuddResultat.getBeregnBPBidragsevneResultat().getResultatPeriodeListe().get(0).getResultatDatoFraTil().getPeriodeDatoTil())
+            totalSaertilskuddResultat.getBeregnBPBidragsevneResultat().getResultatPeriodeListe().get(0).getResultatDatoFraTil().getDatoTil())
             .isEqualTo(LocalDate.parse("2020-09-01")),
         () -> assertThat(
             totalSaertilskuddResultat.getBeregnBPBidragsevneResultat().getResultatPeriodeListe().get(0).getResultatBeregning().getResultatEvneBelop())
@@ -82,10 +83,10 @@ class BeregnSaertilskuddControllerTest {
         () -> assertThat(totalSaertilskuddResultat.getBeregnBPAndelSaertilskuddResultat().getResultatPeriodeListe().size()).isEqualTo(1),
         () -> assertThat(
             totalSaertilskuddResultat.getBeregnBPAndelSaertilskuddResultat().getResultatPeriodeListe().get(0).getResultatDatoFraTil()
-                .getPeriodeDatoFra()).isEqualTo(LocalDate.parse("2020-08-01")),
+                .getDatoFom()).isEqualTo(LocalDate.parse("2020-08-01")),
         () -> assertThat(
             totalSaertilskuddResultat.getBeregnBPAndelSaertilskuddResultat().getResultatPeriodeListe().get(0).getResultatDatoFraTil()
-                .getPeriodeDatoTil()).isEqualTo(LocalDate.parse("2020-09-01")),
+                .getDatoTil()).isEqualTo(LocalDate.parse("2020-09-01")),
         () -> assertThat(totalSaertilskuddResultat.getBeregnBPAndelSaertilskuddResultat().getResultatPeriodeListe().get(0).getResultatBeregning()
             .getResultatAndelProsent()).isEqualTo(BigDecimal.valueOf(10)),
         () -> assertThat(totalSaertilskuddResultat.getBeregnBPAndelSaertilskuddResultat().getResultatPeriodeListe().get(0).getResultatBeregning()
@@ -95,10 +96,10 @@ class BeregnSaertilskuddControllerTest {
         () -> assertThat(totalSaertilskuddResultat.getBeregnBPSamvaersfradragResultat().getResultatPeriodeListe()).isNotNull(),
         () -> assertThat(totalSaertilskuddResultat.getBeregnBPSamvaersfradragResultat().getResultatPeriodeListe().size()).isEqualTo(1),
         () -> assertThat(
-            totalSaertilskuddResultat.getBeregnBPSamvaersfradragResultat().getResultatPeriodeListe().get(0).getResultatDatoFraTil().getPeriodeDatoFra())
+            totalSaertilskuddResultat.getBeregnBPSamvaersfradragResultat().getResultatPeriodeListe().get(0).getResultatDatoFraTil().getDatoFom())
             .isEqualTo(LocalDate.parse("2020-08-01")),
         () -> assertThat(
-            totalSaertilskuddResultat.getBeregnBPSamvaersfradragResultat().getResultatPeriodeListe().get(0).getResultatDatoFraTil().getPeriodeDatoTil())
+            totalSaertilskuddResultat.getBeregnBPSamvaersfradragResultat().getResultatPeriodeListe().get(0).getResultatDatoFraTil().getDatoTil())
             .isEqualTo(LocalDate.parse("2020-09-01")),
         () -> assertThat(totalSaertilskuddResultat.getBeregnBPSamvaersfradragResultat().getResultatPeriodeListe().get(0).getResultatBeregningListe()
             .get(0).getResultatBelop()).isEqualTo(BigDecimal.valueOf(100)),
@@ -107,9 +108,9 @@ class BeregnSaertilskuddControllerTest {
         () -> assertThat(totalSaertilskuddResultat.getBeregnSaertilskuddResultat().getResultatPeriodeListe()).isNotNull(),
         () -> assertThat(totalSaertilskuddResultat.getBeregnSaertilskuddResultat().getResultatPeriodeListe().size()).isEqualTo(1),
         () -> assertThat(totalSaertilskuddResultat.getBeregnSaertilskuddResultat().getResultatPeriodeListe().get(0).getResultatDatoFraTil()
-            .getPeriodeDatoFra()).isEqualTo(LocalDate.parse("2020-08-01")),
+            .getDatoFom()).isEqualTo(LocalDate.parse("2020-08-01")),
         () -> assertThat(totalSaertilskuddResultat.getBeregnSaertilskuddResultat().getResultatPeriodeListe().get(0).getResultatDatoFraTil()
-            .getPeriodeDatoTil()).isEqualTo(LocalDate.parse("2020-09-01")),
+            .getDatoTil()).isEqualTo(LocalDate.parse("2020-09-01")),
         () -> assertThat(totalSaertilskuddResultat.getBeregnSaertilskuddResultat().getResultatPeriodeListe().get(0).getResultatBeregning()
             .getResultatBelop()).isEqualTo(BigDecimal.valueOf(100)),
         () -> assertThat(totalSaertilskuddResultat.getBeregnSaertilskuddResultat().getResultatPeriodeListe().get(0).getResultatBeregning()
@@ -124,7 +125,7 @@ class BeregnSaertilskuddControllerTest {
     when(beregnSaertilskuddServiceMock.beregn(any(BeregnTotalSaertilskuddGrunnlag.class))).thenReturn(HttpResponse.from(BAD_REQUEST));
 
     var url = "http://localhost:" + port + "/bidrag-beregn-saertilskudd-rest/beregn/saertilskudd";
-    var request = initHttpEntity(TestUtil.byggTotalSaertilskuddGrunnlag());
+    var request = initHttpEntity(new BeregnTotalSaertilskuddGrunnlag(LocalDate.parse("2021-08-18"), LocalDate.parse("2021-08-18"), Collections.emptyList()));
     var responseEntity = httpHeaderTestRestTemplate.exchange(url, HttpMethod.POST, request, BeregnSaertilskuddResultat.class);
     var totalSaertilskuddResultat = responseEntity.getBody();
 
@@ -141,7 +142,7 @@ class BeregnSaertilskuddControllerTest {
     when(beregnSaertilskuddServiceMock.beregn(any(BeregnTotalSaertilskuddGrunnlag.class))).thenReturn(HttpResponse.from(INTERNAL_SERVER_ERROR));
 
     var url = "http://localhost:" + port + "/bidrag-beregn-saertilskudd-rest/beregn/saertilskudd";
-    var request = initHttpEntity(TestUtil.byggTotalSaertilskuddGrunnlag());
+    var request = initHttpEntity(new BeregnTotalSaertilskuddGrunnlag(LocalDate.parse("2021-08-18"), LocalDate.parse("2021-08-18"), Collections.emptyList()));
     var responseEntity = httpHeaderTestRestTemplate.exchange(url, HttpMethod.POST, request, BeregnSaertilskuddResultat.class);
     var totalSaertilskuddResultat = responseEntity.getBody();
 

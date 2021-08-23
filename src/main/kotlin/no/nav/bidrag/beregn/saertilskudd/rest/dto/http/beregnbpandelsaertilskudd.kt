@@ -2,33 +2,10 @@ package no.nav.bidrag.beregn.saertilskudd.rest.dto.http
 
 import io.swagger.v3.oas.annotations.media.Schema
 import no.nav.bidrag.beregn.bpsandelsaertilskudd.dto.BeregnBPsAndelSaertilskuddResultatCore
-import no.nav.bidrag.beregn.bpsandelsaertilskudd.dto.NettoSaertilskuddPeriodeCore
 import no.nav.bidrag.beregn.bpsandelsaertilskudd.dto.ResultatBeregningCore
 import no.nav.bidrag.beregn.bpsandelsaertilskudd.dto.ResultatGrunnlagCore
 import no.nav.bidrag.beregn.bpsandelsaertilskudd.dto.ResultatPeriodeCore
-import no.nav.bidrag.beregn.saertilskudd.rest.exception.UgyldigInputException
 import java.math.BigDecimal
-
-// Grunnlag
-@Schema(description = "Grunnlaget for en beregning av bidragspliktiges andel av særtilskudd")
-data class BeregnBPAndelSaertilskuddGrunnlag(
-    @Schema(description = "Periodisert liste over bidragspliktiges netto særtilskudd") val nettoSaertilskuddPeriodeListe: List<NettoSaertilskuddPeriode>? = null
-)
-
-@Schema(description = "Bidragspliktiges netto særtilskudd")
-data class NettoSaertilskuddPeriode(
-    @Schema(description = "Bidragspliktiges netto særtilskudd fra-til-dato") var nettoSaertilskuddDatoFraTil: Periode? = null,
-    @Schema(description = "Bidragspliktiges netto særtilskudd beløp") var nettoSaertilskuddBelop: BigDecimal? = null
-) {
-
-    fun tilCore() = NettoSaertilskuddPeriodeCore(
-        periodeDatoFraTil = if (nettoSaertilskuddDatoFraTil != null) nettoSaertilskuddDatoFraTil!!.tilCore(
-            "nettoSaertilskudd"
-        ) else throw UgyldigInputException("nettoSaertilskuddDatoFraTil kan ikke være null"),
-        nettoSaertilskuddBelop = if (nettoSaertilskuddBelop != null)
-            nettoSaertilskuddBelop!! else throw UgyldigInputException("nettoSaertilskuddBelop kan ikke være null")
-    )
-}
 
 // Resultat
 @Schema(description = "Resultatet av en beregning av bidragspliktiges andel av særtilskudd")
@@ -37,9 +14,9 @@ data class BeregnBPAndelSaertilskuddResultat(
     var resultatPeriodeListe: List<ResultatPeriodeBPAndelSaertilskudd> = emptyList()
 ) {
 
-    constructor(beregnBPAndelSaertilskuddResultat: BeregnBPsAndelSaertilskuddResultatCore) : this(
-        resultatPeriodeListe = beregnBPAndelSaertilskuddResultat.resultatPeriodeListe.map { ResultatPeriodeBPAndelSaertilskudd(it) }
-    )
+  constructor(beregnBPAndelSaertilskuddResultat: BeregnBPsAndelSaertilskuddResultatCore) : this(
+      resultatPeriodeListe = beregnBPAndelSaertilskuddResultat.resultatPeriodeListe.map { ResultatPeriodeBPAndelSaertilskudd(it) }
+  )
 }
 
 @Schema(description = "Resultatet av beregning av bidragspliktiges andel av særtilskudd for en gitt periode")
@@ -49,11 +26,11 @@ data class ResultatPeriodeBPAndelSaertilskudd(
     @Schema(description = "Beregning grunnlag innhold") var resultatGrunnlag: ResultatGrunnlagBPAndelSaertilskudd = ResultatGrunnlagBPAndelSaertilskudd()
 ) {
 
-    constructor(resultatPeriode: ResultatPeriodeCore) : this(
-        resultatDatoFraTil = Periode(resultatPeriode.resultatDatoFraTil),
-        resultatBeregning = ResultatBeregningBPAndelSaertilskudd(resultatPeriode.resultatBeregning),
-        resultatGrunnlag = ResultatGrunnlagBPAndelSaertilskudd(resultatPeriode.resultatGrunnlag)
-    )
+  constructor(resultatPeriode: ResultatPeriodeCore) : this(
+      resultatDatoFraTil = Periode(resultatPeriode.resultatDatoFraTil),
+      resultatBeregning = ResultatBeregningBPAndelSaertilskudd(resultatPeriode.resultatBeregning),
+      resultatGrunnlag = ResultatGrunnlagBPAndelSaertilskudd(resultatPeriode.resultatGrunnlag)
+  )
 }
 
 @Schema(description = "Resultatet av beregning av bidragspliktiges andel av særtilskudd")
@@ -63,11 +40,11 @@ data class ResultatBeregningBPAndelSaertilskudd(
     @Schema(description = "Barnet er selvforsørget") var barnetErSelvforsorget: Boolean = false
 ) {
 
-    constructor(resultatBeregning: ResultatBeregningCore) : this(
-        resultatAndelProsent = resultatBeregning.resultatAndelProsent,
-        resultatAndelBelop = resultatBeregning.resultatAndelBelop,
-        barnetErSelvforsorget = resultatBeregning.barnetErSelvforsorget
-    )
+  constructor(resultatBeregning: ResultatBeregningCore) : this(
+      resultatAndelProsent = resultatBeregning.resultatAndelProsent,
+      resultatAndelBelop = resultatBeregning.resultatAndelBelop,
+      barnetErSelvforsorget = resultatBeregning.barnetErSelvforsorget
+  )
 }
 
 @Schema(description = "Grunnlaget for beregning av bidragspliktiges andel av særtilskudd")
@@ -79,11 +56,11 @@ data class ResultatGrunnlagBPAndelSaertilskudd(
     @Schema(description = "Liste over sjablonperioder") var sjablonListe: List<Sjablon> = emptyList()
 ) {
 
-    constructor(resultatGrunnlag: ResultatGrunnlagCore) : this(
-        nettoSaertilskuddBelop = resultatGrunnlag.nettoSaertilskuddBelop,
-        inntektBPListe = resultatGrunnlag.inntektBPListe.map { Inntekt(it) },
-        inntektBMListe = resultatGrunnlag.inntektBMListe.map { InntektBM(it) },
-        inntektSBListe = resultatGrunnlag.inntektBBListe.map { Inntekt(it) },
-        sjablonListe = resultatGrunnlag.sjablonListe.map { Sjablon(it) }
-    )
+  constructor(resultatGrunnlag: ResultatGrunnlagCore) : this(
+      nettoSaertilskuddBelop = resultatGrunnlag.nettoSaertilskuddBelop,
+      inntektBPListe = resultatGrunnlag.inntektBPListe.map { Inntekt(it) },
+      inntektBMListe = resultatGrunnlag.inntektBMListe.map { InntektBM(it) },
+      inntektSBListe = resultatGrunnlag.inntektBBListe.map { Inntekt(it) },
+      sjablonListe = resultatGrunnlag.sjablonListe.map { Sjablon(it) }
+  )
 }

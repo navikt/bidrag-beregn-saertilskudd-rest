@@ -23,6 +23,10 @@ import no.nav.bidrag.beregn.saertilskudd.rest.TestUtil;
 import no.nav.bidrag.beregn.saertilskudd.rest.consumer.SjablonConsumer;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BeregnTotalSaertilskuddGrunnlag;
 import no.nav.bidrag.beregn.saertilskudd.rest.exception.UgyldigInputException;
+import no.nav.bidrag.beregn.saertilskudd.rest.mapper.BPAndelSaertilskuddCoreMapper;
+import no.nav.bidrag.beregn.saertilskudd.rest.mapper.BidragsevneCoreMapper;
+import no.nav.bidrag.beregn.saertilskudd.rest.mapper.SaertilskuddCoreMapper;
+import no.nav.bidrag.beregn.saertilskudd.rest.mapper.SamvaersfradragCoreMapper;
 import no.nav.bidrag.beregn.samvaersfradrag.SamvaersfradragCore;
 import no.nav.bidrag.beregn.samvaersfradrag.dto.BeregnSamvaersfradragGrunnlagCore;
 import no.nav.bidrag.commons.web.HttpResponse;
@@ -33,6 +37,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
 import org.springframework.http.HttpStatus;
 
 @DisplayName("BeregnSaertilskuddServiceTest")
@@ -51,6 +56,18 @@ class BeregnSaertilskuddServiceTest {
   private SamvaersfradragCore samvaersfradragCoreMock;
   @Mock
   private SaertilskuddCore saertilskuddCoreMock;
+
+  @Spy
+  private BidragsevneCoreMapper bidragsevneCoreMapper;
+
+  @Spy
+  private BPAndelSaertilskuddCoreMapper bpAndelSaertilskuddCoreMapper;
+
+  @Spy
+  private SamvaersfradragCoreMapper samvaersfradragCoreMapper;
+
+  @Spy
+  private SaertilskuddCoreMapper saertilskuddCoreMapper;
 
   @BeforeEach
   void initMocksOgSettOppSjablonMocks() {
@@ -235,78 +252,5 @@ class BeregnSaertilskuddServiceTest {
         .withMessageContaining("Ugyldig input ved beregning av særtilskudd. Følgende avvik ble funnet:")
         .withMessageContaining("beregnDatoFra kan ikke være null")
         .withMessageContaining("periodeDatoTil må være etter periodeDatoFra");
-  }
-
-  @Test
-  @DisplayName("Skal kaste UgyldigInputException ved validering av inputdata - søknadsbarn")
-  void skalKasteUgyldigInputExceptionVedValideringAvInputdataSoknadsbarn() {
-    assertThatExceptionOfType(UgyldigInputException.class)
-        .isThrownBy(() -> beregnSaertilskuddService.beregn(
-            new BeregnTotalSaertilskuddGrunnlag(LocalDate.parse("2017-01-01"), LocalDate.parse("2020-01-01"),
-                TestUtil.byggSoknadsbarnGrunnlagUtenSoknadsbarnFodselsdato(), TestUtil.byggInntektGrunnlag(), TestUtil.byggBidragsevneGrunnlag(),
-                TestUtil.byggBPAndelSaertilskuddGrunnlag(), TestUtil.byggSamvaersfradragGrunnlag(), TestUtil.byggSaertilskuddGrunnlag())))
-        .withMessageContaining("soknadsbarnFodselsdato kan ikke være null");
-  }
-
-  @Test
-  @DisplayName("Skal kaste UgyldigInputException ved validering av inputdata - inntekt")
-  void skalKasteUgyldigInputExceptionVedValideringAvInputdataInntekt() {
-    assertThatExceptionOfType(UgyldigInputException.class)
-        .isThrownBy(() -> beregnSaertilskuddService.beregn(
-            new BeregnTotalSaertilskuddGrunnlag(LocalDate.parse("2017-01-01"), LocalDate.parse("2020-01-01"), TestUtil.byggSoknadsbarnGrunnlag(),
-                TestUtil.byggInntektGrunnlagUtenInntektBMBelop(), TestUtil.byggBidragsevneGrunnlag(), TestUtil.byggBPAndelSaertilskuddGrunnlag(),
-                TestUtil.byggSamvaersfradragGrunnlag(), TestUtil.byggSaertilskuddGrunnlag())))
-        .withMessageContaining("BM inntektBelop kan ikke være null");
-  }
-
-  @Test
-  @DisplayName("Skal kaste UgyldigInputException ved validering av inputdata - bidragsevne")
-  void skalKasteUgyldigInputExceptionVedValideringAvInputdataBidragsevne() {
-    assertThatExceptionOfType(UgyldigInputException.class)
-        .isThrownBy(() -> beregnSaertilskuddService.beregn(
-            new BeregnTotalSaertilskuddGrunnlag(LocalDate.parse("2017-01-01"), LocalDate.parse("2020-01-01"), TestUtil.byggSoknadsbarnGrunnlag(),
-                TestUtil.byggInntektGrunnlag(), TestUtil.byggBidragsevneGrunnlagUtenBostatusKode(), TestUtil.byggBPAndelSaertilskuddGrunnlag(),
-                TestUtil.byggSamvaersfradragGrunnlag(), TestUtil.byggSaertilskuddGrunnlag())))
-        .withMessageContaining("bostatusKode kan ikke være null");
-  }
-
-  @Test
-  @DisplayName("Skal kaste UgyldigInputException ved validering av inputdata - BPs andel særtilskudd")
-  void skalKasteUgyldigInputExceptionVedValideringAvInputdataBPAndelSaertilskudd() {
-    when(bidragsevneCoreMock.beregnBidragsevne(any())).thenReturn(TestUtil.dummyBidragsevneResultatCore());
-    assertThatExceptionOfType(UgyldigInputException.class)
-        .isThrownBy(() -> beregnSaertilskuddService.beregn(
-            new BeregnTotalSaertilskuddGrunnlag(LocalDate.parse("2017-01-01"), LocalDate.parse("2020-01-01"), TestUtil.byggSoknadsbarnGrunnlag(),
-                TestUtil.byggInntektGrunnlag(), TestUtil.byggBidragsevneGrunnlag(),
-                TestUtil.byggBPAndelSaertilskuddGrunnlagUtenNettoSaertilskuddBelop(),
-                TestUtil.byggSamvaersfradragGrunnlag(), TestUtil.byggSaertilskuddGrunnlag())))
-        .withMessageContaining("nettoSaertilskuddBelop kan ikke være null");
-  }
-
-  @Test
-  @DisplayName("Skal kaste UgyldigInputException ved validering av inputdata - samværsfradrag")
-  void skalKasteUgyldigInputExceptionVedValideringAvInputdataSamvaersfradrag() {
-    when(bidragsevneCoreMock.beregnBidragsevne(any())).thenReturn(TestUtil.dummyBidragsevneResultatCore());
-    when(bpAndelSaertilskuddCoreMock.beregnBPsAndelSaertilskudd(any())).thenReturn(TestUtil.dummyBPsAndelSaertilskuddResultatCore());
-    assertThatExceptionOfType(UgyldigInputException.class)
-        .isThrownBy(() -> beregnSaertilskuddService.beregn(
-            new BeregnTotalSaertilskuddGrunnlag(LocalDate.parse("2017-01-01"), LocalDate.parse("2020-01-01"), TestUtil.byggSoknadsbarnGrunnlag(),
-                TestUtil.byggInntektGrunnlag(), TestUtil.byggBidragsevneGrunnlag(), TestUtil.byggBPAndelSaertilskuddGrunnlag(),
-                TestUtil.byggSamvaersfradragGrunnlagUtenSamvaersklasseId(), TestUtil.byggSaertilskuddGrunnlag())))
-        .withMessageContaining("samvaersklasseId kan ikke være null");
-  }
-
-  @Test
-  @DisplayName("Skal kaste UgyldigInputException ved validering av inputdata - saertilskudd")
-  void skalKasteUgyldigInputExceptionVedValideringAvInputdataSaertilskudd() {
-    when(bidragsevneCoreMock.beregnBidragsevne(any())).thenReturn(TestUtil.dummyBidragsevneResultatCore());
-    when(bpAndelSaertilskuddCoreMock.beregnBPsAndelSaertilskudd(any())).thenReturn(TestUtil.dummyBPsAndelSaertilskuddResultatCore());
-    when(samvaersfradragCoreMock.beregnSamvaersfradrag(any())).thenReturn(TestUtil.dummySamvaersfradragResultatCore());
-    assertThatExceptionOfType(UgyldigInputException.class)
-        .isThrownBy(() -> beregnSaertilskuddService.beregn(
-            new BeregnTotalSaertilskuddGrunnlag(LocalDate.parse("2017-01-01"), LocalDate.parse("2020-01-01"), TestUtil.byggSoknadsbarnGrunnlag(),
-                TestUtil.byggInntektGrunnlag(), TestUtil.byggBidragsevneGrunnlag(), TestUtil.byggBPAndelSaertilskuddGrunnlag(),
-                TestUtil.byggSamvaersfradragGrunnlag(), TestUtil.byggSaertilskuddGrunnlagUtenLopendeBidragBelop())))
-        .withMessageContaining("lopendeBidragBelop kan ikke være null");
   }
 }

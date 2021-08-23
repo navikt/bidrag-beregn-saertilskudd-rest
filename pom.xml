@@ -25,7 +25,7 @@
     <bidrag-commons.version>0.5.6</bidrag-commons.version>
     <bidrag-commons-test.version>0.2.1</bidrag-commons-test.version>
     <bidrag-beregn-felles.version>0.14.7</bidrag-beregn-felles.version>
-    <bidrag-beregn-saertilskudd-core.version>0.5.5</bidrag-beregn-saertilskudd-core.version>
+    <bidrag-beregn-saertilskudd-core.version>0.5.6</bidrag-beregn-saertilskudd-core.version>
     <springdoc-openapi-ui.version>1.5.9</springdoc-openapi-ui.version>
     <wiremock-standalone.version>2.27.2</wiremock-standalone.version>
     <springframework-cloud.version>2.2.3.RELEASE</springframework-cloud.version>
@@ -93,6 +93,19 @@
     <dependency>
       <groupId>io.micrometer</groupId>
       <artifactId>micrometer-registry-prometheus</artifactId>
+    </dependency>
+
+    <!-- JacksonObjectMapper for Kotlin -->
+    <dependency>
+      <groupId>com.fasterxml.jackson.module</groupId>
+      <artifactId>jackson-module-kotlin</artifactId>
+      <version>2.12.4</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.fasterxml.jackson.datatype</groupId>
+      <artifactId>jackson-datatype-jsr310</artifactId>
+      <version>2.12.4</version>
     </dependency>
 
     <!-- swagger -->
