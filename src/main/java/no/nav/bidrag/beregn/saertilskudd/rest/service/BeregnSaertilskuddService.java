@@ -81,7 +81,7 @@ public class BeregnSaertilskuddService {
     beregnTotalSaertilskuddGrunnlag.valider();
 
     // Validerer og henter ut soknadsbarn
-    SoknadsBarnInfo soknadsBarnInfo = validerSoknadsbarnId(beregnTotalSaertilskuddGrunnlag);
+    SoknadsBarnInfo soknadsBarnInfo = validerSoknadsbarn(beregnTotalSaertilskuddGrunnlag);
 
     // Lager en map for sjablontall (id og navn)
     var sjablontallMap = new HashMap<String, SjablonTallNavn>();
@@ -97,7 +97,7 @@ public class BeregnSaertilskuddService {
   }
 
   //  Validerer at det kun er oppgitt ett SoknadsbarnInfo-grunnlag og at mapping til SoknadsBarnInfo objekt ikke feiler
-  protected static SoknadsBarnInfo validerSoknadsbarnId(BeregnTotalSaertilskuddGrunnlag beregnTotalSaertilskuddGrunnlag) {
+  private SoknadsBarnInfo validerSoknadsbarn(BeregnTotalSaertilskuddGrunnlag beregnTotalSaertilskuddGrunnlag) {
     List<Grunnlag> soknadsbarnInfoGrunnlag = beregnTotalSaertilskuddGrunnlag.getGrunnlagListe().stream()
         .filter(grunnlag -> grunnlag.getType().equals(GrunnlagType.SOKNADSBARN_INFO)).toList();
     if (soknadsbarnInfoGrunnlag.size() != 1) {
