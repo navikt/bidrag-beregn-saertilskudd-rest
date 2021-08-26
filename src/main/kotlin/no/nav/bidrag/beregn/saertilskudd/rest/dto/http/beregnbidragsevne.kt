@@ -22,13 +22,13 @@ data class BeregnBPBidragsevneResultat(
 data class ResultatPeriodeBidragsevne(
     @Schema(description = "Beregning resultat fra-til-dato") var resultatDatoFraTil: Periode = Periode(),
     @Schema(description = "Beregning resultat innhold") var resultatBeregning: ResultatBeregningBidragsevne = ResultatBeregningBidragsevne(),
-    @Schema(description = "Beregning grunnlag innhold") var resultatGrunnlag: ResultatGrunnlagBidragsevne = ResultatGrunnlagBidragsevne()
+    @Schema(description = "Beregning grunnlag innhold") var grunnlagReferanseListe: List<String> = emptyList()
 ) {
 
   constructor(resultatPeriode: ResultatPeriodeCore) : this(
-      resultatDatoFraTil = Periode(resultatPeriode.resultatDatoFraTil),
+      resultatDatoFraTil = Periode(resultatPeriode.periode),
       resultatBeregning = ResultatBeregningBidragsevne(resultatPeriode.resultatBeregning),
-      resultatGrunnlag = ResultatGrunnlagBidragsevne(resultatPeriode.resultatGrunnlag)
+      grunnlagReferanseListe = resultatPeriode.grunnlagReferanseListe
   )
 }
 

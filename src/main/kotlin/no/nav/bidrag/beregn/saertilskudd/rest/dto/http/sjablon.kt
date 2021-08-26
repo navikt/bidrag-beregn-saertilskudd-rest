@@ -11,7 +11,7 @@ data class Sjablon(
 ) {
 
   constructor(sjablon: SjablonNavnVerdiCore) : this(
-      sjablonNavn = sjablon.sjablonNavn,
-      sjablonVerdi = sjablon.sjablonVerdi
+      sjablonNavn = sjablon.navn,
+      sjablonVerdi = sjablon.verdi
   )
 }

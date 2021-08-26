@@ -7,8 +7,11 @@ import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import no.nav.bidrag.beregn.felles.dto.PeriodeCore;
@@ -31,6 +34,7 @@ public abstract class CoreMapper {
 
   protected static final String BP_ANDEL_SAERTILSKUDD = "BPsAndelSaertilskudd";
   protected static final String BIDRAGSEVNE = "Bidragsevne";
+  protected static final String SAERTILSKUDD = "Saertilskudd";
 
   // Mapper sjabloner av typen sjablontall
   // Filtrerer bort de sjablonene som ikke brukes i den aktuelle delberegningen og de som ikke er innenfor intervallet beregnDatoFra-beregnDatoTil
@@ -76,6 +80,7 @@ public abstract class CoreMapper {
   private boolean filtrerSjablonTall(SjablonTallNavn sjablonTallNavn, String delberegning) {
 
     return switch (delberegning) {
+      case SAERTILSKUDD -> sjablonTallNavn.getSaertilskudd();
       case BIDRAGSEVNE -> sjablonTallNavn.getBidragsevne();
       case BP_ANDEL_SAERTILSKUDD -> sjablonTallNavn.getBpAndelSaertilskudd();
       default -> false;
@@ -104,6 +109,14 @@ public abstract class CoreMapper {
         .collect(toList());
   }
 
+  protected Map<String, SjablonTallNavn> mapSjablontall() {
+    var sjablontallMap = new HashMap<String, SjablonTallNavn>();
+    for (SjablonTallNavn sjablonTallNavn : SjablonTallNavn.values()) {
+      sjablontallMap.put(sjablonTallNavn.getId(), sjablonTallNavn);
+    }
+    return sjablontallMap;
+  }
+
   public static <T> T grunnlagTilObjekt(Grunnlag grunnlag, Class<T> contentClass) {
     try {
       jacksonObjectMapper().registerModule(new JavaTimeModule());
@@ -112,5 +125,10 @@ public abstract class CoreMapper {
     } catch (JsonProcessingException e) {
       throw new UgyldigInputException("Kunne ikke deserialisere " + contentClass.getName() + ". " + e.getMessage());
     }
+  }
+
+  public static JsonNode tilJsonNode(Object object) {
+    var mapper = new ObjectMapper();
+    return mapper.valueToTree(object);
   }
 }

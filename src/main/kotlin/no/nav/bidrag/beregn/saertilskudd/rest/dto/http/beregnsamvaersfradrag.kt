@@ -23,13 +23,13 @@ data class BeregnBPSamvaersfradragResultat(
 data class ResultatPeriodeSamvaersfradrag(
     @Schema(description = "Beregning resultat fra-til-dato") var resultatDatoFraTil: Periode = Periode(),
     @Schema(description = "Beregning resultat innhold liste") var resultatBeregningListe: List<ResultatBeregningSamvaersfradrag> = emptyList(),
-    @Schema(description = "Beregning grunnlag innhold") var resultatGrunnlag: ResultatGrunnlagSamvaersfradrag = ResultatGrunnlagSamvaersfradrag()
+    @Schema(description = "Beregning grunnlag innhold") var grunnlagReferanseListe: List<String> = emptyList()
 ) {
 
   constructor(resultatPeriode: ResultatPeriodeCore) : this(
-      resultatDatoFraTil = Periode(resultatPeriode.resultatDatoFraTil),
+      resultatDatoFraTil = Periode(resultatPeriode.periode),
       resultatBeregningListe = resultatPeriode.resultatBeregningListe.map { ResultatBeregningSamvaersfradrag(it) },
-      resultatGrunnlag = ResultatGrunnlagSamvaersfradrag(resultatPeriode.resultatGrunnlag)
+      grunnlagReferanseListe = resultatPeriode.grunnlagReferanseListe
   )
 }
 

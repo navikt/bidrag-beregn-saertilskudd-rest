@@ -40,15 +40,17 @@ data class BeregnSaertilskuddResultat(
 
 @Schema(description = "Resultatet av beregning av særtilskudd for en gitt periode")
 data class ResultatPeriodeSaertilskudd(
+    @Schema(description = "Søknadsbarn") var soknadsbarnId: Int = 0,
     @Schema(description = "Beregning resultat fra-til-dato") var resultatDatoFraTil: Periode = Periode(),
     @Schema(description = "Beregning resultat innhold liste") var resultatBeregning: ResultatBeregningSaertilskudd = ResultatBeregningSaertilskudd(),
-    @Schema(description = "Beregning grunnlag innhold") var resultatGrunnlag: ResultatGrunnlagSaertilskudd = ResultatGrunnlagSaertilskudd()
+    @Schema(description = "Beregnet grunnlag innhold") var grunnlagReferanseListe: List<String> = emptyList()
 ) {
 
   constructor(resultatPeriode: ResultatPeriodeCore) : this(
+      soknadsbarnId = resultatPeriode.soknadsbarnPersonId,
       resultatDatoFraTil = Periode(resultatPeriode.periode),
-      resultatBeregning = ResultatBeregningSaertilskudd(resultatPeriode.resultatBeregning),
-      resultatGrunnlag = ResultatGrunnlagSaertilskudd(resultatPeriode.resultatGrunnlag)
+      resultatBeregning = ResultatBeregningSaertilskudd(resultatPeriode.resultat),
+      grunnlagReferanseListe = resultatPeriode.grunnlagReferanseListe
   )
 }
 

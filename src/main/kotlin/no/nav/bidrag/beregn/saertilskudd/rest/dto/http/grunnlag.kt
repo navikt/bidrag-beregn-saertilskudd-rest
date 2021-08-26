@@ -13,6 +13,7 @@ import no.nav.bidrag.beregn.bidragsevne.dto.SaerfradragPeriodeCore
 import no.nav.bidrag.beregn.bidragsevne.dto.SkatteklassePeriodeCore
 import no.nav.bidrag.beregn.bpsandelsaertilskudd.dto.NettoSaertilskuddPeriodeCore
 import no.nav.bidrag.beregn.felles.dto.PeriodeCore
+import no.nav.bidrag.beregn.saertilskudd.dto.BPsAndelSaertilskuddPeriodeCore
 import no.nav.bidrag.beregn.saertilskudd.dto.LopendeBidragPeriodeCore
 import no.nav.bidrag.beregn.saertilskudd.rest.exception.UgyldigInputException
 import no.nav.bidrag.beregn.samvaersfradrag.dto.SamvaersklassePeriodeCore
@@ -117,7 +118,7 @@ class SBInntekt(datoFom: LocalDate, datoTil: LocalDate, rolle: Rolle, inntektTyp
   }
 }
 
-class BarnIHusstand(datoFom: LocalDate, datoTil: LocalDate, val antall: BigDecimal?) : BasePeriode(datoFom, datoTil) {
+class BarnIHusstand(datoFom: LocalDate, datoTil: LocalDate, val antall: Double?) : BasePeriode(datoFom, datoTil) {
 
   fun valider() {
     if (antall == null) throw UgyldigInputException("antall kan ikke være null")
@@ -255,3 +256,11 @@ data class SoknadsBarnInfo(
     @JsonSerialize(using = LocalDateSerializer::class)
     val fodselsdato: LocalDate
 )
+
+class Bidragsevne(datoFom: LocalDate, datoTil: LocalDate, val belop: BigDecimal, val grunnlagReferanseListe: List<String>) : BasePeriode(datoFom, datoTil) {}
+
+class BPsAndelSaertilskudd(datoFom: LocalDate, datoTil: LocalDate, val belop: BigDecimal, val prosent: BigDecimal, val selvforsorget: Boolean, val grunnlagReferanseListe: List<String>) : BasePeriode(datoFom, datoTil) {}
+
+class Samvaersfradrag(datoFom: LocalDate, datoTil: LocalDate, val belop: BigDecimal, val barn: Int, val grunnlagReferanseListe: List<String>) : BasePeriode(datoFom, datoTil) {}
+
+class SjablonPeriode(datoFom: LocalDate, datoTil: LocalDate, val sjablonNavn: String, val sjablonVerdi: Int): BasePeriode(datoFom, datoTil) {}

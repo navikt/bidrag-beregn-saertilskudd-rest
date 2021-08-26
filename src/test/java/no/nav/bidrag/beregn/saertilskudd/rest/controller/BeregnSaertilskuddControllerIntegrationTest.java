@@ -8,9 +8,10 @@ import static org.springframework.http.HttpStatus.OK;
 import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import no.nav.bidrag.beregn.saertilskudd.rest.SaertilskuddDelberegningResultat;
 import no.nav.bidrag.beregn.saertilskudd.rest.BidragBeregnSaertilskuddLocal;
 import no.nav.bidrag.beregn.saertilskudd.rest.consumer.wiremock_stub.SjablonApiStub;
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BeregnTotalSaertilskuddResultat;
+import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BeregnetTotalSaertilskuddResultat;
 import no.nav.bidrag.commons.web.test.HttpHeaderTestRestTemplate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -201,45 +202,26 @@ public class BeregnSaertilskuddControllerIntegrationTest {
     var request = lesFilOgByggRequest(filnavn);
 
     // Kall rest-API for saertilskudd
-    var responseEntity = httpHeaderTestRestTemplate.exchange(url, HttpMethod.POST, request, BeregnTotalSaertilskuddResultat.class);
+    var responseEntity = httpHeaderTestRestTemplate.exchange(url, HttpMethod.POST, request, BeregnetTotalSaertilskuddResultat.class);
     var totalSaertilskuddResultat = responseEntity.getBody();
+
+    var saertilskuddDelberegningResultat = new SaertilskuddDelberegningResultat(totalSaertilskuddResultat);
 
     assertAll(
         () -> assertThat(responseEntity.getStatusCode()).isEqualTo(OK),
         () -> assertThat(totalSaertilskuddResultat).isNotNull(),
 
-        // Sjekk BeregnBPBidragsevneResultat
-        () -> assertThat(totalSaertilskuddResultat.getBeregnBPBidragsevneResultat()).isNotNull(),
-        () -> assertThat(totalSaertilskuddResultat.getBeregnBPBidragsevneResultat().getResultatPeriodeListe()).isNotNull(),
-        () -> assertThat(totalSaertilskuddResultat.getBeregnBPBidragsevneResultat().getResultatPeriodeListe().size()).isEqualTo(1),
-        () -> assertThat(totalSaertilskuddResultat.getBeregnBPBidragsevneResultat().getResultatPeriodeListe().get(0).getResultatBeregning()
-            .getResultatEvneBelop()).isEqualTo(forventetBidragsevneBelop),
-
-        // Sjekk BeregnBPAndelSaertilskuddResultat
-        () -> assertThat(totalSaertilskuddResultat.getBeregnBPAndelSaertilskuddResultat()).isNotNull(),
-        () -> assertThat(totalSaertilskuddResultat.getBeregnBPAndelSaertilskuddResultat().getResultatPeriodeListe()).isNotNull(),
-        () -> assertThat(totalSaertilskuddResultat.getBeregnBPAndelSaertilskuddResultat().getResultatPeriodeListe().size()).isEqualTo(1),
-        () -> assertThat(totalSaertilskuddResultat.getBeregnBPAndelSaertilskuddResultat().getResultatPeriodeListe().get(0).getResultatBeregning()
-            .getResultatAndelProsent()).isEqualTo(forventetBPAndelSaertilskuddProsentBarn),
-        () -> assertThat(totalSaertilskuddResultat.getBeregnBPAndelSaertilskuddResultat().getResultatPeriodeListe().get(0).getResultatBeregning()
-            .getResultatAndelBelop()).isEqualTo(forventetBPAndelSaertilskuddBelopBarn),
-
-        // Sjekk BeregnBPSamvaersfradragResultat
-        () -> assertThat(totalSaertilskuddResultat.getBeregnBPSamvaersfradragResultat()).isNotNull(),
-        () -> assertThat(totalSaertilskuddResultat.getBeregnBPSamvaersfradragResultat().getResultatPeriodeListe()).isNotNull(),
-        () -> assertThat(totalSaertilskuddResultat.getBeregnBPSamvaersfradragResultat().getResultatPeriodeListe().size()).isEqualTo(1),
-        () -> assertThat(totalSaertilskuddResultat.getBeregnBPSamvaersfradragResultat().getResultatPeriodeListe().get(0)
-            .getResultatBeregningListe().get(0).getResultatBelop()).isEqualTo(forventetSamvaersfradragBelopBarn1),
-
-        // Sjekk BeregnSaertilskuddResultat
-        () -> assertThat(totalSaertilskuddResultat.getBeregnSaertilskuddResultat()).isNotNull(),
-        () -> assertThat(totalSaertilskuddResultat.getBeregnSaertilskuddResultat().getResultatPeriodeListe()).isNotNull(),
-        () -> assertThat(totalSaertilskuddResultat.getBeregnSaertilskuddResultat().getResultatPeriodeListe().size()).isEqualTo(1),
-        () -> assertThat(totalSaertilskuddResultat.getBeregnSaertilskuddResultat().getResultatPeriodeListe().get(0)
-            .getResultatBeregning().getResultatBelop().compareTo(forventetSaertilskuddBelopBarn)).isZero(),
-        () -> assertThat(totalSaertilskuddResultat.getBeregnSaertilskuddResultat().getResultatPeriodeListe().get(0)
-            .getResultatBeregning().getResultatKode()).isEqualTo(
-            forventetSaertilskuddResultatkodeBarn)
+        () -> assertThat(totalSaertilskuddResultat.getBeregnetSaertilskuddPeriodeListe()).isNotNull(),
+        () -> assertThat(totalSaertilskuddResultat.getBeregnetSaertilskuddPeriodeListe().size()).isEqualTo(1),
+        () -> assertThat(totalSaertilskuddResultat.getBeregnetSaertilskuddPeriodeListe().get(0).getResultat().getBelop()).isEqualTo(forventetSaertilskuddBelopBarn),
+        () -> assertThat(totalSaertilskuddResultat.getBeregnetSaertilskuddPeriodeListe().get(0).getResultat().getKode()).isEqualTo(forventetSaertilskuddResultatkodeBarn),
+        () -> assertThat(saertilskuddDelberegningResultat.bidragsevneListe).size().isEqualTo(1),
+        () -> assertThat(saertilskuddDelberegningResultat.bidragsevneListe.get(0).getBelop()).isEqualTo(forventetBidragsevneBelop),
+        () -> assertThat(saertilskuddDelberegningResultat.bpsAndelSaertilskuddListe).size().isEqualTo(1),
+        () -> assertThat(saertilskuddDelberegningResultat.bpsAndelSaertilskuddListe.get(0).getBelop()).isEqualTo(forventetBPAndelSaertilskuddBelopBarn),
+        () -> assertThat(saertilskuddDelberegningResultat.bpsAndelSaertilskuddListe.get(0).getProsent()).isEqualTo(forventetBPAndelSaertilskuddProsentBarn),
+        () -> assertThat(saertilskuddDelberegningResultat.samvaersfradragListe).size().isEqualTo(1),
+        () -> assertThat(saertilskuddDelberegningResultat.samvaersfradragListe.get(0).getBelop()).isEqualTo(forventetSamvaersfradragBelopBarn1)
     );
   }
 
@@ -247,47 +229,35 @@ public class BeregnSaertilskuddControllerIntegrationTest {
     var request = lesFilOgByggRequest(filnavn);
 
     // Kall rest-API for Saertilskudd
-    var responseEntity = httpHeaderTestRestTemplate.exchange(url, HttpMethod.POST, request, BeregnTotalSaertilskuddResultat.class);
+    var responseEntity = httpHeaderTestRestTemplate.exchange(url, HttpMethod.POST, request, BeregnetTotalSaertilskuddResultat.class);
     var totalSaertilskuddResultat = responseEntity.getBody();
+
+    var saertilskuddDelberegningResultat = new SaertilskuddDelberegningResultat(totalSaertilskuddResultat);
+
 
     assertAll(
         () -> assertThat(responseEntity.getStatusCode()).isEqualTo(OK),
         () -> assertThat(totalSaertilskuddResultat).isNotNull(),
 
         // Sjekk BeregnBPBidragsevneResultat
-        () -> assertThat(totalSaertilskuddResultat.getBeregnBPBidragsevneResultat()).isNotNull(),
-        () -> assertThat(totalSaertilskuddResultat.getBeregnBPBidragsevneResultat().getResultatPeriodeListe()).isNotNull(),
-        () -> assertThat(totalSaertilskuddResultat.getBeregnBPBidragsevneResultat().getResultatPeriodeListe().size()).isEqualTo(1),
-        () -> assertThat(totalSaertilskuddResultat.getBeregnBPBidragsevneResultat().getResultatPeriodeListe().get(0).getResultatBeregning()
-            .getResultatEvneBelop()).isEqualTo(forventetBidragsevneBelop),
+        () -> assertThat(saertilskuddDelberegningResultat.bidragsevneListe.size()).isEqualTo(1),
+        () -> assertThat(saertilskuddDelberegningResultat.bidragsevneListe.get(0).getBelop()).isEqualTo(forventetBidragsevneBelop),
 
         // Sjekk BeregnBPAndelSaertilskuddResultat
-        () -> assertThat(totalSaertilskuddResultat.getBeregnBPAndelSaertilskuddResultat()).isNotNull(),
-        () -> assertThat(totalSaertilskuddResultat.getBeregnBPAndelSaertilskuddResultat().getResultatPeriodeListe()).isNotNull(),
-        () -> assertThat(totalSaertilskuddResultat.getBeregnBPAndelSaertilskuddResultat().getResultatPeriodeListe().size()).isEqualTo(1),
-        () -> assertThat(totalSaertilskuddResultat.getBeregnBPAndelSaertilskuddResultat().getResultatPeriodeListe().get(0).getResultatBeregning()
-            .getResultatAndelBelop()).isEqualTo(forventetBPAndelSaertilskuddBelopBarn),
-        () -> assertThat(totalSaertilskuddResultat.getBeregnBPAndelSaertilskuddResultat().getResultatPeriodeListe().get(0).getResultatBeregning()
-            .getResultatAndelProsent()).isEqualTo(forventetBPAndelSaertilskuddProsentBarn),
+        () -> assertThat(saertilskuddDelberegningResultat.bpsAndelSaertilskuddListe.size()).isEqualTo(1),
+        () -> assertThat(saertilskuddDelberegningResultat.bpsAndelSaertilskuddListe.get(0).getBelop()).isEqualTo(forventetBPAndelSaertilskuddBelopBarn),
+        () -> assertThat(saertilskuddDelberegningResultat.bpsAndelSaertilskuddListe.get(0).getProsent()).isEqualTo(forventetBPAndelSaertilskuddProsentBarn),
 
         // Sjekk BeregnBPSamvaersfradragResultat
-        () -> assertThat(totalSaertilskuddResultat.getBeregnBPSamvaersfradragResultat()).isNotNull(),
-        () -> assertThat(totalSaertilskuddResultat.getBeregnBPSamvaersfradragResultat().getResultatPeriodeListe()).isNotNull(),
-        () -> assertThat(totalSaertilskuddResultat.getBeregnBPSamvaersfradragResultat().getResultatPeriodeListe().size()).isEqualTo(1),
-        () -> assertThat(totalSaertilskuddResultat.getBeregnBPSamvaersfradragResultat().getResultatPeriodeListe().get(0).getResultatBeregningListe()
-            .get(0).getResultatBelop()).isEqualTo(forventetSamvaersfradragBelopBarn1),
-        () -> assertThat(totalSaertilskuddResultat.getBeregnBPSamvaersfradragResultat().getResultatPeriodeListe().get(0).getResultatBeregningListe()
-            .get(1).getResultatBelop()).isEqualTo(forventetSamvaersfradragBelopBarn2),
+        () -> assertThat(saertilskuddDelberegningResultat.samvaersfradragListe.size()).isEqualTo(2),
+        () -> assertThat(saertilskuddDelberegningResultat.samvaersfradragListe.get(0).getBelop()).isEqualTo(forventetSamvaersfradragBelopBarn1),
+        () -> assertThat(saertilskuddDelberegningResultat.samvaersfradragListe.get(1).getBelop()).isEqualTo(forventetSamvaersfradragBelopBarn2),
 
-        // Sjekk BeregnSaertilskuddResultat
-        () -> assertThat(totalSaertilskuddResultat.getBeregnSaertilskuddResultat()).isNotNull(),
-        () -> assertThat(totalSaertilskuddResultat.getBeregnSaertilskuddResultat().getResultatPeriodeListe()).isNotNull(),
-        () -> assertThat(totalSaertilskuddResultat.getBeregnSaertilskuddResultat().getResultatPeriodeListe().size()).isEqualTo(1),
+        () -> assertThat(totalSaertilskuddResultat.getBeregnetSaertilskuddPeriodeListe().size()).isEqualTo(1),
 
-        () -> assertThat(totalSaertilskuddResultat.getBeregnSaertilskuddResultat().getResultatPeriodeListe().get(0).getResultatBeregning()
-            .getResultatBelop().compareTo(forventetSaertilskuddBelopBarn)).isZero(),
-        () -> assertThat(totalSaertilskuddResultat.getBeregnSaertilskuddResultat().getResultatPeriodeListe().get(0).getResultatBeregning()
-            .getResultatKode()).isEqualTo(forventetSaertilskuddResultatkodeBarn)
+        () -> assertThat(totalSaertilskuddResultat.getBeregnetSaertilskuddPeriodeListe().get(0).getResultat().getBelop()).isEqualTo(forventetSaertilskuddBelopBarn),
+        () -> assertThat(totalSaertilskuddResultat.getBeregnetSaertilskuddPeriodeListe().get(0).getResultat()
+            .getKode()).isEqualTo(forventetSaertilskuddResultatkodeBarn)
 
     );
   }

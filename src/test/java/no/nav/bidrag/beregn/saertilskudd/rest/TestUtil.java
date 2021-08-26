@@ -4,90 +4,92 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import no.nav.bidrag.beregn.bidragsevne.dto.BeregnBidragsevneResultatCore;
-import no.nav.bidrag.beregn.bidragsevne.dto.InntektCore;
 import no.nav.bidrag.beregn.bpsandelsaertilskudd.dto.BeregnBPsAndelSaertilskuddResultatCore;
 import no.nav.bidrag.beregn.felles.dto.AvvikCore;
 import no.nav.bidrag.beregn.felles.dto.PeriodeCore;
-import no.nav.bidrag.beregn.saertilskudd.dto.BPsAndelSaertilskuddCore;
 import no.nav.bidrag.beregn.saertilskudd.dto.BeregnSaertilskuddResultatCore;
-import no.nav.bidrag.beregn.saertilskudd.dto.BidragsevneCore;
-import no.nav.bidrag.beregn.saertilskudd.dto.LopendeBidragCore;
-import no.nav.bidrag.beregn.saertilskudd.dto.SamvaersfradragCore;
 import no.nav.bidrag.beregn.saertilskudd.rest.consumer.Bidragsevne;
 import no.nav.bidrag.beregn.saertilskudd.rest.consumer.Samvaersfradrag;
 import no.nav.bidrag.beregn.saertilskudd.rest.consumer.Sjablontall;
 import no.nav.bidrag.beregn.saertilskudd.rest.consumer.TrinnvisSkattesats;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BMInntekt;
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BPAndelSaertilskuddGrunnlag;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BPInntekt;
+import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BPsAndelSaertilskudd;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BarnIHusstand;
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BeregnBPAndelSaertilskuddResultat;
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BeregnBPBidragsevneResultat;
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BeregnBPSamvaersfradragResultat;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BeregnSaertilskuddResultat;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BeregnTotalSaertilskuddGrunnlag;
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BidragsevneGrunnlag;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.Bostatus;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.Grunnlag;
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.GrunnlagBarn;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.GrunnlagType;
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.Inntekt;
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.InntektBM;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.LopendeBidrag;
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.LopendeBidragGrunnlag;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.NettoSaertilskudd;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.Periode;
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.ResultatBeregningBPAndelSaertilskudd;
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.ResultatBeregningBidragsevne;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.ResultatBeregningSaertilskudd;
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.ResultatBeregningSamvaersfradrag;
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.ResultatGrunnlagBPAndelSaertilskudd;
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.ResultatGrunnlagBidragsevne;
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.ResultatGrunnlagSaertilskudd;
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.ResultatGrunnlagSamvaersfradrag;
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.ResultatPeriodeBPAndelSaertilskudd;
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.ResultatPeriodeBidragsevne;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.ResultatPeriodeSaertilskudd;
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.ResultatPeriodeSamvaersfradrag;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.Rolle;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.SBInntekt;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.Saerfradrag;
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.SamvaersfradragGrunnlag;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.Samvaersklasse;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.Skatteklasse;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.SoknadsBarnInfo;
 import no.nav.bidrag.beregn.samvaersfradrag.dto.BeregnSamvaersfradragResultatCore;
-import no.nav.bidrag.beregn.samvaersfradrag.dto.GrunnlagBeregningPeriodisertCore;
-import no.nav.bidrag.beregn.samvaersfradrag.dto.SamvaersfradragGrunnlagPerBarnCore;
 
 import static com.fasterxml.jackson.module.kotlin.ExtensionsKt.jacksonObjectMapper;
+
 public class TestUtil {
+
+  public static final String BIDRAGSEVNE_REFERANSE = "BIDRAGSEVNE_REFERANSE";
+  public static final String LOPENDE_BIDRAG_REFERANSE = "LOPENDE_BIDRAG_REFERANSE";
+  public static final String BPS_ANDEL_SAERTILSKUDD_REFERANSE = "BPS_ANDEL_SAERTILSKUDD_REFERANSE";
+  public static final String SAMVAERSFRADRAG_REFERANSE = "SAMVAERSFRADRAG_REFERANSE";
+
+  public static final String INNTEKT_REFERANSE = "INNTEKT_REFERANSE";
+  public static final String SKATTEKLASSE_REFERANSE = "SKATTEKLASSE_REFERANSE";
+  public static final String BOSTATUS_REFERANSE = "BOSTATUS_REFERANSE";
+  public static final String BARN_I_HUSSTAND_REFERANSE = "BARN_I_HUSSTAND_REFERANSE";
+  public static final String SAERFRADRAG_REFERANSE = "SAERFRADRAG_REFERANSE";
+  public static final String NETTO_SAERTILSKUDD_REFERANSE = "NETTO_SAERTILSKUDD_REFERANSE";
+  public static final String SAMVAERSKLASSE_REFERANSE = "SAMVAERSKLASSE_REFERANSE";
 
 
   public static BeregnTotalSaertilskuddGrunnlag byggTotalSaertilskuddGrunnlag() {
     var grunnlagListe = new ArrayList<Grunnlag>();
-    grunnlagListe.add(new Grunnlag("Mottatt_SoknadsbarnInfo_SB_1", GrunnlagType.SOKNADSBARN_INFO, tilJsonNodeInnhold(new SoknadsBarnInfo(1, LocalDate.parse("2006-08-19")))));
-    grunnlagListe.add(new Grunnlag("Mottatt_Inntekt_AG_20200801_SB_1", GrunnlagType.INNTEKT, tilJsonNodeInnhold(new SBInntekt(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01"),
-        Rolle.SB, "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER", BigDecimal.valueOf(0), 1))));
-    grunnlagListe.add(new Grunnlag("Mottatt_Inntekt_AG_20200801_BM", GrunnlagType.INNTEKT, tilJsonNodeInnhold(new BMInntekt(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01"), "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER", BigDecimal.valueOf(300000),
-        Rolle.BM, false, false))));
-    grunnlagListe.add(new Grunnlag("Mottatt_Inntekt_AG_20200801_BM", GrunnlagType.INNTEKT, tilJsonNodeInnhold(new BMInntekt(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01"), "UTVIDET_BARNETRYGD", BigDecimal.valueOf(12688),
-        Rolle.BM, false, false))));
-    grunnlagListe.add(new Grunnlag("Mottatt_Inntekt_AG_20200801_BP", GrunnlagType.INNTEKT, tilJsonNodeInnhold(new BPInntekt(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01"),
-        Rolle.BP, "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER", BigDecimal.valueOf(500000)))));
-    grunnlagListe.add(new Grunnlag("Mottatt_BarnIHusstand_20200801", GrunnlagType.BARN_I_HUSSTAND, tilJsonNodeInnhold(new BarnIHusstand(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01"), BigDecimal.valueOf(0)))));
-    grunnlagListe.add(new Grunnlag("Mottatt_Bostatus_20200801", GrunnlagType.BOSTATUS, tilJsonNodeInnhold(new Bostatus(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01"), "ALENE"))));
-    grunnlagListe.add(new Grunnlag("Mottatt_Saerfradrag_20200801", GrunnlagType.SAERFRADRAG, tilJsonNodeInnhold(new Saerfradrag(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01"), "INGEN"))));
-    grunnlagListe.add(new Grunnlag("Mottatt_Skatteklasse_20200801", GrunnlagType.SKATTEKLASSE, tilJsonNodeInnhold(new Skatteklasse(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01"), 1))));
-    grunnlagListe.add(new Grunnlag("Mottatt_Netto_Saertilskudd_20200801", GrunnlagType.NETTO_SAERTILSKUDD, tilJsonNodeInnhold(new NettoSaertilskudd(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01"), BigDecimal.valueOf(7000)))));
-    grunnlagListe.add(new Grunnlag("Mottatt_Samvaersklasse_20200801_SB_1", GrunnlagType.SAMVAERSKLASSE, tilJsonNodeInnhold(new Samvaersklasse(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01"), 1, LocalDate.parse("2006-08-19"), "01"))));
-    grunnlagListe.add(new Grunnlag("Mottatt_LoependeBidrag_20200801_SB_1", GrunnlagType.LOPENDE_BIDRAG, tilJsonNodeInnhold(new LopendeBidrag(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01"), 1, BigDecimal.valueOf(2500), BigDecimal.valueOf(2957), BigDecimal.valueOf(2500), BigDecimal.valueOf(457)))));
+    grunnlagListe.add(new Grunnlag("Mottatt_SoknadsbarnInfo_SB_1", GrunnlagType.SOKNADSBARN_INFO,
+        tilJsonNodeInnhold(new SoknadsBarnInfo(1, LocalDate.parse("2006-08-19")))));
+    grunnlagListe.add(new Grunnlag("Mottatt_Inntekt_AG_20200801_SB_1", GrunnlagType.INNTEKT,
+        tilJsonNodeInnhold(new SBInntekt(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01"),
+            Rolle.SB, "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER", BigDecimal.valueOf(0), 1))));
+    grunnlagListe.add(new Grunnlag("Mottatt_Inntekt_AG_20200801_BM", GrunnlagType.INNTEKT, tilJsonNodeInnhold(
+        new BMInntekt(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01"), "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER", BigDecimal.valueOf(300000),
+            Rolle.BM, false, false))));
+    grunnlagListe.add(new Grunnlag("Mottatt_Inntekt_AG_20200801_BM", GrunnlagType.INNTEKT, tilJsonNodeInnhold(
+        new BMInntekt(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01"), "UTVIDET_BARNETRYGD", BigDecimal.valueOf(12688),
+            Rolle.BM, false, false))));
+    grunnlagListe.add(new Grunnlag("Mottatt_Inntekt_AG_20200801_BP", GrunnlagType.INNTEKT,
+        tilJsonNodeInnhold(new BPInntekt(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01"),
+            Rolle.BP, "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER", BigDecimal.valueOf(500000)))));
+    grunnlagListe.add(new Grunnlag("Mottatt_BarnIHusstand_20200801", GrunnlagType.BARN_I_HUSSTAND,
+        tilJsonNodeInnhold(new BarnIHusstand(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01"), Double.valueOf(0)))));
+    grunnlagListe.add(new Grunnlag("Mottatt_Bostatus_20200801", GrunnlagType.BOSTATUS,
+        tilJsonNodeInnhold(new Bostatus(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01"), "ALENE"))));
+    grunnlagListe.add(new Grunnlag("Mottatt_Saerfradrag_20200801", GrunnlagType.SAERFRADRAG,
+        tilJsonNodeInnhold(new Saerfradrag(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01"), "INGEN"))));
+    grunnlagListe.add(new Grunnlag("Mottatt_Skatteklasse_20200801", GrunnlagType.SKATTEKLASSE,
+        tilJsonNodeInnhold(new Skatteklasse(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01"), 1))));
+    grunnlagListe.add(new Grunnlag("Mottatt_Netto_Saertilskudd_20200801", GrunnlagType.NETTO_SAERTILSKUDD,
+        tilJsonNodeInnhold(new NettoSaertilskudd(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01"), BigDecimal.valueOf(7000)))));
+    grunnlagListe.add(new Grunnlag("Mottatt_Samvaersklasse_20200801_SB_1", GrunnlagType.SAMVAERSKLASSE, tilJsonNodeInnhold(
+        new Samvaersklasse(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01"), 1, LocalDate.parse("2006-08-19"), "01"))));
+    grunnlagListe.add(new Grunnlag("Mottatt_LoependeBidrag_20200801_SB_1", GrunnlagType.LOPENDE_BIDRAG, tilJsonNodeInnhold(
+        new LopendeBidrag(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01"), 1, BigDecimal.valueOf(2500), BigDecimal.valueOf(2957),
+            BigDecimal.valueOf(2500), BigDecimal.valueOf(457)))));
 
     return new BeregnTotalSaertilskuddGrunnlag(LocalDate.parse("2021-08-19"), LocalDate.parse("2021-09-19"), grunnlagListe);
   }
@@ -98,13 +100,17 @@ public class TestUtil {
   }
 
   // Bygger opp BeregnBidragsevneResultat
-  public static BeregnBPBidragsevneResultat dummyBidragsevneResultat() {
-    var bidragPeriodeResultatListe = new ArrayList<ResultatPeriodeBidragsevne>();
-    bidragPeriodeResultatListe.add(new ResultatPeriodeBidragsevne(new Periode(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01")),
-        new ResultatBeregningBidragsevne(BigDecimal.valueOf(100)),
-        new ResultatGrunnlagBidragsevne(singletonList(new Inntekt("INNTEKTSOPPL_ARBEIDSGIVER", BigDecimal.valueOf(500000))), 1, "MED_ANDRE",
-            BigDecimal.ONE, "HELT", emptyList())));
-    return new BeregnBPBidragsevneResultat(bidragPeriodeResultatListe);
+  public static Grunnlag dummyBidragsevneResultat() {
+    ObjectMapper objectMapper = new ObjectMapper();
+    var bidragsevne = new no.nav.bidrag.beregn.saertilskudd.rest.dto.http.Bidragsevne(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01"),
+        BigDecimal.valueOf(100), new ArrayList<>() {{
+      add(INNTEKT_REFERANSE);
+      add(SKATTEKLASSE_REFERANSE);
+      add(BOSTATUS_REFERANSE);
+      add(BARN_I_HUSSTAND_REFERANSE);
+      add(SAMVAERSKLASSE_REFERANSE);
+    }});
+    return new Grunnlag(BIDRAGSEVNE_REFERANSE, GrunnlagType.BIDRAGSEVNE, objectMapper.valueToTree(bidragsevne));
   }
 
   // Bygger opp BeregnBidragsevneResultatCore
@@ -113,10 +119,14 @@ public class TestUtil {
     bidragPeriodeResultatListe.add(new no.nav.bidrag.beregn.bidragsevne.dto.ResultatPeriodeCore(
         new PeriodeCore(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01")),
         new no.nav.bidrag.beregn.bidragsevne.dto.ResultatBeregningCore(BigDecimal.valueOf(100)),
-        new no.nav.bidrag.beregn.bidragsevne.dto.ResultatGrunnlagCore(
-            singletonList(new InntektCore("INNTEKTSOPPL_ARBEIDSGIVER", BigDecimal.valueOf(500000))), 1, "MED_ANDRE", BigDecimal.ONE, "HELT",
-            emptyList())));
-    return new BeregnBidragsevneResultatCore(bidragPeriodeResultatListe, emptyList());
+        new ArrayList<>() {{
+          add(INNTEKT_REFERANSE);
+          add(SKATTEKLASSE_REFERANSE);
+          add(BOSTATUS_REFERANSE);
+          add(BARN_I_HUSSTAND_REFERANSE);
+          add(SAMVAERSKLASSE_REFERANSE);
+        }}));
+    return new BeregnBidragsevneResultatCore(bidragPeriodeResultatListe, emptyList(), emptyList());
   }
 
   // Bygger opp BeregnBidragsevneResultatCore med avvik
@@ -126,22 +136,19 @@ public class TestUtil {
     avvikListe.add(new AvvikCore(
         "periodeDatoTil må være etter periodeDatoFra i inntektPeriodeListe: datoFra=2018-04-01, datoTil=2018-03-01",
         "DATO_FRA_ETTER_DATO_TIL"));
-    return new BeregnBidragsevneResultatCore(emptyList(), avvikListe);
+    return new BeregnBidragsevneResultatCore(emptyList(), emptyList(), avvikListe);
   }
 
   // Bygger opp BeregnBPAndelSaertilskuddResultat
-  public static BeregnBPAndelSaertilskuddResultat dummyBPsAndelSaertilskuddResultat() {
-    var bidragPeriodeResultatListe = new ArrayList<ResultatPeriodeBPAndelSaertilskudd>();
-    bidragPeriodeResultatListe
-        .add(new ResultatPeriodeBPAndelSaertilskudd(
-            new Periode(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01")),
-            new ResultatBeregningBPAndelSaertilskudd(BigDecimal.valueOf(10), BigDecimal.valueOf(100), false),
-            new ResultatGrunnlagBPAndelSaertilskudd(BigDecimal.valueOf(100),
-                singletonList(new Inntekt("INNTEKTSOPPL_ARBEIDSGIVER", BigDecimal.valueOf(100000))),
-                singletonList(new InntektBM("INNTEKTSOPPL_ARBEIDSGIVER", BigDecimal.valueOf(100000), false, false)),
-                singletonList(new Inntekt("INNTEKTSOPPL_ARBEIDSGIVER", BigDecimal.valueOf(100000))),
-                emptyList())));
-    return new BeregnBPAndelSaertilskuddResultat(bidragPeriodeResultatListe);
+  public static Grunnlag dummyBPsAndelSaertilskuddResultat() {
+    ObjectMapper objectMapper = new ObjectMapper();
+    var bpsAndelSaertilskudd = new BPsAndelSaertilskudd(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01"), BigDecimal.valueOf(100),
+        BigDecimal.valueOf(10), false, new ArrayList<>() {{
+      add(INNTEKT_REFERANSE);
+      add(INNTEKT_REFERANSE);
+      add(INNTEKT_REFERANSE);
+    }});
+    return new Grunnlag(BPS_ANDEL_SAERTILSKUDD_REFERANSE, GrunnlagType.BPSANDELSAERTILSKUDD, objectMapper.valueToTree(bpsAndelSaertilskudd));
   }
 
   // Bygger opp BeregnBPsAndelSaertilskuddResultatCore
@@ -150,15 +157,12 @@ public class TestUtil {
     bidragPeriodeResultatListe.add(new no.nav.bidrag.beregn.bpsandelsaertilskudd.dto.ResultatPeriodeCore(
         new PeriodeCore(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01")),
         new no.nav.bidrag.beregn.bpsandelsaertilskudd.dto.ResultatBeregningCore(BigDecimal.valueOf(10), BigDecimal.valueOf(100), false),
-        new no.nav.bidrag.beregn.bpsandelsaertilskudd.dto.ResultatGrunnlagCore(BigDecimal.valueOf(100),
-            singletonList(
-                new no.nav.bidrag.beregn.bpsandelsaertilskudd.dto.InntektCore("INNTEKTSOPPL_ARBEIDSGIVER", BigDecimal.valueOf(100000), false, false)),
-            singletonList(
-                new no.nav.bidrag.beregn.bpsandelsaertilskudd.dto.InntektCore("INNTEKTSOPPL_ARBEIDSGIVER", BigDecimal.valueOf(100000), false, false)),
-            singletonList(
-                new no.nav.bidrag.beregn.bpsandelsaertilskudd.dto.InntektCore("INNTEKTSOPPL_ARBEIDSGIVER", BigDecimal.valueOf(100000), false, false)),
-            emptyList())));
-    return new BeregnBPsAndelSaertilskuddResultatCore(bidragPeriodeResultatListe, emptyList());
+        new ArrayList<>() {{
+          add(INNTEKT_REFERANSE);
+          add(INNTEKT_REFERANSE);
+          add(INNTEKT_REFERANSE);
+        }}));
+    return new BeregnBPsAndelSaertilskuddResultatCore(bidragPeriodeResultatListe, emptyList(), emptyList());
   }
 
   // Bygger opp BeregnBPsAndelSaertilskuddResultatCore med avvik
@@ -168,28 +172,33 @@ public class TestUtil {
     avvikListe.add(new AvvikCore(
         "periodeDatoTil må være etter periodeDatoFra i inntektBPPeriodeListe: datoFra=2018-04-01, datoTil=2018-03-01",
         "DATO_FRA_ETTER_DATO_TIL"));
-    return new BeregnBPsAndelSaertilskuddResultatCore(emptyList(), avvikListe);
+    return new BeregnBPsAndelSaertilskuddResultatCore(emptyList(), emptyList(), avvikListe);
   }
 
   // Bygger opp BeregnSamvaersfradragResultat
-  public static BeregnBPSamvaersfradragResultat dummySamvaersfradragResultat() {
-    var bidragPeriodeResultatListe = new ArrayList<ResultatPeriodeSamvaersfradrag>();
-    bidragPeriodeResultatListe.add(new ResultatPeriodeSamvaersfradrag(new Periode(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01")),
-        singletonList(new ResultatBeregningSamvaersfradrag(1, BigDecimal.valueOf(100))),
-        new ResultatGrunnlagSamvaersfradrag(singletonList(new GrunnlagBarn(1, 9, "00")), emptyList())));
-    return new BeregnBPSamvaersfradragResultat(bidragPeriodeResultatListe);
+  public static Grunnlag dummySamvaersfradragResultat() {
+    ObjectMapper objectMapper = new ObjectMapper();
+    var samvaersfradrag = new no.nav.bidrag.beregn.saertilskudd.rest.dto.http.Samvaersfradrag(LocalDate.parse("2020-08-01"),
+        LocalDate.parse("2020-09-01"), BigDecimal.valueOf(100), 1, new ArrayList<>() {{
+      add(SAMVAERSFRADRAG_REFERANSE);
+    }});
+    return new Grunnlag(SAMVAERSFRADRAG_REFERANSE, GrunnlagType.SAMVAERSFRADRAG, objectMapper.valueToTree(samvaersfradrag));
   }
-//
+
+  //
   // Bygger opp BeregnSamvaersfradragResultatCore
   public static BeregnSamvaersfradragResultatCore dummySamvaersfradragResultatCore() {
     var bidragPeriodeResultatListe = new ArrayList<no.nav.bidrag.beregn.samvaersfradrag.dto.ResultatPeriodeCore>();
     bidragPeriodeResultatListe.add(new no.nav.bidrag.beregn.samvaersfradrag.dto.ResultatPeriodeCore(
         new PeriodeCore(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01")),
         singletonList(new no.nav.bidrag.beregn.samvaersfradrag.dto.ResultatBeregningCore(1, BigDecimal.valueOf(100))),
-        new GrunnlagBeregningPeriodisertCore(singletonList(new SamvaersfradragGrunnlagPerBarnCore(1, 9, "00")), emptyList())));
-    return new BeregnSamvaersfradragResultatCore(bidragPeriodeResultatListe, emptyList());
+        new ArrayList<>() {{
+          add(SAMVAERSFRADRAG_REFERANSE);
+        }}));
+    return new BeregnSamvaersfradragResultatCore(bidragPeriodeResultatListe, emptyList(), emptyList());
   }
-//
+
+  //
 //  // Bygger opp BeregnSamvaersfradragResultatCore med avvik
   public static BeregnSamvaersfradragResultatCore dummySamvaersfradragResultatCoreMedAvvik() {
     var avvikListe = new ArrayList<AvvikCore>();
@@ -197,35 +206,38 @@ public class TestUtil {
     avvikListe.add(new AvvikCore(
         "periodeDatoTil må være etter periodeDatoFra i samvaersklassePeriodeListe: datoFra=2018-04-01, datoTil=2018-03-01",
         "DATO_FRA_ETTER_DATO_TIL"));
-    return new BeregnSamvaersfradragResultatCore(emptyList(), avvikListe);
+    return new BeregnSamvaersfradragResultatCore(emptyList(), emptyList(), avvikListe);
   }
 
   // Bygger opp BeregnSaertilskuddResultat
   public static BeregnSaertilskuddResultat dummySaertilskuddResultat() {
     var bidragPeriodeResultatListe = new ArrayList<ResultatPeriodeSaertilskudd>();
-    bidragPeriodeResultatListe.add(new ResultatPeriodeSaertilskudd(
+    bidragPeriodeResultatListe.add(new ResultatPeriodeSaertilskudd(1,
         new Periode(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01")),
         new ResultatBeregningSaertilskudd(BigDecimal.valueOf(100), "RESULTATKODE"),
-        new ResultatGrunnlagSaertilskudd(new BidragsevneGrunnlag(BigDecimal.valueOf(100)),
-            new BPAndelSaertilskuddGrunnlag(BigDecimal.valueOf(100), BigDecimal.valueOf(100), false),
-            singletonList(new SamvaersfradragGrunnlag(1, BigDecimal.valueOf(100))),
-            singletonList(new LopendeBidragGrunnlag(1, BigDecimal.valueOf(100), BigDecimal.valueOf(100), BigDecimal.valueOf(100),
-                BigDecimal.valueOf(100))))));
+        new ArrayList<>() {{
+          add("Inntekt");
+          add("Skatteklasse");
+          add("Samvaersklasse");
+          add("LopendeBidrag");
+        }}));
     return new BeregnSaertilskuddResultat(bidragPeriodeResultatListe);
   }
-//
+
+  //
   // Bygger opp BeregnSaertilskuddResultatCore
   public static BeregnSaertilskuddResultatCore dummySaertilskuddResultatCore() {
     var bidragPeriodeResultatListe = new ArrayList<no.nav.bidrag.beregn.saertilskudd.dto.ResultatPeriodeCore>();
     bidragPeriodeResultatListe.add(new no.nav.bidrag.beregn.saertilskudd.dto.ResultatPeriodeCore(
         new PeriodeCore(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01")), 1,
         new no.nav.bidrag.beregn.saertilskudd.dto.ResultatBeregningCore(BigDecimal.valueOf(100), "RESULTATKODE"),
-        new no.nav.bidrag.beregn.saertilskudd.dto.ResultatGrunnlagCore(new BidragsevneCore(BigDecimal.valueOf(100)),
-            new BPsAndelSaertilskuddCore(BigDecimal.valueOf(100), BigDecimal.valueOf(100), false),
-            singletonList(new LopendeBidragCore(1, BigDecimal.valueOf(100), BigDecimal.valueOf(100), BigDecimal.valueOf(100),
-                BigDecimal.valueOf(100))),
-            singletonList(new SamvaersfradragCore(1, BigDecimal.valueOf(100))))));
-    return new BeregnSaertilskuddResultatCore(bidragPeriodeResultatListe, emptyList());
+        new ArrayList<>() {{
+          add("Inntekt");
+          add("Skatteklasse");
+          add("Samvaersklasse");
+          add("LopendeBidrag");
+        }}));
+    return new BeregnSaertilskuddResultatCore(bidragPeriodeResultatListe, emptyList(), emptyList());
   }
 
   // Bygger opp BeregnSaertilskuddResultatCore med avvik
@@ -235,7 +247,7 @@ public class TestUtil {
     avvikListe.add(new AvvikCore(
         "periodeDatoTil må være etter periodeDatoFra i samvaersfradragPeriodeListe: datoFra=2018-04-01, datoTil=2018-03-01",
         "DATO_FRA_ETTER_DATO_TIL"));
-    return new BeregnSaertilskuddResultatCore(emptyList(), avvikListe);
+    return new BeregnSaertilskuddResultatCore(emptyList(), emptyList(), avvikListe);
   }
 
 

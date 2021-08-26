@@ -23,13 +23,13 @@ data class BeregnBPAndelSaertilskuddResultat(
 data class ResultatPeriodeBPAndelSaertilskudd(
     @Schema(description = "Beregning resultat fra-til-dato") var resultatDatoFraTil: Periode = Periode(),
     @Schema(description = "Beregning resultat innhold") var resultatBeregning: ResultatBeregningBPAndelSaertilskudd = ResultatBeregningBPAndelSaertilskudd(),
-    @Schema(description = "Beregning grunnlag innhold") var resultatGrunnlag: ResultatGrunnlagBPAndelSaertilskudd = ResultatGrunnlagBPAndelSaertilskudd()
+    @Schema(description = "Beregning grunnlag innhold") var grunnlagReferanseListe: List<String> = emptyList()
 ) {
 
   constructor(resultatPeriode: ResultatPeriodeCore) : this(
-      resultatDatoFraTil = Periode(resultatPeriode.resultatDatoFraTil),
+      resultatDatoFraTil = Periode(resultatPeriode.periode),
       resultatBeregning = ResultatBeregningBPAndelSaertilskudd(resultatPeriode.resultatBeregning),
-      resultatGrunnlag = ResultatGrunnlagBPAndelSaertilskudd(resultatPeriode.resultatGrunnlag)
+      grunnlagReferanseListe = resultatPeriode.grunnlagReferanseListe
   )
 }
 
