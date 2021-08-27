@@ -39,7 +39,8 @@ public class SaertilskuddCoreMapper extends CoreMapper {
     var bidragsevnePeriodeCoreListe =
         beregnBidragsevneResultatCore.getResultatPeriodeListe()
             .stream()
-            .map(resultat -> new BidragsevnePeriodeCore(byggReferanseForDelberegning("Delberegning_BP_Bidragsevne", resultat.getPeriode().getDatoFom()),
+            .map(resultat -> new BidragsevnePeriodeCore(
+                byggReferanseForDelberegning("Delberegning_BP_Bidragsevne", resultat.getPeriode().getDatoFom()),
                 new PeriodeCore(resultat.getPeriode().getDatoFom(), resultat.getPeriode().getDatoTil()),
                 resultat.getResultatBeregning().getResultatEvneBelop()))
             .collect(toList());
@@ -48,7 +49,8 @@ public class SaertilskuddCoreMapper extends CoreMapper {
     var bpAndelSaertilskuddPeriodeCoreListe =
         beregnBPsAndelSaertilskuddResultatCore.getResultatPeriodeListe()
             .stream()
-            .map(resultat -> new BPsAndelSaertilskuddPeriodeCore(byggReferanseForDelberegning("Delberegning_BP_AndelSaertilskudd", resultat.getPeriode().getDatoFom()),
+            .map(resultat -> new BPsAndelSaertilskuddPeriodeCore(
+                byggReferanseForDelberegning("Delberegning_BP_AndelSaertilskudd", resultat.getPeriode().getDatoFom()),
                 new PeriodeCore(resultat.getPeriode().getDatoFom(), resultat.getPeriode().getDatoTil()),
                 resultat.getResultatBeregning().getResultatAndelProsent(), resultat.getResultatBeregning().getResultatAndelBelop(),
                 resultat.getResultatBeregning().getBarnetErSelvforsorget()))
@@ -61,7 +63,8 @@ public class SaertilskuddCoreMapper extends CoreMapper {
             .flatMap(resultatperiode -> resultatperiode.getResultatBeregningListe()
                 .stream()
                 .map(resultatberegning ->
-                    new SamvaersfradragPeriodeCore(byggReferanseForDelberegning("Delberegning_BP_Samvaersfradrag", resultatperiode.getPeriode().getDatoFom()),
+                    new SamvaersfradragPeriodeCore(
+                        byggReferanseForDelberegning("Delberegning_BP_Samvaersfradrag", resultatperiode.getPeriode().getDatoFom()),
                         new PeriodeCore(resultatperiode.getPeriode().getDatoFom(),
                             resultatperiode.getPeriode().getDatoTil()),
                         resultatberegning.getBarnPersonId(),
@@ -82,7 +85,8 @@ public class SaertilskuddCoreMapper extends CoreMapper {
         beregnTotalSaertilskuddGrunnlag, mapSjablontall()));
 
     return new BeregnSaertilskuddGrunnlagCore(beregnTotalSaertilskuddGrunnlag.getBeregnDatoFra(), beregnTotalSaertilskuddGrunnlag.getBeregnDatoTil(),
-        soknadsBarnId, bidragsevnePeriodeCoreListe, bpAndelSaertilskuddPeriodeCoreListe, andreLopendeBidragListe, samvaersfradragPeriodeCoreListe, sjablonPeriodeCoreListe);
+        soknadsBarnId, bidragsevnePeriodeCoreListe, bpAndelSaertilskuddPeriodeCoreListe, andreLopendeBidragListe, samvaersfradragPeriodeCoreListe,
+        sjablonPeriodeCoreListe);
   }
 
   // Bygger referanse for delberegning

@@ -2,21 +2,21 @@ package no.nav.bidrag.beregn.saertilskudd.rest;
 
 import java.util.ArrayList;
 import java.util.List;
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BPsAndelSaertilskudd;
+import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BPsAndelSaertilskuddResultatPeriode;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BeregnetTotalSaertilskuddResultat;
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.Bidragsevne;
+import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BidragsevneResultatPeriode;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.Grunnlag;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.ResultatPeriode;
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.Samvaersfradrag;
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.SjablonPeriode;
+import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.SamvaersfradragResultatPeriode;
+import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.SjablonResultatPeriode;
 import no.nav.bidrag.beregn.saertilskudd.rest.mapper.CoreMapper;
 
 public class SaertilskuddDelberegningResultat {
 
-  public List<Bidragsevne> bidragsevneListe = new ArrayList<>();
-  public List<BPsAndelSaertilskudd> bpsAndelSaertilskuddListe = new ArrayList<>();
-  public List<Samvaersfradrag> samvaersfradragListe = new ArrayList<>();
-  public List<SjablonPeriode> sjablonPeriodeListe = new ArrayList<>();
+  public List<BidragsevneResultatPeriode> bidragsevneListe = new ArrayList<>();
+  public List<BPsAndelSaertilskuddResultatPeriode> bpsAndelSaertilskuddListe = new ArrayList<>();
+  public List<SamvaersfradragResultatPeriode> samvaersfradragListe = new ArrayList<>();
+  public List<SjablonResultatPeriode> sjablonPeriodeListe = new ArrayList<>();
 
   public SaertilskuddDelberegningResultat(BeregnetTotalSaertilskuddResultat beregnetTotalSaertilskuddResultat) {
     for (ResultatPeriode resultatPeriode : beregnetTotalSaertilskuddResultat.getBeregnetSaertilskuddPeriodeListe()) {
@@ -26,17 +26,17 @@ public class SaertilskuddDelberegningResultat {
         if (resultatGrunnlag != null) {
           switch (resultatGrunnlag.getType()) {
             case BIDRAGSEVNE:
-              bidragsevneListe.add(CoreMapper.grunnlagTilObjekt(resultatGrunnlag, Bidragsevne.class));
+              bidragsevneListe.add(CoreMapper.grunnlagTilObjekt(resultatGrunnlag, BidragsevneResultatPeriode.class));
               break;
             case BPSANDELSAERTILSKUDD:
-              bpsAndelSaertilskuddListe.add(CoreMapper.grunnlagTilObjekt(resultatGrunnlag, BPsAndelSaertilskudd.class));
+              bpsAndelSaertilskuddListe.add(CoreMapper.grunnlagTilObjekt(resultatGrunnlag, BPsAndelSaertilskuddResultatPeriode.class));
               break;
             case SAMVAERSFRADRAG:
               samvaersfradragListe.add(
-                  CoreMapper.grunnlagTilObjekt(resultatGrunnlag, Samvaersfradrag.class));
+                  CoreMapper.grunnlagTilObjekt(resultatGrunnlag, SamvaersfradragResultatPeriode.class));
               break;
             case SJABLON:
-              sjablonPeriodeListe.add(CoreMapper.grunnlagTilObjekt(resultatGrunnlag, SjablonPeriode.class));
+              sjablonPeriodeListe.add(CoreMapper.grunnlagTilObjekt(resultatGrunnlag, SjablonResultatPeriode.class));
             default:
               break;
           }

@@ -21,18 +21,14 @@ import no.nav.bidrag.beregn.saertilskudd.rest.consumer.Sjablontall;
 import no.nav.bidrag.beregn.saertilskudd.rest.consumer.TrinnvisSkattesats;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BMInntekt;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BPInntekt;
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BPsAndelSaertilskudd;
+import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BPsAndelSaertilskuddResultatPeriode;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BarnIHusstand;
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BeregnSaertilskuddResultat;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BeregnTotalSaertilskuddGrunnlag;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.Bostatus;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.Grunnlag;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.GrunnlagType;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.LopendeBidrag;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.NettoSaertilskudd;
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.Periode;
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.ResultatBeregningSaertilskudd;
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.ResultatPeriodeSaertilskudd;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.Rolle;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.SBInntekt;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.Saerfradrag;
@@ -102,7 +98,7 @@ public class TestUtil {
   // Bygger opp BeregnBidragsevneResultat
   public static Grunnlag dummyBidragsevneResultat() {
     ObjectMapper objectMapper = new ObjectMapper();
-    var bidragsevne = new no.nav.bidrag.beregn.saertilskudd.rest.dto.http.Bidragsevne(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01"),
+    var bidragsevne = new no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BidragsevneResultatPeriode(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01"),
         BigDecimal.valueOf(100), new ArrayList<>() {{
       add(INNTEKT_REFERANSE);
       add(SKATTEKLASSE_REFERANSE);
@@ -142,7 +138,7 @@ public class TestUtil {
   // Bygger opp BeregnBPAndelSaertilskuddResultat
   public static Grunnlag dummyBPsAndelSaertilskuddResultat() {
     ObjectMapper objectMapper = new ObjectMapper();
-    var bpsAndelSaertilskudd = new BPsAndelSaertilskudd(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01"), BigDecimal.valueOf(100),
+    var bpsAndelSaertilskudd = new BPsAndelSaertilskuddResultatPeriode(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01"), BigDecimal.valueOf(100),
         BigDecimal.valueOf(10), false, new ArrayList<>() {{
       add(INNTEKT_REFERANSE);
       add(INNTEKT_REFERANSE);
@@ -178,7 +174,7 @@ public class TestUtil {
   // Bygger opp BeregnSamvaersfradragResultat
   public static Grunnlag dummySamvaersfradragResultat() {
     ObjectMapper objectMapper = new ObjectMapper();
-    var samvaersfradrag = new no.nav.bidrag.beregn.saertilskudd.rest.dto.http.Samvaersfradrag(LocalDate.parse("2020-08-01"),
+    var samvaersfradrag = new no.nav.bidrag.beregn.saertilskudd.rest.dto.http.SamvaersfradragResultatPeriode(LocalDate.parse("2020-08-01"),
         LocalDate.parse("2020-09-01"), BigDecimal.valueOf(100), 1, new ArrayList<>() {{
       add(SAMVAERSFRADRAG_REFERANSE);
     }});
@@ -207,37 +203,6 @@ public class TestUtil {
         "periodeDatoTil må være etter periodeDatoFra i samvaersklassePeriodeListe: datoFra=2018-04-01, datoTil=2018-03-01",
         "DATO_FRA_ETTER_DATO_TIL"));
     return new BeregnSamvaersfradragResultatCore(emptyList(), emptyList(), avvikListe);
-  }
-
-  // Bygger opp BeregnSaertilskuddResultat
-  public static BeregnSaertilskuddResultat dummySaertilskuddResultat() {
-    var bidragPeriodeResultatListe = new ArrayList<ResultatPeriodeSaertilskudd>();
-    bidragPeriodeResultatListe.add(new ResultatPeriodeSaertilskudd(1,
-        new Periode(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01")),
-        new ResultatBeregningSaertilskudd(BigDecimal.valueOf(100), "RESULTATKODE"),
-        new ArrayList<>() {{
-          add("Inntekt");
-          add("Skatteklasse");
-          add("Samvaersklasse");
-          add("LopendeBidrag");
-        }}));
-    return new BeregnSaertilskuddResultat(bidragPeriodeResultatListe);
-  }
-
-  //
-  // Bygger opp BeregnSaertilskuddResultatCore
-  public static BeregnSaertilskuddResultatCore dummySaertilskuddResultatCore() {
-    var bidragPeriodeResultatListe = new ArrayList<no.nav.bidrag.beregn.saertilskudd.dto.ResultatPeriodeCore>();
-    bidragPeriodeResultatListe.add(new no.nav.bidrag.beregn.saertilskudd.dto.ResultatPeriodeCore(
-        new PeriodeCore(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01")), 1,
-        new no.nav.bidrag.beregn.saertilskudd.dto.ResultatBeregningCore(BigDecimal.valueOf(100), "RESULTATKODE"),
-        new ArrayList<>() {{
-          add("Inntekt");
-          add("Skatteklasse");
-          add("Samvaersklasse");
-          add("LopendeBidrag");
-        }}));
-    return new BeregnSaertilskuddResultatCore(bidragPeriodeResultatListe, emptyList(), emptyList());
   }
 
   // Bygger opp BeregnSaertilskuddResultatCore med avvik

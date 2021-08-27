@@ -1,7 +1,6 @@
 package no.nav.bidrag.beregn.saertilskudd.rest.controller;
 
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BeregnTotalSaertilskuddGrunnlag;
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BeregnTotalSaertilskuddResultat;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BeregnetTotalSaertilskuddResultat;
 import no.nav.bidrag.beregn.saertilskudd.rest.service.BeregnSaertilskuddService;
 import org.springframework.http.ResponseEntity;

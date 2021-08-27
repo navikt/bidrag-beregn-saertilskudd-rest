@@ -22,7 +22,6 @@ import no.nav.bidrag.beregn.saertilskudd.dto.ResultatBeregningCore;
 import no.nav.bidrag.beregn.saertilskudd.dto.ResultatPeriodeCore;
 import no.nav.bidrag.beregn.saertilskudd.rest.BidragBeregnSaertilskuddLocal;
 import no.nav.bidrag.beregn.saertilskudd.rest.TestUtil;
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BeregnSaertilskuddResultat;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BeregnTotalSaertilskuddGrunnlag;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BeregnetTotalSaertilskuddResultat;
 import no.nav.bidrag.beregn.saertilskudd.rest.service.BeregnSaertilskuddService;
@@ -129,7 +128,7 @@ class BeregnSaertilskuddControllerTest {
 
     var url = "http://localhost:" + port + "/bidrag-beregn-saertilskudd-rest/beregn/saertilskudd";
     var request = initHttpEntity(new BeregnTotalSaertilskuddGrunnlag(LocalDate.parse("2021-08-18"), LocalDate.parse("2021-08-18"), emptyList()));
-    var responseEntity = httpHeaderTestRestTemplate.exchange(url, HttpMethod.POST, request, BeregnSaertilskuddResultat.class);
+    var responseEntity = httpHeaderTestRestTemplate.exchange(url, HttpMethod.POST, request, BeregnetTotalSaertilskuddResultat.class);
     var totalSaertilskuddResultat = responseEntity.getBody();
 
     assertAll(
@@ -146,7 +145,7 @@ class BeregnSaertilskuddControllerTest {
 
     var url = "http://localhost:" + port + "/bidrag-beregn-saertilskudd-rest/beregn/saertilskudd";
     var request = initHttpEntity(new BeregnTotalSaertilskuddGrunnlag(LocalDate.parse("2021-08-18"), LocalDate.parse("2021-08-18"), emptyList()));
-    var responseEntity = httpHeaderTestRestTemplate.exchange(url, HttpMethod.POST, request, BeregnSaertilskuddResultat.class);
+    var responseEntity = httpHeaderTestRestTemplate.exchange(url, HttpMethod.POST, request, BeregnetTotalSaertilskuddResultat.class);
     var totalSaertilskuddResultat = responseEntity.getBody();
 
     assertAll(

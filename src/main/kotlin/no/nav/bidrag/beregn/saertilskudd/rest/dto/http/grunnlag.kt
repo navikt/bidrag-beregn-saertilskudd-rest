@@ -2,10 +2,12 @@ package no.nav.bidrag.beregn.saertilskudd.rest.dto.http
 
 import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer
+import io.swagger.v3.oas.annotations.media.Schema
 import no.nav.bidrag.beregn.bidragsevne.dto.AntallBarnIEgetHusholdPeriodeCore
 import no.nav.bidrag.beregn.bidragsevne.dto.BostatusPeriodeCore
 import no.nav.bidrag.beregn.bidragsevne.dto.InntektPeriodeCore
@@ -13,12 +15,38 @@ import no.nav.bidrag.beregn.bidragsevne.dto.SaerfradragPeriodeCore
 import no.nav.bidrag.beregn.bidragsevne.dto.SkatteklassePeriodeCore
 import no.nav.bidrag.beregn.bpsandelsaertilskudd.dto.NettoSaertilskuddPeriodeCore
 import no.nav.bidrag.beregn.felles.dto.PeriodeCore
-import no.nav.bidrag.beregn.saertilskudd.dto.BPsAndelSaertilskuddPeriodeCore
 import no.nav.bidrag.beregn.saertilskudd.dto.LopendeBidragPeriodeCore
 import no.nav.bidrag.beregn.saertilskudd.rest.exception.UgyldigInputException
 import no.nav.bidrag.beregn.samvaersfradrag.dto.SamvaersklassePeriodeCore
 import java.math.BigDecimal
 import java.time.LocalDate
+
+@Schema(description = "Totalgrunnlaget for en særtilskuddsberegning")
+data class BeregnTotalSaertilskuddGrunnlag(
+    @Schema(description = "Beregn fra-dato") val beregnDatoFra: LocalDate? = null,
+    @Schema(description = "Beregn til-dato") val beregnDatoTil: LocalDate? = null,
+    @Schema(description = "Periodisert liste over grunnlagselementer") val grunnlagListe: List<Grunnlag>? = null,
+) {
+
+  fun valider() {
+    if (beregnDatoFra == null) throw UgyldigInputException("beregnDatoFra kan ikke være null")
+    if (beregnDatoTil == null) throw UgyldigInputException("beregnDatoTil kan ikke være null")
+    if (grunnlagListe != null) grunnlagListe.map { it.valider() } else throw UgyldigInputException("grunnlagListe kan ikke være null")
+  }
+}
+
+@Schema(description = "Grunnlag")
+data class Grunnlag(
+    @Schema(description = "Referanse") val referanse: String? = null,
+    @Schema(description = "Type") val type: GrunnlagType?,
+    @Schema(description = "Innhold") val innhold: JsonNode? = null
+) {
+  fun valider() {
+    if (referanse == null) throw UgyldigInputException("referanse kan ikke være null")
+    if (type == null) throw UgyldigInputException("type kan ikke være null")
+    if (innhold == null) throw UgyldigInputException("innhold kan ikke være null")
+  }
+}
 
 open class BasePeriode {
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
@@ -256,11 +284,3 @@ data class SoknadsBarnInfo(
     @JsonSerialize(using = LocalDateSerializer::class)
     val fodselsdato: LocalDate
 )
-
-class Bidragsevne(datoFom: LocalDate, datoTil: LocalDate, val belop: BigDecimal, val grunnlagReferanseListe: List<String>) : BasePeriode(datoFom, datoTil) {}
-
-class BPsAndelSaertilskudd(datoFom: LocalDate, datoTil: LocalDate, val belop: BigDecimal, val prosent: BigDecimal, val selvforsorget: Boolean, val grunnlagReferanseListe: List<String>) : BasePeriode(datoFom, datoTil) {}
-
-class Samvaersfradrag(datoFom: LocalDate, datoTil: LocalDate, val belop: BigDecimal, val barn: Int, val grunnlagReferanseListe: List<String>) : BasePeriode(datoFom, datoTil) {}
-
-class SjablonPeriode(datoFom: LocalDate, datoTil: LocalDate, val sjablonNavn: String, val sjablonVerdi: Int): BasePeriode(datoFom, datoTil) {}

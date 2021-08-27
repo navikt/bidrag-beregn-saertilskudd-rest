@@ -32,15 +32,15 @@ import no.nav.bidrag.beregn.saertilskudd.dto.BidragsevnePeriodeCore;
 import no.nav.bidrag.beregn.saertilskudd.dto.SamvaersfradragPeriodeCore;
 import no.nav.bidrag.beregn.saertilskudd.rest.consumer.SjablonConsumer;
 import no.nav.bidrag.beregn.saertilskudd.rest.consumer.SjablonListe;
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BPsAndelSaertilskudd;
+import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BPsAndelSaertilskuddResultatPeriode;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BeregnTotalSaertilskuddGrunnlag;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BeregnetTotalSaertilskuddResultat;
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.Bidragsevne;
+import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BidragsevneResultatPeriode;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.Grunnlag;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.GrunnlagType;
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.Samvaersfradrag;
+import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.SamvaersfradragResultatPeriode;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.Samvaersklasse;
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.SjablonPeriode;
+import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.SjablonResultatPeriode;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.SoknadsBarnInfo;
 import no.nav.bidrag.beregn.saertilskudd.rest.exception.UgyldigInputException;
 import no.nav.bidrag.beregn.saertilskudd.rest.mapper.BPAndelSaertilskuddCoreMapper;
@@ -213,7 +213,7 @@ public class BeregnSaertilskuddService {
   private JsonNode lagInnholdBidragsevne(BidragsevnePeriodeCore bidragsevnePeriodeCore, BeregnBidragsevneResultatCore beregnBidragsevneResultatCore) {
     var grunnlagReferanseListe = getReferanseListeFromResultatPeriodeCore(beregnBidragsevneResultatCore.getResultatPeriodeListe(),
         bidragsevnePeriodeCore.getPeriodeDatoFraTil().getDatoFom());
-    Bidragsevne bidragsevne = new Bidragsevne(bidragsevnePeriodeCore.getPeriodeDatoFraTil().getDatoFom(),
+    BidragsevneResultatPeriode bidragsevne = new BidragsevneResultatPeriode(bidragsevnePeriodeCore.getPeriodeDatoFraTil().getDatoFom(),
         bidragsevnePeriodeCore.getPeriodeDatoFraTil().getDatoTil(), bidragsevnePeriodeCore.getBidragsevneBelop(), grunnlagReferanseListe);
     return tilJsonNode(bidragsevne);
   }
@@ -223,7 +223,7 @@ public class BeregnSaertilskuddService {
       BeregnBPsAndelSaertilskuddResultatCore beregnBPsAndelSaertilskuddResultatCore) {
     var grunnlagReferanseListe = getReferanseListeFromResultatPeriodeCore(beregnBPsAndelSaertilskuddResultatCore.getResultatPeriodeListe(),
         bPsAndelSaertilskuddPeriodeCore.getPeriodeDatoFraTil().getDatoFom());
-    BPsAndelSaertilskudd bPsAndelSaertilskudd = new BPsAndelSaertilskudd(mapDato(bPsAndelSaertilskuddPeriodeCore.getPeriodeDatoFraTil().getDatoFom()),
+    BPsAndelSaertilskuddResultatPeriode bPsAndelSaertilskudd = new BPsAndelSaertilskuddResultatPeriode(mapDato(bPsAndelSaertilskuddPeriodeCore.getPeriodeDatoFraTil().getDatoFom()),
         mapDato(bPsAndelSaertilskuddPeriodeCore.getPeriodeDatoFraTil().getDatoTil()), bPsAndelSaertilskuddPeriodeCore.getBPsAndelSaertilskuddBelop(),
         bPsAndelSaertilskuddPeriodeCore.getBPsAndelSaertilskuddProsent(), bPsAndelSaertilskuddPeriodeCore.getBarnetErSelvforsorget(),
         grunnlagReferanseListe);
@@ -235,7 +235,7 @@ public class BeregnSaertilskuddService {
       BeregnSamvaersfradragResultatCore beregnSamvaersfradragResultatCore) {
     var grunnlagReferanseListe = getReferanseListeFromResultatPeriodeCore(beregnSamvaersfradragResultatCore.getResultatPeriodeListe(),
         samvaersfradragPeriodeCore.getPeriodeDatoFraTil().getDatoFom());
-    Samvaersfradrag samvaersfradrag = new Samvaersfradrag(mapDato(samvaersfradragPeriodeCore.getPeriodeDatoFraTil().getDatoFom()),
+    SamvaersfradragResultatPeriode samvaersfradrag = new SamvaersfradragResultatPeriode(mapDato(samvaersfradragPeriodeCore.getPeriodeDatoFraTil().getDatoFom()),
         mapDato(samvaersfradragPeriodeCore.getPeriodeDatoFraTil().getDatoTil()), samvaersfradragPeriodeCore.getSamvaersfradragBelop(),
         samvaersfradragPeriodeCore.getBarnPersonId(), grunnlagReferanseListe);
     return tilJsonNode(samvaersfradrag);
@@ -248,7 +248,7 @@ public class BeregnSaertilskuddService {
   private List<Grunnlag> mapSjabloner(List<SjablonResultatGrunnlagCore> sjablonResultatGrunnlagCoreListe) {
     return sjablonResultatGrunnlagCoreListe.stream()
         .map(sjablon -> {
-              var sjablonPeriode = new SjablonPeriode(mapDato(sjablon.getPeriode().getDatoFom()), mapDato(sjablon.getPeriode().getDatoTil()),
+              var sjablonPeriode = new SjablonResultatPeriode(mapDato(sjablon.getPeriode().getDatoFom()), mapDato(sjablon.getPeriode().getDatoTil()),
                   sjablon.getNavn(), sjablon.getVerdi().intValue());
               return new Grunnlag(sjablon.getReferanse(), GrunnlagType.SJABLON, tilJsonNode(sjablonPeriode));
             }
