@@ -2,10 +2,12 @@ package no.nav.bidrag.beregn.saertilskudd.rest.dto.http
 
 import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer
+import io.swagger.v3.oas.annotations.media.Schema
 import no.nav.bidrag.beregn.bidragsevne.dto.AntallBarnIEgetHusholdPeriodeCore
 import no.nav.bidrag.beregn.bidragsevne.dto.BostatusPeriodeCore
 import no.nav.bidrag.beregn.bidragsevne.dto.InntektPeriodeCore
@@ -18,6 +20,33 @@ import no.nav.bidrag.beregn.saertilskudd.rest.exception.UgyldigInputException
 import no.nav.bidrag.beregn.samvaersfradrag.dto.SamvaersklassePeriodeCore
 import java.math.BigDecimal
 import java.time.LocalDate
+
+@Schema(description = "Totalgrunnlaget for en særtilskuddsberegning")
+data class BeregnTotalSaertilskuddGrunnlag(
+    @Schema(description = "Beregn fra-dato") val beregnDatoFra: LocalDate? = null,
+    @Schema(description = "Beregn til-dato") val beregnDatoTil: LocalDate? = null,
+    @Schema(description = "Periodisert liste over grunnlagselementer") val grunnlagListe: List<Grunnlag>? = null,
+) {
+
+  fun valider() {
+    if (beregnDatoFra == null) throw UgyldigInputException("beregnDatoFra kan ikke være null")
+    if (beregnDatoTil == null) throw UgyldigInputException("beregnDatoTil kan ikke være null")
+    if (grunnlagListe != null) grunnlagListe.map { it.valider() } else throw UgyldigInputException("grunnlagListe kan ikke være null")
+  }
+}
+
+@Schema(description = "Grunnlag")
+data class Grunnlag(
+    @Schema(description = "Referanse") val referanse: String? = null,
+    @Schema(description = "Type") val type: GrunnlagType?,
+    @Schema(description = "Innhold") val innhold: JsonNode? = null
+) {
+  fun valider() {
+    if (referanse == null) throw UgyldigInputException("referanse kan ikke være null")
+    if (type == null) throw UgyldigInputException("type kan ikke være null")
+    if (innhold == null) throw UgyldigInputException("innhold kan ikke være null")
+  }
+}
 
 open class BasePeriode {
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
@@ -117,7 +146,7 @@ class SBInntekt(datoFom: LocalDate, datoTil: LocalDate, rolle: Rolle, inntektTyp
   }
 }
 
-class BarnIHusstand(datoFom: LocalDate, datoTil: LocalDate, val antall: BigDecimal?) : BasePeriode(datoFom, datoTil) {
+class BarnIHusstand(datoFom: LocalDate, datoTil: LocalDate, val antall: Double?) : BasePeriode(datoFom, datoTil) {
 
   fun valider() {
     if (antall == null) throw UgyldigInputException("antall kan ikke være null")

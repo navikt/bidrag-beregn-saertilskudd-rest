@@ -12,6 +12,10 @@ enum class GrunnlagType(@get:JsonValue val value: String) {
   INNTEKT("Inntekt"),
   NETTO_SAERTILSKUDD("NettoSaertilskudd"),
   SAMVAERSKLASSE("Samvaersklasse"),
+  BIDRAGSEVNE("Bidragsevne"),
+  BPSANDELSAERTILSKUDD("BPsAndelSaertilskudd"),
+  SAMVAERSFRADRAG("Samvaersfradrag"),
+  SJABLON("Sjablon"),
   LOPENDE_BIDRAG("LopendeBidrag");
 
   companion object {
