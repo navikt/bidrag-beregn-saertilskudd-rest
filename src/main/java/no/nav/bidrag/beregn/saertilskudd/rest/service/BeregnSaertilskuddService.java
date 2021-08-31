@@ -155,7 +155,7 @@ public class BeregnSaertilskuddService {
     var bpAndelSaertilskuddResultatFraCore = beregnBPAndelSaertilskudd(bpAndelSaertilskuddGrunnlagTilCore);
     grunnlagReferanseListe.addAll(lagGrunnlagListeForDelberegning(beregnTotalSaertilskuddGrunnlag, bpAndelSaertilskuddResultatFraCore.getResultatPeriodeListe(), bpAndelSaertilskuddResultatFraCore.getSjablonListe()));
     grunnlagReferanseListe.addAll(
-        lagGrunnlagListeForBeregnedeGrunnlagBPsAndelSaertilskudd(beregnTotalSaertilskuddGrunnlag, bpAndelSaertilskuddResultatFraCore.getResultatPeriodeListe()));
+        lagGrunnlagListeForBeregnedeGrunnlagBPsAndelSaertilskudd(bpAndelSaertilskuddResultatFraCore.getResultatPeriodeListe()));
 
     // ++ Samværsfradrag
     var samvaersfradragGrunnlagTilCore = samvaersfradragCoreMapper.mapSamvaersfradragGrunnlagTilCore(beregnTotalSaertilskuddGrunnlag, sjablonListe);
@@ -201,7 +201,7 @@ public class BeregnSaertilskuddService {
   }
 
 
-  private List<Grunnlag> lagGrunnlagListeForBeregnedeGrunnlagBPsAndelSaertilskudd(BeregnTotalSaertilskuddGrunnlag beregnTotalSaertilskuddGrunnlag, List<ResultatPeriodeCore> resultatPeriodeCoreListe) {
+  private List<Grunnlag> lagGrunnlagListeForBeregnedeGrunnlagBPsAndelSaertilskudd(List<ResultatPeriodeCore> resultatPeriodeCoreListe) {
     List<Grunnlag> beregnedeGrunnlagListe = new ArrayList<>();
     for(var resultatPeriode : resultatPeriodeCoreListe) {
       beregnedeGrunnlagListe.addAll(resultatPeriode.getBeregnedeGrunnlag().getInntektBPListe().stream().map(inntektBase -> new Grunnlag(inntektBase.getReferanse(), GrunnlagType.INNTEKT, tilJsonNode(new BPInntekt(resultatPeriode.getPeriode().getDatoFom(), resultatPeriode.getPeriode().getDatoTil(), Rolle.BP, inntektBase.getInntektType().toString(), inntektBase.getInntektBelop())))).toList());
@@ -248,9 +248,6 @@ public class BeregnSaertilskuddService {
         .map(grunnlag -> new Grunnlag(grunnlag.getReferanse(), GrunnlagType.SAMVAERSFRADRAG,
             lagInnholdSamvaersfradrag(grunnlag, samvaersfradragResultatFraCore)))
         .collect(toList()));
-
-    // Danner grunnlag basert på liste over sjabloner som er brukt i beregningen
-    resultatGrunnlagListe.addAll(mapSjabloner(beregnSaertilskuddResultatCore.getSjablonListe()));
 
     return resultatGrunnlagListe;
   }

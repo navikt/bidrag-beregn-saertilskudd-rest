@@ -68,7 +68,7 @@ class BeregnSaertilskuddControllerTest {
             add(BPS_ANDEL_SAERTILSKUDD_REFERANSE);
             add(SAMVAERSFRADRAG_REFERANSE);
           }}));
-        }}, emptyList(), emptyList()), new ArrayList<>() {{
+        }}, emptyList()), new ArrayList<>() {{
           add(TestUtil.dummyBidragsevneResultat());
           add(TestUtil.dummyBPsAndelSaertilskuddResultat());
           add(TestUtil.dummySamvaersfradragResultat());

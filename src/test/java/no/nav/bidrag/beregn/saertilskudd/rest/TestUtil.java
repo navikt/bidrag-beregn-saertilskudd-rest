@@ -238,7 +238,7 @@ public class TestUtil {
     avvikListe.add(new AvvikCore(
         "periodeDatoTil må være etter periodeDatoFra i samvaersfradragPeriodeListe: datoFra=2018-04-01, datoTil=2018-03-01",
         "DATO_FRA_ETTER_DATO_TIL"));
-    return new BeregnSaertilskuddResultatCore(emptyList(), emptyList(), avvikListe);
+    return new BeregnSaertilskuddResultatCore(emptyList(), avvikListe);
   }
 
 
