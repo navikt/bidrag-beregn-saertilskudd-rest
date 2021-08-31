@@ -11,7 +11,10 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import no.nav.bidrag.beregn.bidragsevne.dto.BeregnBidragsevneResultatCore;
+import no.nav.bidrag.beregn.bpsandelsaertilskudd.bo.GrunnlagBeregning;
 import no.nav.bidrag.beregn.bpsandelsaertilskudd.dto.BeregnBPsAndelSaertilskuddResultatCore;
+import no.nav.bidrag.beregn.bpsandelsaertilskudd.dto.BeregnedeGrunnlag;
+import no.nav.bidrag.beregn.bpsandelsaertilskudd.dto.BeregnedeGrunnlagCore;
 import no.nav.bidrag.beregn.felles.dto.AvvikCore;
 import no.nav.bidrag.beregn.felles.dto.PeriodeCore;
 import no.nav.bidrag.beregn.saertilskudd.dto.BeregnSaertilskuddResultatCore;
@@ -24,11 +27,13 @@ import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BPInntekt;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BPsAndelSaertilskuddResultatPeriode;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BarnIHusstand;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BeregnTotalSaertilskuddGrunnlag;
+import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BeregnetTotalSaertilskuddResultat;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.Bostatus;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.Grunnlag;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.GrunnlagType;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.LopendeBidrag;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.NettoSaertilskudd;
+import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.ResultatPeriode;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.Rolle;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.SBInntekt;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.Saerfradrag;
@@ -95,6 +100,26 @@ public class TestUtil {
     return jacksonObjectMapper().convertValue(object, JsonNode.class);
   }
 
+  public static List<String> hentAlleReferanser(BeregnetTotalSaertilskuddResultat beregnetTotalSaertilskuddResultat) {
+    List<String> alleReferanser = new ArrayList<>();
+
+    for(ResultatPeriode resultatPeriode : beregnetTotalSaertilskuddResultat.getBeregnetSaertilskuddPeriodeListe()) {
+      alleReferanser.addAll(resultatPeriode.getGrunnlagReferanseListe());
+    }
+
+    for(Grunnlag grunnlag : beregnetTotalSaertilskuddResultat.getGrunnlagListe()) {
+      if (grunnlag.getInnhold().has("grunnlagReferanseListe")) {
+        var grunnlagReferanseListe = grunnlag.getInnhold().get("grunnlagReferanseListe");
+        if (grunnlagReferanseListe.isArray()) {
+          for(JsonNode grunnlagReferanse : grunnlagReferanseListe) {
+            alleReferanser.add(grunnlagReferanse.asText());
+          }
+        }
+      }
+    }
+    return alleReferanser;
+  }
+
   // Bygger opp BeregnBidragsevneResultat
   public static Grunnlag dummyBidragsevneResultat() {
     ObjectMapper objectMapper = new ObjectMapper();
@@ -153,6 +178,7 @@ public class TestUtil {
     bidragPeriodeResultatListe.add(new no.nav.bidrag.beregn.bpsandelsaertilskudd.dto.ResultatPeriodeCore(
         new PeriodeCore(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01")),
         new no.nav.bidrag.beregn.bpsandelsaertilskudd.dto.ResultatBeregningCore(BigDecimal.valueOf(10), BigDecimal.valueOf(100), false),
+        new BeregnedeGrunnlagCore(emptyList(), emptyList(), emptyList()),
         new ArrayList<>() {{
           add(INNTEKT_REFERANSE);
           add(INNTEKT_REFERANSE);

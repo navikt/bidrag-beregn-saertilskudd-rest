@@ -20,6 +20,7 @@ import no.nav.bidrag.beregn.bidragsevne.dto.BeregnBidragsevneResultatCore;
 import no.nav.bidrag.beregn.bpsandelsaertilskudd.BPsAndelSaertilskuddCore;
 import no.nav.bidrag.beregn.bpsandelsaertilskudd.dto.BeregnBPsAndelSaertilskuddGrunnlagCore;
 import no.nav.bidrag.beregn.bpsandelsaertilskudd.dto.BeregnBPsAndelSaertilskuddResultatCore;
+import no.nav.bidrag.beregn.bpsandelsaertilskudd.dto.ResultatPeriodeCore;
 import no.nav.bidrag.beregn.felles.dto.AvvikCore;
 import no.nav.bidrag.beregn.felles.dto.IResultatPeriode;
 import no.nav.bidrag.beregn.felles.dto.SjablonResultatGrunnlagCore;
@@ -32,12 +33,16 @@ import no.nav.bidrag.beregn.saertilskudd.dto.BidragsevnePeriodeCore;
 import no.nav.bidrag.beregn.saertilskudd.dto.SamvaersfradragPeriodeCore;
 import no.nav.bidrag.beregn.saertilskudd.rest.consumer.SjablonConsumer;
 import no.nav.bidrag.beregn.saertilskudd.rest.consumer.SjablonListe;
+import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BMInntekt;
+import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BPInntekt;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BPsAndelSaertilskuddResultatPeriode;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BeregnTotalSaertilskuddGrunnlag;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BeregnetTotalSaertilskuddResultat;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BidragsevneResultatPeriode;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.Grunnlag;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.GrunnlagType;
+import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.Rolle;
+import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.SBInntekt;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.SamvaersfradragResultatPeriode;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.Samvaersklasse;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.SjablonResultatPeriode;
@@ -141,15 +146,21 @@ public class BeregnSaertilskuddService {
     var bidragsevneGrunnlagTilCore = bidragsevneCoreMapper.mapBidragsevneGrunnlagTilCore(beregnTotalSaertilskuddGrunnlag, sjablontallMap,
         sjablonListe);
     var bidragsevneResultatFraCore = beregnBidragsevne(bidragsevneGrunnlagTilCore);
+    grunnlagReferanseListe.addAll(lagGrunnlagListeForDelberegning(beregnTotalSaertilskuddGrunnlag, bidragsevneResultatFraCore.getResultatPeriodeListe(), bidragsevneResultatFraCore.getSjablonListe()));
+
 
     // ++ BPs andel av særtilskudd
     var bpAndelSaertilskuddGrunnlagTilCore = bpAndelSaertilskuddCoreMapper.mapBPsAndelSaertilskuddGrunnlagTilCore(beregnTotalSaertilskuddGrunnlag,
         sjablontallMap, sjablonListe);
     var bpAndelSaertilskuddResultatFraCore = beregnBPAndelSaertilskudd(bpAndelSaertilskuddGrunnlagTilCore);
+    grunnlagReferanseListe.addAll(lagGrunnlagListeForDelberegning(beregnTotalSaertilskuddGrunnlag, bpAndelSaertilskuddResultatFraCore.getResultatPeriodeListe(), bpAndelSaertilskuddResultatFraCore.getSjablonListe()));
+    grunnlagReferanseListe.addAll(
+        lagGrunnlagListeForBeregnedeGrunnlagBPsAndelSaertilskudd(beregnTotalSaertilskuddGrunnlag, bpAndelSaertilskuddResultatFraCore.getResultatPeriodeListe()));
 
     // ++ Samværsfradrag
     var samvaersfradragGrunnlagTilCore = samvaersfradragCoreMapper.mapSamvaersfradragGrunnlagTilCore(beregnTotalSaertilskuddGrunnlag, sjablonListe);
     var samvaersfradragResultatFraCore = beregnSamvaersfradrag(samvaersfradragGrunnlagTilCore);
+    grunnlagReferanseListe.addAll(lagGrunnlagListeForDelberegning(beregnTotalSaertilskuddGrunnlag, samvaersfradragResultatFraCore.getResultatPeriodeListe(), samvaersfradragResultatFraCore.getSjablonListe()));
 
     // ++ Særtilskudd (totalberegning)
     var saertilskuddGrunnlagTilCore = saertilskuddCoreMapper.mapSaertilskuddGrunnlagTilCore(beregnTotalSaertilskuddGrunnlag,
@@ -160,9 +171,44 @@ public class BeregnSaertilskuddService {
     grunnlagReferanseListe.addAll(lagGrunnlagReferanseListeSaertilskudd(beregnTotalSaertilskuddGrunnlag, saertilskuddResultatFraCore,
         saertilskuddGrunnlagTilCore, bidragsevneResultatFraCore, bpAndelSaertilskuddResultatFraCore, samvaersfradragResultatFraCore));
 
+    var unikeReferanserListe = grunnlagReferanseListe.stream().sorted(comparing(Grunnlag::getReferanse)).distinct().toList();
+
     // Bygger responsobjekt
     return HttpResponse.from(HttpStatus.OK, new BeregnetTotalSaertilskuddResultat(saertilskuddResultatFraCore,
-        grunnlagReferanseListe.stream().sorted(comparing(Grunnlag::getReferanse)).distinct().toList()));
+        unikeReferanserListe));
+  }
+
+  private List<Grunnlag> lagGrunnlagListeForDelberegning(BeregnTotalSaertilskuddGrunnlag beregnTotalSaertilskuddGrunnlag, List<? extends IResultatPeriode> resultatPeriodeListe, List<SjablonResultatGrunnlagCore> sjablonListe) {
+    var resultatGrunnlagListe = new ArrayList<Grunnlag>();
+
+    // Bygger opp oversikt over alle grunnlag som er brukt i beregningen
+    var grunnlagReferanseListe = resultatPeriodeListe.stream()
+        .flatMap(resultatPeriodeCore -> resultatPeriodeCore.getGrunnlagReferanseListe().stream()
+            .map(String::new))
+        .distinct()
+        .collect(toList());
+
+    // Matcher mottatte grunnlag med grunnlag som er brukt i beregningen
+    resultatGrunnlagListe.addAll(beregnTotalSaertilskuddGrunnlag.getGrunnlagListe().stream()
+        .filter(grunnlag -> grunnlagReferanseListe.contains(grunnlag.getReferanse()))
+        .map(grunnlag -> new Grunnlag(grunnlag.getReferanse(), grunnlag.getType(), grunnlag.getInnhold()))
+        .collect(toList()));
+
+    // Danner grunnlag basert på liste over sjabloner som er brukt i beregningen
+    resultatGrunnlagListe.addAll(mapSjabloner(sjablonListe));
+
+    return resultatGrunnlagListe;
+  }
+
+
+  private List<Grunnlag> lagGrunnlagListeForBeregnedeGrunnlagBPsAndelSaertilskudd(BeregnTotalSaertilskuddGrunnlag beregnTotalSaertilskuddGrunnlag, List<ResultatPeriodeCore> resultatPeriodeCoreListe) {
+    List<Grunnlag> beregnedeGrunnlagListe = new ArrayList<>();
+    for(var resultatPeriode : resultatPeriodeCoreListe) {
+      beregnedeGrunnlagListe.addAll(resultatPeriode.getBeregnedeGrunnlag().getInntektBPListe().stream().map(inntektBase -> new Grunnlag(inntektBase.getReferanse(), GrunnlagType.INNTEKT, tilJsonNode(new BPInntekt(resultatPeriode.getPeriode().getDatoFom(), resultatPeriode.getPeriode().getDatoTil(), Rolle.BP, inntektBase.getInntektType().toString(), inntektBase.getInntektBelop())))).toList());
+      beregnedeGrunnlagListe.addAll(resultatPeriode.getBeregnedeGrunnlag().getInntektBMListe().stream().map(inntektBase -> new Grunnlag(inntektBase.getReferanse(), GrunnlagType.INNTEKT, tilJsonNode(new BMInntekt(resultatPeriode.getPeriode().getDatoFom(), resultatPeriode.getPeriode().getDatoTil(), inntektBase.getInntektType().toString(), inntektBase.getInntektBelop(), Rolle.BM, inntektBase.getDeltFordel(), inntektBase.getSkatteklasse2())))).toList());
+      beregnedeGrunnlagListe.addAll(resultatPeriode.getBeregnedeGrunnlag().getInntektBBListe().stream().map(inntektBase -> new Grunnlag(inntektBase.getReferanse(), GrunnlagType.INNTEKT, tilJsonNode(new SBInntekt(resultatPeriode.getPeriode().getDatoFom(), resultatPeriode.getPeriode().getDatoTil(), Rolle.SB, inntektBase.getInntektType().toString(), inntektBase.getInntektBelop(), null)))).toList());
+    }
+    return beregnedeGrunnlagListe;
   }
 
   // Barnebidrag

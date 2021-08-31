@@ -10,6 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import no.nav.bidrag.beregn.saertilskudd.rest.SaertilskuddDelberegningResultat;
 import no.nav.bidrag.beregn.saertilskudd.rest.BidragBeregnSaertilskuddLocal;
+import no.nav.bidrag.beregn.saertilskudd.rest.TestUtil;
 import no.nav.bidrag.beregn.saertilskudd.rest.consumer.wiremock_stub.SjablonApiStub;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BeregnetTotalSaertilskuddResultat;
 import no.nav.bidrag.commons.web.test.HttpHeaderTestRestTemplate;
@@ -207,6 +208,9 @@ public class BeregnSaertilskuddControllerIntegrationTest {
 
     var saertilskuddDelberegningResultat = new SaertilskuddDelberegningResultat(totalSaertilskuddResultat);
 
+    var alleReferanser = TestUtil.hentAlleReferanser(totalSaertilskuddResultat);
+    var referanserIGrunnlagListe = totalSaertilskuddResultat.getGrunnlagListe().stream().map(grunnlag -> grunnlag.getReferanse()).toList();
+
     assertAll(
         () -> assertThat(responseEntity.getStatusCode()).isEqualTo(OK),
         () -> assertThat(totalSaertilskuddResultat).isNotNull(),
@@ -221,7 +225,8 @@ public class BeregnSaertilskuddControllerIntegrationTest {
         () -> assertThat(saertilskuddDelberegningResultat.bpsAndelSaertilskuddListe.get(0).getBelop()).isEqualTo(forventetBPAndelSaertilskuddBelopBarn),
         () -> assertThat(saertilskuddDelberegningResultat.bpsAndelSaertilskuddListe.get(0).getProsent()).isEqualTo(forventetBPAndelSaertilskuddProsentBarn),
         () -> assertThat(saertilskuddDelberegningResultat.samvaersfradragListe).size().isEqualTo(1),
-        () -> assertThat(saertilskuddDelberegningResultat.samvaersfradragListe.get(0).getBelop()).isEqualTo(forventetSamvaersfradragBelopBarn1)
+        () -> assertThat(saertilskuddDelberegningResultat.samvaersfradragListe.get(0).getBelop()).isEqualTo(forventetSamvaersfradragBelopBarn1),
+        () -> assertThat(referanserIGrunnlagListe.containsAll(alleReferanser)).isTrue()
     );
   }
 
@@ -233,6 +238,9 @@ public class BeregnSaertilskuddControllerIntegrationTest {
     var totalSaertilskuddResultat = responseEntity.getBody();
 
     var saertilskuddDelberegningResultat = new SaertilskuddDelberegningResultat(totalSaertilskuddResultat);
+
+    var alleReferanser = TestUtil.hentAlleReferanser(totalSaertilskuddResultat);
+    var referanserIGrunnlagListe = totalSaertilskuddResultat.getGrunnlagListe().stream().map(grunnlag -> grunnlag.getReferanse()).toList();
 
 
     assertAll(
@@ -257,8 +265,8 @@ public class BeregnSaertilskuddControllerIntegrationTest {
 
         () -> assertThat(totalSaertilskuddResultat.getBeregnetSaertilskuddPeriodeListe().get(0).getResultat().getBelop()).isEqualTo(forventetSaertilskuddBelopBarn),
         () -> assertThat(totalSaertilskuddResultat.getBeregnetSaertilskuddPeriodeListe().get(0).getResultat()
-            .getKode()).isEqualTo(forventetSaertilskuddResultatkodeBarn)
-
+            .getKode()).isEqualTo(forventetSaertilskuddResultatkodeBarn),
+        () -> assertThat(referanserIGrunnlagListe.containsAll(alleReferanser)).isTrue()
     );
   }
 
