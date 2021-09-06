@@ -12,7 +12,7 @@ data class Periode(
 ) {
 
   constructor(periode: PeriodeCore) : this(
-      datoFom = periode.periodeDatoFra,
-      datoTil = periode.periodeDatoTil
+      datoFom = periode.datoFom,
+      datoTil = periode.datoTil
   )
 }
