@@ -1,8 +1,6 @@
 name: bidrag-beregn-saertilskudd-rest
 ingresses:
-  - https://bidrag-beregn-saertilskudd-rest.nais.preprod.local/
-  - https://bidrag-beregn-saertilskudd-rest.dev-fss.nais.io/
-  - https://bidrag-beregn-saertilskudd-rest.dev.adeo.no/
+  - https://bidrag-beregn-saertilskudd-rest.dev.intern.nav.no/
 env:
   - name: SJABLON_URL
     value: https://bidrag-sjablon.dev-fss.nais.io/bidrag-sjablon

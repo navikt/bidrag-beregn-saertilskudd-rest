@@ -29,8 +29,7 @@ spec:
       cpu: 500m
       memory: 512Mi
   ingresses:
-    - https://bidrag-beregn-saertilskudd-rest.nais.adeo.no/
-    - https://bidrag-beregn-saertilskudd-rest.prod-fss.nais.io
+    - https://bidrag-beregn-saertilskudd-rest.intern.nav.no
   vault:
     enabled: false
   env:
