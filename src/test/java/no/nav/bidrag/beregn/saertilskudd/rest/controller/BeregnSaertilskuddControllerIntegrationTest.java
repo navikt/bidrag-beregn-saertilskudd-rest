@@ -60,7 +60,7 @@ public class BeregnSaertilskuddControllerIntegrationTest {
     sjablonApiStub.settOppSjablonStub();
 
     // Bygg opp url
-    url = "http://localhost:" + port + "/bidrag-beregn-saertilskudd-rest/beregn/saertilskudd";
+    url = "http://localhost:" + port + "/beregn/saertilskudd";
   }
 
   @Test

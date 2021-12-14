@@ -73,7 +73,7 @@ class BeregnSaertilskuddControllerTest {
           add(TestUtil.dummyBPsAndelSaertilskuddResultat());
           add(TestUtil.dummySamvaersfradragResultat());
         }})));
-    var url = "http://localhost:" + port + "/bidrag-beregn-saertilskudd-rest/beregn/saertilskudd";
+    var url = "http://localhost:" + port + "/beregn/saertilskudd";
     var request = initHttpEntity(TestUtil.byggTotalSaertilskuddGrunnlag());
     var responseEntity = httpHeaderTestRestTemplate.exchange(url, HttpMethod.POST, request, BeregnetTotalSaertilskuddResultat.class);
     var totalSaertilskuddResultat = responseEntity.getBody();
@@ -126,7 +126,7 @@ class BeregnSaertilskuddControllerTest {
 
     when(beregnSaertilskuddServiceMock.beregn(any(BeregnTotalSaertilskuddGrunnlag.class))).thenReturn(HttpResponse.from(BAD_REQUEST));
 
-    var url = "http://localhost:" + port + "/bidrag-beregn-saertilskudd-rest/beregn/saertilskudd";
+    var url = "http://localhost:" + port + "/beregn/saertilskudd";
     var request = initHttpEntity(new BeregnTotalSaertilskuddGrunnlag(LocalDate.parse("2021-08-18"), LocalDate.parse("2021-08-18"), emptyList()));
     var responseEntity = httpHeaderTestRestTemplate.exchange(url, HttpMethod.POST, request, BeregnetTotalSaertilskuddResultat.class);
     var totalSaertilskuddResultat = responseEntity.getBody();
@@ -143,7 +143,7 @@ class BeregnSaertilskuddControllerTest {
 
     when(beregnSaertilskuddServiceMock.beregn(any(BeregnTotalSaertilskuddGrunnlag.class))).thenReturn(HttpResponse.from(INTERNAL_SERVER_ERROR));
 
-    var url = "http://localhost:" + port + "/bidrag-beregn-saertilskudd-rest/beregn/saertilskudd";
+    var url = "http://localhost:" + port + "/beregn/saertilskudd";
     var request = initHttpEntity(new BeregnTotalSaertilskuddGrunnlag(LocalDate.parse("2021-08-18"), LocalDate.parse("2021-08-18"), emptyList()));
     var responseEntity = httpHeaderTestRestTemplate.exchange(url, HttpMethod.POST, request, BeregnetTotalSaertilskuddResultat.class);
     var totalSaertilskuddResultat = responseEntity.getBody();
