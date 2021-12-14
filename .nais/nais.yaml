@@ -8,18 +8,18 @@ metadata:
 spec:
   image: {{ image }}
   liveness:
-    path: /bidrag-beregn-saertilskudd-rest/actuator/health
+    path: /actuator/health
     initialDelay: 20
     timeout: 1
     periodSeconds: 5
     failureThreshold: 10
   readiness:
-    path: /bidrag-beregn-saertilskudd-rest/actuator/health
+    path: /actuator/health
     initialDelay: 20
     timeout: 1
   prometheus:
     enabled: true
-    path: /bidrag-beregn-saertilskudd-rest/actuator/prometheus
+    path: /actuator/prometheus
   resources:
     limits:
       cpu: 1000m
