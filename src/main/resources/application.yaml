@@ -8,6 +8,8 @@ management:
 
 springdoc:
   packages-to-scan: no.nav.bidrag.beregn.saertilskudd.rest.controller
+  swagger-ui:
+    path: /
 
 ---
 # Profil for lokal kjøring
