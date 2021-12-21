@@ -35,3 +35,5 @@ spec:
   env:
     - name: BIDRAGGCPPROXY_URL
       value: https://bidrag-gcp-proxy.intern.nav.no
+   - name: BIDRAGGCPPROXY_SCOPE
+      value: prod-fss.bidrag.bidrag-gcp-proxy

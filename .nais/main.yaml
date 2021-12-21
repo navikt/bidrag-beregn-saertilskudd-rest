@@ -4,3 +4,5 @@ ingresses:
 env:
   - name: BIDRAGGCPPROXY_URL
     value: https://bidrag-gcp-proxy.dev.intern.nav.no
+ - name: BIDRAGGCPPROXY_SCOPE
+    value: dev-fss.bidrag.bidrag-gcp-proxy
