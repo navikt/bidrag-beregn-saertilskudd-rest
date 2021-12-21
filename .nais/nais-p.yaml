@@ -6,6 +6,13 @@ metadata:
   labels:
     team: bidrag
 spec:
+  azure:
+    application:
+      enabled: true
+  accessPolicy:
+    outbound:
+      external:
+        - host: bidrag-gcp-proxy.intern.nav.no
   image: {{ image }}
   port: 8080
   liveness:

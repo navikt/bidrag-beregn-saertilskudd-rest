@@ -9,6 +9,10 @@ spec:
   azure:
     application:
       enabled: true
+  accessPolicy:
+    outbound:
+      external:
+        - host: { { azure.bidraggcpproxy_url } }
   image: {{ image }}
   liveness:
     path: /actuator/health
@@ -35,7 +39,7 @@ spec:
     - {{url}}
   {{/each}}
   env:
-  {{#each env}}
-    - name: {{this.name}}
-      value: "{{this.value}}"
-  {{/each}}
+    - name: BIDRAGGCPPROXY_URL
+      value: https://{{ azure.bidraggcpproxy_url }}
+    - name: BIDRAGGCPPROXY_SCOPE
+      value: {{ azure.bidraggcpproxy_scope }}

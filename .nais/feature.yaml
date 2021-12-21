@@ -1,8 +1,7 @@
 name: bidrag-beregn-saertilskudd-rest-feature
 ingresses:
   - https://bidrag-beregn-saertilskudd-rest-feature.dev.intern.nav.no/
-env:
-  - name: BIDRAGGCPPROXY_URL
-    value: https://bidrag-gcp-proxy-feature.dev.intern.nav.no
-  - name: BIDRAGGCPPROXY_SCOPE
-    value: dev-fss.bidrag.bidrag-gcp-proxy-feature
+
+azure:
+  bidraggcpproxy_url: bidrag-gcp-proxy-feature.dev-fss-pub.nais.io
+  bidraggcpproxy_scope: dev-fss.bidrag.bidrag-gcp-proxy-feature
