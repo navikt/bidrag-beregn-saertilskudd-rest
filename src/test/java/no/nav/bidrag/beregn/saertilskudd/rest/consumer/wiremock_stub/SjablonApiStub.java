@@ -20,7 +20,7 @@ public class SjablonApiStub {
   }
 
   private void settOppSjablonSjablontallStub() {
-    var url = "/bidrag-gcp-proxy/sjablontall?all=true";
+    var url = "/sjablon/sjablontall?all=true";
 
     stubFor(
         get(urlEqualTo(url))
@@ -161,7 +161,7 @@ public class SjablonApiStub {
 
 
   private void settOppSjablonSamvaersfradragStub() {
-    var url = "/bidrag-gcp-proxy/samvaersfradrag?all=true";
+    var url = "/sjablon/samvaersfradrag?all=true";
 
     stubFor(
         get(urlEqualTo(url))
@@ -385,7 +385,7 @@ public class SjablonApiStub {
   }
 
   private void settOppSjablonBidragsevneStub() {
-    var url = "/bidrag-gcp-proxy/bidragsevner?all=true";
+    var url = "/sjablon/bidragsevner?all=true";
 
     stubFor(
         get(urlEqualTo(url))
@@ -415,7 +415,7 @@ public class SjablonApiStub {
   }
 
   private void settOppSjablonTrinnvisSkattesatsStub() {
-    var url = "/bidrag-gcp-proxy/trinnvisskattesats?all=true";
+    var url = "/sjablon/trinnvisskattesats?all=true";
 
     stubFor(
         get(urlEqualTo(url))

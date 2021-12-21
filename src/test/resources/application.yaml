@@ -1,4 +1,4 @@
-BIDRAGGCPPROXY_URL: http://localhost:8096/bidrag-gcp-proxy
+BIDRAGGCPPROXY_URL: http://localhost:8096/
 
 springdoc:
   swagger-ui:

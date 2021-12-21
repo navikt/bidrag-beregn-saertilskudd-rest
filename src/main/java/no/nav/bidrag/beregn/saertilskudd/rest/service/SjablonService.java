@@ -28,10 +28,10 @@ public class SjablonService {
 
   public SjablonService(BidragGcpProxyConsumer bidragGcpProxyConsumer) {
     this.bidragGcpProxyConsumer = bidragGcpProxyConsumer;
-    this.sjablonSjablontallUrl = "/sjablontall?all=true";
-    this.sjablonSamvaersfradragUrl = "/samvaersfradrag?all=true";
-    this.sjablonBidragsevneUrl = "/bidragsevner?all=true";
-    this.sjablonTrinnvisSkattesatsUrl = "/trinnvisskattesats?all=true";
+    this.sjablonSjablontallUrl = "/sjablon/sjablontall?all=true";
+    this.sjablonSamvaersfradragUrl = "/sjablon/samvaersfradrag?all=true";
+    this.sjablonBidragsevneUrl = "/sjablon/bidragsevner?all=true";
+    this.sjablonTrinnvisSkattesatsUrl = "/sjablon/trinnvisskattesats?all=true";
   }
 
   public HttpResponse<List<Sjablontall>> hentSjablonSjablontall() {
