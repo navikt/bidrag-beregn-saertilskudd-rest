@@ -2,5 +2,5 @@ name: bidrag-beregn-saertilskudd-rest
 ingresses:
   - https://bidrag-beregn-saertilskudd-rest.dev.intern.nav.no/
 env:
-  - name: SJABLON_URL
-    value: https://bidrag-sjablon.dev-fss.nais.io/bidrag-sjablon
+  - name: BIDRAGGCPPROXY_URL
+    value: https://bidrag-gcp-proxy.dev.intern.nav.no

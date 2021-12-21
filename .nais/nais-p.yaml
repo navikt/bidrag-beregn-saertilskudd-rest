@@ -33,5 +33,5 @@ spec:
   vault:
     enabled: false
   env:
-    - name: SJABLON_URL
-      value: https://bidrag-sjablon.nais.adeo.no/bidrag-sjablon
+    - name: BIDRAGGCPPROXY_URL
+      value: https://bidrag-gcp-proxy.intern.nav.no

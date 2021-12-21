@@ -66,7 +66,8 @@ public class BeregnSaertilskuddService {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(BeregnSaertilskuddService.class);
 
-  private final SjablonConsumer sjablonConsumer;
+//  private final SjablonConsumer sjablonConsumer;
+  private final SjablonService sjablonService;
   private final BidragsevneCore bidragsevneCore;
   private final BPsAndelSaertilskuddCore bpAndelSaertilskuddCore;
   private final SamvaersfradragCore samvaersfradragCore;
@@ -76,11 +77,11 @@ public class BeregnSaertilskuddService {
   private final SamvaersfradragCoreMapper samvaersfradragCoreMapper;
   private final SaertilskuddCoreMapper saertilskuddCoreMapper;
 
-  public BeregnSaertilskuddService(SjablonConsumer sjablonConsumer, BidragsevneCore bidragsevneCore, BPsAndelSaertilskuddCore bpAndelSaertilskuddCore,
+  public BeregnSaertilskuddService(SjablonService sjablonService, BidragsevneCore bidragsevneCore, BPsAndelSaertilskuddCore bpAndelSaertilskuddCore,
       SamvaersfradragCore samvaersfradragCore, SaertilskuddCore saertilskuddCore, BidragsevneCoreMapper bidragsevneCoreMapper,
       BPAndelSaertilskuddCoreMapper bpAndelSaertilskuddCoreMapper, SamvaersfradragCoreMapper samvaersfradragCoreMapper,
       SaertilskuddCoreMapper saertilskuddCoreMapper) {
-    this.sjablonConsumer = sjablonConsumer;
+    this.sjablonService = sjablonService;
     this.bidragsevneCore = bidragsevneCore;
     this.bpAndelSaertilskuddCore = bpAndelSaertilskuddCore;
     this.samvaersfradragCore = samvaersfradragCore;
@@ -418,20 +419,20 @@ public class BeregnSaertilskuddService {
   private SjablonListe hentSjabloner() {
 
     // Henter sjabloner for sjablontall
-    var sjablonSjablontallListe = Optional.ofNullable(sjablonConsumer.hentSjablonSjablontall().getResponseEntity().getBody()).orElse(emptyList());
+    var sjablonSjablontallListe = Optional.ofNullable(sjablonService.hentSjablonSjablontall().getResponseEntity().getBody()).orElse(emptyList());
     LOGGER.debug("Antall sjabloner hentet av type Sjablontall: {}", sjablonSjablontallListe.size());
 
     // Henter sjabloner for samværsfradrag
-    var sjablonSamvaersfradragListe = Optional.ofNullable(sjablonConsumer.hentSjablonSamvaersfradrag().getResponseEntity().getBody())
+    var sjablonSamvaersfradragListe = Optional.ofNullable(sjablonService.hentSjablonSamvaersfradrag().getResponseEntity().getBody())
         .orElse(emptyList());
     LOGGER.debug("Antall sjabloner hentet av type Samværsfradrag: {}", sjablonSamvaersfradragListe.size());
 
     // Henter sjabloner for bidragsevne
-    var sjablonBidragsevneListe = Optional.ofNullable(sjablonConsumer.hentSjablonBidragsevne().getResponseEntity().getBody()).orElse(emptyList());
+    var sjablonBidragsevneListe = Optional.ofNullable(sjablonService.hentSjablonBidragsevne().getResponseEntity().getBody()).orElse(emptyList());
     LOGGER.debug("Antall sjabloner hentet av type Bidragsevne: {}", sjablonBidragsevneListe.size());
 
     // Henter sjabloner for trinnvis skattesats
-    var sjablonTrinnvisSkattesatsListe = Optional.ofNullable(sjablonConsumer.hentSjablonTrinnvisSkattesats().getResponseEntity().getBody())
+    var sjablonTrinnvisSkattesatsListe = Optional.ofNullable(sjablonService.hentSjablonTrinnvisSkattesats().getResponseEntity().getBody())
         .orElse(emptyList());
     LOGGER.debug("Antall sjabloner hentet av type Trinnvis skattesats: {}", sjablonTrinnvisSkattesatsListe.size());
 

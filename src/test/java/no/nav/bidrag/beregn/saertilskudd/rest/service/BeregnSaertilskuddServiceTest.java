@@ -6,34 +6,20 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.Collection;
 import no.nav.bidrag.beregn.bidragsevne.BidragsevneCore;
-import no.nav.bidrag.beregn.bidragsevne.dto.BeregnBidragsevneGrunnlagCore;
 import no.nav.bidrag.beregn.bpsandelsaertilskudd.BPsAndelSaertilskuddCore;
-import no.nav.bidrag.beregn.bpsandelsaertilskudd.dto.BeregnBPsAndelSaertilskuddGrunnlagCore;
-import no.nav.bidrag.beregn.felles.dto.SjablonInnholdCore;
-import no.nav.bidrag.beregn.felles.dto.SjablonPeriodeCore;
-import no.nav.bidrag.beregn.felles.enums.SjablonNavn;
-import no.nav.bidrag.beregn.felles.enums.SjablonTallNavn;
 import no.nav.bidrag.beregn.saertilskudd.SaertilskuddCore;
-import no.nav.bidrag.beregn.saertilskudd.dto.BeregnSaertilskuddGrunnlagCore;
 import no.nav.bidrag.beregn.saertilskudd.rest.TestUtil;
-import no.nav.bidrag.beregn.saertilskudd.rest.consumer.SjablonConsumer;
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BeregnTotalSaertilskuddGrunnlag;
 import no.nav.bidrag.beregn.saertilskudd.rest.exception.UgyldigInputException;
 import no.nav.bidrag.beregn.saertilskudd.rest.mapper.BPAndelSaertilskuddCoreMapper;
 import no.nav.bidrag.beregn.saertilskudd.rest.mapper.BidragsevneCoreMapper;
 import no.nav.bidrag.beregn.saertilskudd.rest.mapper.SaertilskuddCoreMapper;
 import no.nav.bidrag.beregn.saertilskudd.rest.mapper.SamvaersfradragCoreMapper;
 import no.nav.bidrag.beregn.samvaersfradrag.SamvaersfradragCore;
-import no.nav.bidrag.beregn.samvaersfradrag.dto.BeregnSamvaersfradragGrunnlagCore;
 import no.nav.bidrag.commons.web.HttpResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -47,7 +33,7 @@ class BeregnSaertilskuddServiceTest {
   private BeregnSaertilskuddService beregnSaertilskuddService;
 
   @Mock
-  private SjablonConsumer sjablonConsumerMock;
+  private SjablonService sjablonServiceMock;
   @Mock
   private BidragsevneCore bidragsevneCoreMock;
   @Mock
@@ -72,10 +58,10 @@ class BeregnSaertilskuddServiceTest {
   @BeforeEach
   void initMocksOgSettOppSjablonMocks() {
     MockitoAnnotations.initMocks(this);
-    when(sjablonConsumerMock.hentSjablonSjablontall()).thenReturn(HttpResponse.from(HttpStatus.OK, TestUtil.dummySjablonSjablontallListe()));
-    when(sjablonConsumerMock.hentSjablonSamvaersfradrag()).thenReturn(HttpResponse.from(HttpStatus.OK, TestUtil.dummySjablonSamvaersfradragListe()));
-    when(sjablonConsumerMock.hentSjablonBidragsevne()).thenReturn(HttpResponse.from(HttpStatus.OK, TestUtil.dummySjablonBidragsevneListe()));
-    when(sjablonConsumerMock.hentSjablonTrinnvisSkattesats())
+    when(sjablonServiceMock.hentSjablonSjablontall()).thenReturn(HttpResponse.from(HttpStatus.OK, TestUtil.dummySjablonSjablontallListe()));
+    when(sjablonServiceMock.hentSjablonSamvaersfradrag()).thenReturn(HttpResponse.from(HttpStatus.OK, TestUtil.dummySjablonSamvaersfradragListe()));
+    when(sjablonServiceMock.hentSjablonBidragsevne()).thenReturn(HttpResponse.from(HttpStatus.OK, TestUtil.dummySjablonBidragsevneListe()));
+    when(sjablonServiceMock.hentSjablonTrinnvisSkattesats())
         .thenReturn(HttpResponse.from(HttpStatus.OK, TestUtil.dummySjablonTrinnvisSkattesatsListe()));
   }
 

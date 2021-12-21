@@ -13,6 +13,8 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.OK;
 
 import java.math.BigDecimal;
+import no.nav.bidrag.beregn.saertilskudd.rest.BidragBeregnSaertilskuddOverridesConfig;
+import no.nav.bidrag.beregn.saertilskudd.rest.BidragBeregnSaertilskuddTest;
 import no.nav.bidrag.beregn.saertilskudd.rest.SaertilskuddDelberegningResultat;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -20,13 +22,13 @@ import no.nav.bidrag.beregn.felles.dto.PeriodeCore;
 import no.nav.bidrag.beregn.saertilskudd.dto.BeregnSaertilskuddResultatCore;
 import no.nav.bidrag.beregn.saertilskudd.dto.ResultatBeregningCore;
 import no.nav.bidrag.beregn.saertilskudd.dto.ResultatPeriodeCore;
-import no.nav.bidrag.beregn.saertilskudd.rest.BidragBeregnSaertilskuddLocal;
 import no.nav.bidrag.beregn.saertilskudd.rest.TestUtil;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BeregnTotalSaertilskuddGrunnlag;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BeregnetTotalSaertilskuddResultat;
 import no.nav.bidrag.beregn.saertilskudd.rest.service.BeregnSaertilskuddService;
 import no.nav.bidrag.commons.web.HttpResponse;
 import no.nav.bidrag.commons.web.test.HttpHeaderTestRestTemplate;
+import no.nav.security.token.support.spring.test.EnableMockOAuth2Server;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -36,12 +38,17 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 
 @DisplayName("BeregnSaertilskuddControllerTest")
-@SpringBootTest(classes = BidragBeregnSaertilskuddLocal.class, webEnvironment = WebEnvironment.RANDOM_PORT)
+@SpringBootTest(classes = BidragBeregnSaertilskuddTest.class, webEnvironment = WebEnvironment.RANDOM_PORT)
+@Import(BidragBeregnSaertilskuddOverridesConfig.class)
+@AutoConfigureWireMock(port = 8096)
+@EnableMockOAuth2Server
 class BeregnSaertilskuddControllerTest {
 
   @Autowired
