@@ -1,4 +1,4 @@
-package no.nav.bidrag.beregn.saertilskudd.rest.consumer;
+package no.nav.bidrag.beregn.saertilskudd.rest.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
@@ -10,12 +10,16 @@ import static org.mockito.Mockito.when;
 
 import java.util.List;
 import no.nav.bidrag.beregn.saertilskudd.rest.TestUtil;
-import no.nav.bidrag.beregn.saertilskudd.rest.exception.SjablonConsumerException;
+import no.nav.bidrag.beregn.saertilskudd.rest.consumer.BidragGcpProxyConsumer;
+import no.nav.bidrag.beregn.saertilskudd.rest.consumer.Bidragsevne;
+import no.nav.bidrag.beregn.saertilskudd.rest.consumer.Samvaersfradrag;
+import no.nav.bidrag.beregn.saertilskudd.rest.consumer.Sjablontall;
+import no.nav.bidrag.beregn.saertilskudd.rest.consumer.TrinnvisSkattesats;
+import no.nav.bidrag.beregn.saertilskudd.rest.exception.BidragGcpProxyConsumerException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
@@ -25,22 +29,27 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 @ExtendWith(MockitoExtension.class)
-@SuppressWarnings("unchecked")
-@DisplayName("SjablonConsumerTest")
-class SjablonConsumerTest {
+@DisplayName("SjablonServiceTest")
+public class SjablonServiceTest {
 
-  @InjectMocks
-  private SjablonConsumer sjablonConsumer;
+  private SjablonService sjablonService;
 
-  @Mock
+  private BidragGcpProxyConsumer bidragGcpProxyConsumer;
+
   private RestTemplate restTemplateMock;
+
+  public SjablonServiceTest() {
+    this.restTemplateMock = Mockito.mock(RestTemplate.class);
+    this.bidragGcpProxyConsumer = new BidragGcpProxyConsumer(restTemplateMock);
+    this.sjablonService = new SjablonService(bidragGcpProxyConsumer);
+  }
 
   @Test
   @DisplayName("Skal hente liste av Sjablontall når respons fra tjenesten er OK")
   void skalHenteListeAvSjablontallNaarResponsFraTjenestenErOk() {
     when(restTemplateMock.exchange(anyString(), eq(HttpMethod.GET), eq(null), (ParameterizedTypeReference<List<Sjablontall>>) any()))
         .thenReturn(new ResponseEntity<>(TestUtil.dummySjablonSjablontallListe(), HttpStatus.OK));
-    var sjablonResponse = sjablonConsumer.hentSjablonSjablontall();
+    var sjablonResponse = sjablonService.hentSjablonSjablontall();
 
     assertAll(
         () -> assertThat(sjablonResponse).isNotNull(),
@@ -59,7 +68,7 @@ class SjablonConsumerTest {
     when(restTemplateMock.exchange(anyString(), eq(HttpMethod.GET), eq(null), (ParameterizedTypeReference<List<Sjablontall>>) any()))
         .thenThrow(new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR));
 
-    assertThatExceptionOfType(SjablonConsumerException.class).isThrownBy(() -> sjablonConsumer.hentSjablonSjablontall());
+    assertThatExceptionOfType(BidragGcpProxyConsumerException.class).isThrownBy(() -> sjablonService.hentSjablonSjablontall());
   }
 
   @Test
@@ -67,7 +76,7 @@ class SjablonConsumerTest {
   void skalHenteListeAvSamvaersfradragSjablonerNaarResponsFraTjenestenErOk() {
     when(restTemplateMock.exchange(anyString(), eq(HttpMethod.GET), eq(null), (ParameterizedTypeReference<List<Samvaersfradrag>>) any()))
         .thenReturn(new ResponseEntity<>(TestUtil.dummySjablonSamvaersfradragListe(), HttpStatus.OK));
-    var sjablonResponse = sjablonConsumer.hentSjablonSamvaersfradrag();
+    var sjablonResponse = sjablonService.hentSjablonSamvaersfradrag();
 
     assertAll(
         () -> assertThat(sjablonResponse).isNotNull(),
@@ -86,7 +95,7 @@ class SjablonConsumerTest {
     when(restTemplateMock.exchange(anyString(), eq(HttpMethod.GET), eq(null), (ParameterizedTypeReference<List<Samvaersfradrag>>) any()))
         .thenThrow(new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR));
 
-    assertThatExceptionOfType(SjablonConsumerException.class).isThrownBy(() -> sjablonConsumer.hentSjablonSamvaersfradrag());
+    assertThatExceptionOfType(BidragGcpProxyConsumerException.class).isThrownBy(() -> sjablonService.hentSjablonSamvaersfradrag());
   }
 
   @Test
@@ -94,7 +103,7 @@ class SjablonConsumerTest {
   void skalHenteListeAvBidragsevneSjablonerNaarResponsFraTjenestenErOk() {
     when(restTemplateMock.exchange(anyString(), eq(HttpMethod.GET), eq(null), (ParameterizedTypeReference<List<Bidragsevne>>) any()))
         .thenReturn(new ResponseEntity<>(TestUtil.dummySjablonBidragsevneListe(), HttpStatus.OK));
-    var sjablonResponse = sjablonConsumer.hentSjablonBidragsevne();
+    var sjablonResponse = sjablonService.hentSjablonBidragsevne();
 
     assertAll(
         () -> assertThat(sjablonResponse).isNotNull(),
@@ -113,7 +122,7 @@ class SjablonConsumerTest {
     when(restTemplateMock.exchange(anyString(), eq(HttpMethod.GET), eq(null), (ParameterizedTypeReference<List<Bidragsevne>>) any()))
         .thenThrow(new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR));
 
-    assertThatExceptionOfType(SjablonConsumerException.class).isThrownBy(() -> sjablonConsumer.hentSjablonBidragsevne());
+    assertThatExceptionOfType(BidragGcpProxyConsumerException.class).isThrownBy(() -> sjablonService.hentSjablonBidragsevne());
   }
 
   @Test
@@ -121,7 +130,7 @@ class SjablonConsumerTest {
   void skalHenteListeAvTrinnvisSkattesatsSjablonerNaarResponsFraTjenestenErOk() {
     when(restTemplateMock.exchange(anyString(), eq(HttpMethod.GET), eq(null), (ParameterizedTypeReference<List<TrinnvisSkattesats>>) any()))
         .thenReturn(new ResponseEntity<>(TestUtil.dummySjablonTrinnvisSkattesatsListe(), HttpStatus.OK));
-    var sjablonResponse = sjablonConsumer.hentSjablonTrinnvisSkattesats();
+    var sjablonResponse = sjablonService.hentSjablonTrinnvisSkattesats();
 
     assertAll(
         () -> assertThat(sjablonResponse).isNotNull(),
@@ -140,6 +149,6 @@ class SjablonConsumerTest {
     when(restTemplateMock.exchange(anyString(), eq(HttpMethod.GET), eq(null), (ParameterizedTypeReference<List<TrinnvisSkattesats>>) any()))
         .thenThrow(new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR));
 
-    assertThatExceptionOfType(SjablonConsumerException.class).isThrownBy(() -> sjablonConsumer.hentSjablonTrinnvisSkattesats());
+    assertThatExceptionOfType(BidragGcpProxyConsumerException.class).isThrownBy(() -> sjablonService.hentSjablonTrinnvisSkattesats());
   }
 }

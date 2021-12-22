@@ -14,5 +14,4 @@ public class BidragBeregnSaertilskuddTestConfig {
     TestRestTemplate testRestTemplate = new TestRestTemplate(new RestTemplateBuilder());
     return new HttpHeaderTestRestTemplate(testRestTemplate);
   }
-
 }

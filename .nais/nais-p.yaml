@@ -6,21 +6,28 @@ metadata:
   labels:
     team: bidrag
 spec:
+  azure:
+    application:
+      enabled: true
+  accessPolicy:
+    outbound:
+      external:
+        - host: bidrag-gcp-proxy.intern.nav.no
   image: {{ image }}
   port: 8080
   liveness:
-    path: /bidrag-beregn-saertilskudd-rest/actuator/health
+    path: /actuator/health
     initialDelay: 20
     timeout: 1
     periodSeconds: 5
     failureThreshold: 10
   readiness:
-    path: /bidrag-beregn-saertilskudd-rest/actuator/health
+    path: /actuator/health
     initialDelay: 20
     timeout: 1
   prometheus:
     enabled: true
-    path: /bidrag-beregn-saertilskudd-rest/actuator/prometheus
+    path: /actuator/prometheus
   resources:
     limits:
       cpu: 1000m
@@ -29,10 +36,11 @@ spec:
       cpu: 500m
       memory: 512Mi
   ingresses:
-    - https://bidrag-beregn-saertilskudd-rest.nais.adeo.no/
-    - https://bidrag-beregn-saertilskudd-rest.prod-fss.nais.io
+    - https://bidrag-beregn-saertilskudd-rest.intern.nav.no
   vault:
     enabled: false
   env:
-    - name: SJABLON_URL
-      value: https://bidrag-sjablon.nais.adeo.no/bidrag-sjablon
+    - name: BIDRAGGCPPROXY_URL
+      value: https://bidrag-gcp-proxy.intern.nav.no
+   - name: BIDRAGGCPPROXY_SCOPE
+      value: prod-fss.bidrag.bidrag-gcp-proxy

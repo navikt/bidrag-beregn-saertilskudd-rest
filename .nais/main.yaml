@@ -1,8 +1,9 @@
 name: bidrag-beregn-saertilskudd-rest
 ingresses:
-  - https://bidrag-beregn-saertilskudd-rest.nais.preprod.local/
-  - https://bidrag-beregn-saertilskudd-rest.dev-fss.nais.io/
-  - https://bidrag-beregn-saertilskudd-rest.dev.adeo.no/
-env:
-  - name: SJABLON_URL
-    value: https://bidrag-sjablon.dev-fss.nais.io/bidrag-sjablon
+  - https://bidrag-beregn-saertilskudd-rest.dev.intern.nav.no/
+
+azure:
+  bidraggcpproxy_url: bidrag-gcp-proxy.dev.intern.nav.no
+  bidraggcpproxy_scope: dev-fss.bidrag.bidrag-gcp-proxy
+  cucumber_cloud_app: bidrag-cucumber-cloud
+  cucumber_cloud_cluster: dev-gcp
