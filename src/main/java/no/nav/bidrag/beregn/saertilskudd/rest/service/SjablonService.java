@@ -21,32 +21,29 @@ public class SjablonService {
   };
 
   private final BidragGcpProxyConsumer bidragGcpProxyConsumer;
-  private final String sjablonSjablontallUrl;
-  private final String sjablonSamvaersfradragUrl;
-  private final String sjablonBidragsevneUrl;
-  private final String sjablonTrinnvisSkattesatsUrl;
+
 
   public SjablonService(BidragGcpProxyConsumer bidragGcpProxyConsumer) {
     this.bidragGcpProxyConsumer = bidragGcpProxyConsumer;
-    this.sjablonSjablontallUrl = "/sjablon/sjablontall?all=true";
-    this.sjablonSamvaersfradragUrl = "/sjablon/samvaersfradrag?all=true";
-    this.sjablonBidragsevneUrl = "/sjablon/bidragsevner?all=true";
-    this.sjablonTrinnvisSkattesatsUrl = "/sjablon/trinnvisskattesats?all=true";
   }
 
   public HttpResponse<List<Sjablontall>> hentSjablonSjablontall() {
+    String sjablonSjablontallUrl = "/sjablon/sjablontall?all=true";
     return bidragGcpProxyConsumer.hentSjablonListe(sjablonSjablontallUrl, SJABLON_SJABLONTALL_LISTE);
   }
 
   public HttpResponse<List<Samvaersfradrag>> hentSjablonSamvaersfradrag() {
+    String sjablonSamvaersfradragUrl = "/sjablon/samvaersfradrag?all=true";
     return bidragGcpProxyConsumer.hentSjablonListe(sjablonSamvaersfradragUrl, SJABLON_SAMVAERSFRADRAG_LISTE);
   }
 
   public HttpResponse<List<Bidragsevne>> hentSjablonBidragsevne() {
+    String sjablonBidragsevneUrl = "/sjablon/bidragsevner?all=true";
     return bidragGcpProxyConsumer.hentSjablonListe(sjablonBidragsevneUrl, SJABLON_BIDRAGSEVNE_LISTE);
   }
 
   public HttpResponse<List<TrinnvisSkattesats>> hentSjablonTrinnvisSkattesats() {
+    String sjablonTrinnvisSkattesatsUrl = "/sjablon/trinnvisskattesats?all=true";
     return bidragGcpProxyConsumer.hentSjablonListe(sjablonTrinnvisSkattesatsUrl, SJABLON_TRINNVIS_SKATTESATS_LISTE);
   }
 }

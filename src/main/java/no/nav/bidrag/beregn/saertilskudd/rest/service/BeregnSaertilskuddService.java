@@ -31,7 +31,6 @@ import no.nav.bidrag.beregn.saertilskudd.dto.BeregnSaertilskuddGrunnlagCore;
 import no.nav.bidrag.beregn.saertilskudd.dto.BeregnSaertilskuddResultatCore;
 import no.nav.bidrag.beregn.saertilskudd.dto.BidragsevnePeriodeCore;
 import no.nav.bidrag.beregn.saertilskudd.dto.SamvaersfradragPeriodeCore;
-import no.nav.bidrag.beregn.saertilskudd.rest.consumer.SjablonConsumer;
 import no.nav.bidrag.beregn.saertilskudd.rest.consumer.SjablonListe;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BMInntekt;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BPInntekt;
