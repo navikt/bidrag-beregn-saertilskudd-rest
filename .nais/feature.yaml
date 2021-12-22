@@ -5,3 +5,5 @@ ingresses:
 azure:
   bidraggcpproxy_url: bidrag-gcp-proxy-feature.dev-fss-pub.nais.io
   bidraggcpproxy_scope: dev-fss.bidrag.bidrag-gcp-proxy-feature
+  cucumber_cloud_app: bidrag-cucumber-cloud-feature
+  cucumber_cloud_cluster: dev-gcp

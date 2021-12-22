@@ -10,6 +10,11 @@ spec:
     application:
       enabled: true
   accessPolicy:
+    inbound:
+      rules:
+        - application: {{ azure.cucumber_cloud_app }}
+          cluster: {{ azure.cucumber_cloud_cluster }}
+          namespace: bidrag
     outbound:
       external:
         - host: {{ azure.bidraggcpproxy_url }}
