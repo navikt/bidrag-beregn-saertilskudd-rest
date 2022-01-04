@@ -2,10 +2,12 @@ package no.nav.bidrag.beregn.saertilskudd.rest;
 
 import static org.springframework.context.annotation.FilterType.ASSIGNABLE_TYPE;
 
+import no.nav.bidrag.beregn.saertilskudd.rest.consumer.wiremock_stub.SjablonApiStub;
 import no.nav.security.token.support.spring.api.EnableJwtTokenValidation;
 import no.nav.security.token.support.spring.test.EnableMockOAuth2Server;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ComponentScan.Filter;
 
@@ -20,6 +22,9 @@ public class BidragBeregnSaertilskuddLocal {
   public static void main(String... args) {
     SpringApplication app = new SpringApplication(BidragBeregnSaertilskuddLocal.class);
     app.setAdditionalProfiles(LOCAL);
-    app.run(args);
+    ConfigurableApplicationContext context = app.run(args);
+
+    // Making sure wiremock stubs are set up
+    context.getBean(SjablonApiStub.class).settOppSjablonStub();
   }
 }
