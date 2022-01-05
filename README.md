@@ -1,8 +1,8 @@
 # bidrag-beregn-saertilskudd-rest
 
-![](https://github.com/navikt/bidrag-beregn-saertilskudd-rest/workflows/continuous%20integration/badge.svg)
-[![test build on pull request](https://github.com/navikt/bidrag-beregn-saertilskudd-rest/actions/workflows/pr.yaml/badge.svg)](https://github.com/navikt/bidrag-beregn-saertilskudd-rest/actions/workflows/pr.yaml)
-[![release bidrag-beregn-saertilskudd-rest](https://github.com/navikt/bidrag-beregn-saertilskudd-rest/actions/workflows/release.yaml/badge.svg)](https://github.com/navikt/bidrag-beregn-saertilskudd-rest/actions/workflows/release.yaml)
+[![](https://github.com/navikt/bidrag-beregn-saertilskudd-rest/actions/workflows/ci.yaml/badge.svg)](https://github.com/navikt/bidrag-beregn-saertilskudd-rest/actions/workflows/ci.yaml)
+[![](https://github.com/navikt/bidrag-beregn-saertilskudd-rest/actions/workflows/pr.yaml/badge.svg)](https://github.com/navikt/bidrag-beregn-saertilskudd-rest/actions/workflows/pr.yaml)
+[![](https://github.com/navikt/bidrag-beregn-saertilskudd-rest/actions/workflows/release.yaml/badge.svg)](https://github.com/navikt/bidrag-beregn-saertilskudd-rest/actions/workflows/release.yaml)
 
 Mikrotjeneste / Rest-API for beregning av særtilskudd som er satt opp til å kjøre på NAIS i GCP.
 
@@ -14,7 +14,7 @@ Swagger-UI: [https://bidrag-beregn-saertilskudd-rest.dev.intern.nav.no/](https:/
 Tjenesten kalles med en POST-request, hvor input-dataene legges i request-bodyen. For nærmere detaljer, se Swagger.
 
 ### Avhengigheter
-`bidrag-beregn-saertilskudd-rest` kaller maven-modul bidrag-beregn-saertilskudd-core, hvor selve beregningen gjøres.
+`bidrag-beregn-saertilskudd-rest` kaller maven-modul `bidrag-beregn-saertilskudd-core`, hvor selve beregningen gjøres.
 Sjablonverdier hentes ved å kalle rest-tjenesten `bidrag-sjablon` via proxy tjenesten `bidrag-gcp-proxy`.
 
 ### Sikkerhet
@@ -22,7 +22,7 @@ Tjenesten er sikret med Azure AD JWT tokens. Konsumenter av tjenesten er derfor 
 
 ### Funksjonalitet
 Tjenesten tar inn parametre knyttet til bidragsmottaker, bidragspliktig og bidragsbarn. Eksempler på inputdata er inntekter, bostatus og løpende
-bidrag. Det gjøres input-kontroll på dataene. Hvis noen av disse inneholder null, kastes UgyldigInputException, som resulterer i statuskode 
+bidrag. Det gjøres input-kontroll på dataene. Hvis noen av disse inneholder null, kastes `UgyldigInputException`, som resulterer i statuskode 
 400 (Bad Request).
 
 Sjablonverdier som er nødvendige for beregningen hentes fra tjenesten `bidrag-sjablon` via proxy tjenesten `bidrag-gcp-proxy`. Ved feil i kall for henting av sjablonverdier kastes `BidragGcpProxyConsumerException`, som resulterer i statuskode 500 (Internal Server Error).
