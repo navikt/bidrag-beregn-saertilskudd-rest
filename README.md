@@ -7,8 +7,8 @@
 Mikrotjeneste / Rest-API for beregning av særtilskudd som er satt opp til å kjøre på NAIS i GCP.
 
 ### Tilgjengelige tjenester (endepunkter)
-Request-URL: [https://bidrag-beregn-saertilskudd-rest.dev.intern.nav.no/beregn/saertilskudd](https://bidrag-beregn-saertilskudd-rest.dev.intern.nav.no/beregn/saertilskudd)
-Swagger-UI: [https://bidrag-beregn-saertilskudd-rest.dev.intern.nav.no/](https://bidrag-beregn-saertilskudd-rest.dev.intern.nav.no/)
+* Request-URL: [https://bidrag-beregn-saertilskudd-rest.dev.intern.nav.no/beregn/saertilskudd](https://bidrag-beregn-saertilskudd-rest.dev.intern.nav.no/beregn/saertilskudd)
+* Swagger-UI: [https://bidrag-beregn-saertilskudd-rest.dev.intern.nav.no/](https://bidrag-beregn-saertilskudd-rest.dev.intern.nav.no/)
 
 ### Input/output
 Tjenesten kalles med en POST-request, hvor input-dataene legges i request-bodyen. For nærmere detaljer, se Swagger.
