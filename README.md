@@ -43,6 +43,9 @@ For hver delberegning returneres resultatet av beregningen og grunnlaget for ber
 
 ![Overordnet arkitektur](./img/beregn-saertilskudd.drawio.png)
 
+### Kjøre applikasjon lokalt
+Applikasjonen kan kjøres opp lokalt med fila `BidragBeregnSaertilskuddLocal`. Applikasjonen kjøres da opp på [http://localhost:8080/](http://localhost:8080/) og kan testes med Swagger. Også når applikasjonen kjøres lokalt kreves et gyldig JWT-token, men her kreves ikke et gyldig Azure AD token. Lokalt er applikasjonen konfugurert til å bruke en lokalt kjørende MockOAuth-service for å utstede og validere JWT-tokens. For å utstede et gylig token til testing kan man benytte endepunktet `GET /local/cookie?issuerId=aad&audience=aud-localhost`. Viktig at `issuerId=aad` og `audience=aud-locahost`. 
+
 ### Integrasjonstester
 Det er lagt inn integrasjonstester (BeregnSaertilskuddControllerIntegrationTest.java) vha. Junit- og WireMock-rammeverkene. Disse testene er ment å
 dekke et bredt spekter av scenarier med tanke på særtilskuddsberegning.
