@@ -12,9 +12,8 @@ spec:
   accessPolicy:
     outbound:
       external:
-        - host: bidrag-gcp-proxy.intern.nav.no
+        - host: bidrag-gcp-proxy.prod-fss-pub.nais.io
   image: {{ image }}
-  port: 8080
   liveness:
     path: /actuator/health
     initialDelay: 20
@@ -41,6 +40,6 @@ spec:
     enabled: false
   env:
     - name: BIDRAGGCPPROXY_URL
-      value: https://bidrag-gcp-proxy.intern.nav.no
-   - name: BIDRAGGCPPROXY_SCOPE
+      value: https://bidrag-gcp-proxy.prod-fss-pub.nais.io
+    - name: BIDRAGGCPPROXY_SCOPE
       value: prod-fss.bidrag.bidrag-gcp-proxy
