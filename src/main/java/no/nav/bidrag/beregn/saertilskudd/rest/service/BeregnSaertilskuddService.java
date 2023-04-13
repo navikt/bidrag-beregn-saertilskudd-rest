@@ -31,6 +31,7 @@ import no.nav.bidrag.beregn.saertilskudd.dto.BeregnSaertilskuddGrunnlagCore;
 import no.nav.bidrag.beregn.saertilskudd.dto.BeregnSaertilskuddResultatCore;
 import no.nav.bidrag.beregn.saertilskudd.dto.BidragsevnePeriodeCore;
 import no.nav.bidrag.beregn.saertilskudd.dto.SamvaersfradragPeriodeCore;
+import no.nav.bidrag.beregn.saertilskudd.rest.consumer.SjablonConsumer;
 import no.nav.bidrag.beregn.saertilskudd.rest.consumer.SjablonListe;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BMInntekt;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BPInntekt;
@@ -65,8 +66,7 @@ public class BeregnSaertilskuddService {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(BeregnSaertilskuddService.class);
 
-//  private final SjablonConsumer sjablonConsumer;
-  private final SjablonService sjablonService;
+  private final SjablonConsumer sjablonConsumer;
   private final BidragsevneCore bidragsevneCore;
   private final BPsAndelSaertilskuddCore bpAndelSaertilskuddCore;
   private final SamvaersfradragCore samvaersfradragCore;
@@ -76,11 +76,11 @@ public class BeregnSaertilskuddService {
   private final SamvaersfradragCoreMapper samvaersfradragCoreMapper;
   private final SaertilskuddCoreMapper saertilskuddCoreMapper;
 
-  public BeregnSaertilskuddService(SjablonService sjablonService, BidragsevneCore bidragsevneCore, BPsAndelSaertilskuddCore bpAndelSaertilskuddCore,
+  public BeregnSaertilskuddService(SjablonConsumer sjablonConsumer, BidragsevneCore bidragsevneCore, BPsAndelSaertilskuddCore bpAndelSaertilskuddCore,
       SamvaersfradragCore samvaersfradragCore, SaertilskuddCore saertilskuddCore, BidragsevneCoreMapper bidragsevneCoreMapper,
       BPAndelSaertilskuddCoreMapper bpAndelSaertilskuddCoreMapper, SamvaersfradragCoreMapper samvaersfradragCoreMapper,
       SaertilskuddCoreMapper saertilskuddCoreMapper) {
-    this.sjablonService = sjablonService;
+    this.sjablonConsumer = sjablonConsumer;
     this.bidragsevneCore = bidragsevneCore;
     this.bpAndelSaertilskuddCore = bpAndelSaertilskuddCore;
     this.samvaersfradragCore = samvaersfradragCore;
@@ -146,26 +146,30 @@ public class BeregnSaertilskuddService {
     var bidragsevneGrunnlagTilCore = bidragsevneCoreMapper.mapBidragsevneGrunnlagTilCore(beregnTotalSaertilskuddGrunnlag, sjablontallMap,
         sjablonListe);
     var bidragsevneResultatFraCore = beregnBidragsevne(bidragsevneGrunnlagTilCore);
-    grunnlagReferanseListe.addAll(lagGrunnlagListeForDelberegning(beregnTotalSaertilskuddGrunnlag, bidragsevneResultatFraCore.getResultatPeriodeListe(), bidragsevneResultatFraCore.getSjablonListe()));
-
+    grunnlagReferanseListe.addAll(
+        lagGrunnlagListeForDelberegning(beregnTotalSaertilskuddGrunnlag, bidragsevneResultatFraCore.getResultatPeriodeListe(),
+            bidragsevneResultatFraCore.getSjablonListe()));
 
     // ++ BPs andel av særtilskudd
     var bpAndelSaertilskuddGrunnlagTilCore = bpAndelSaertilskuddCoreMapper.mapBPsAndelSaertilskuddGrunnlagTilCore(beregnTotalSaertilskuddGrunnlag,
         sjablontallMap, sjablonListe);
     var bpAndelSaertilskuddResultatFraCore = beregnBPAndelSaertilskudd(bpAndelSaertilskuddGrunnlagTilCore);
-    grunnlagReferanseListe.addAll(lagGrunnlagListeForDelberegning(beregnTotalSaertilskuddGrunnlag, bpAndelSaertilskuddResultatFraCore.getResultatPeriodeListe(), bpAndelSaertilskuddResultatFraCore.getSjablonListe()));
+    grunnlagReferanseListe.addAll(
+        lagGrunnlagListeForDelberegning(beregnTotalSaertilskuddGrunnlag, bpAndelSaertilskuddResultatFraCore.getResultatPeriodeListe(),
+            bpAndelSaertilskuddResultatFraCore.getSjablonListe()));
     grunnlagReferanseListe.addAll(
         lagGrunnlagListeForBeregnedeGrunnlagBPsAndelSaertilskudd(bpAndelSaertilskuddResultatFraCore.getResultatPeriodeListe()));
 
     // ++ Samværsfradrag
     var samvaersfradragGrunnlagTilCore = samvaersfradragCoreMapper.mapSamvaersfradragGrunnlagTilCore(beregnTotalSaertilskuddGrunnlag, sjablonListe);
     var samvaersfradragResultatFraCore = beregnSamvaersfradrag(samvaersfradragGrunnlagTilCore);
-    grunnlagReferanseListe.addAll(lagGrunnlagListeForDelberegning(beregnTotalSaertilskuddGrunnlag, samvaersfradragResultatFraCore.getResultatPeriodeListe(), samvaersfradragResultatFraCore.getSjablonListe()));
+    grunnlagReferanseListe.addAll(
+        lagGrunnlagListeForDelberegning(beregnTotalSaertilskuddGrunnlag, samvaersfradragResultatFraCore.getResultatPeriodeListe(),
+            samvaersfradragResultatFraCore.getSjablonListe()));
 
     // ++ Særtilskudd (totalberegning)
     var saertilskuddGrunnlagTilCore = saertilskuddCoreMapper.mapSaertilskuddGrunnlagTilCore(beregnTotalSaertilskuddGrunnlag,
-        bidragsevneResultatFraCore,
-        bpAndelSaertilskuddResultatFraCore, samvaersfradragResultatFraCore, soknadsBarnId, sjablonListe);
+        bidragsevneResultatFraCore, bpAndelSaertilskuddResultatFraCore, samvaersfradragResultatFraCore, soknadsBarnId, sjablonListe);
     var saertilskuddResultatFraCore = beregnSaertilskudd(saertilskuddGrunnlagTilCore);
 
     grunnlagReferanseListe.addAll(lagGrunnlagReferanseListeSaertilskudd(beregnTotalSaertilskuddGrunnlag, saertilskuddResultatFraCore,
@@ -174,11 +178,12 @@ public class BeregnSaertilskuddService {
     var unikeReferanserListe = grunnlagReferanseListe.stream().sorted(comparing(Grunnlag::getReferanse)).distinct().toList();
 
     // Bygger responsobjekt
-    return HttpResponse.from(HttpStatus.OK, new BeregnetTotalSaertilskuddResultat(saertilskuddResultatFraCore,
+    return HttpResponse.Companion.from(HttpStatus.OK, new BeregnetTotalSaertilskuddResultat(saertilskuddResultatFraCore,
         unikeReferanserListe));
   }
 
-  private List<Grunnlag> lagGrunnlagListeForDelberegning(BeregnTotalSaertilskuddGrunnlag beregnTotalSaertilskuddGrunnlag, List<? extends IResultatPeriode> resultatPeriodeListe, List<SjablonResultatGrunnlagCore> sjablonListe) {
+  private List<Grunnlag> lagGrunnlagListeForDelberegning(BeregnTotalSaertilskuddGrunnlag beregnTotalSaertilskuddGrunnlag,
+      List<? extends IResultatPeriode> resultatPeriodeListe, List<SjablonResultatGrunnlagCore> sjablonListe) {
     var resultatGrunnlagListe = new ArrayList<Grunnlag>();
 
     // Bygger opp oversikt over alle grunnlag som er brukt i beregningen
@@ -186,13 +191,13 @@ public class BeregnSaertilskuddService {
         .flatMap(resultatPeriodeCore -> resultatPeriodeCore.getGrunnlagReferanseListe().stream()
             .map(String::new))
         .distinct()
-        .collect(toList());
+        .toList();
 
     // Matcher mottatte grunnlag med grunnlag som er brukt i beregningen
     resultatGrunnlagListe.addAll(beregnTotalSaertilskuddGrunnlag.getGrunnlagListe().stream()
         .filter(grunnlag -> grunnlagReferanseListe.contains(grunnlag.getReferanse()))
         .map(grunnlag -> new Grunnlag(grunnlag.getReferanse(), grunnlag.getType(), grunnlag.getInnhold()))
-        .collect(toList()));
+        .toList());
 
     // Danner grunnlag basert på liste over sjabloner som er brukt i beregningen
     resultatGrunnlagListe.addAll(mapSjabloner(sjablonListe));
@@ -203,10 +208,20 @@ public class BeregnSaertilskuddService {
 
   private List<Grunnlag> lagGrunnlagListeForBeregnedeGrunnlagBPsAndelSaertilskudd(List<ResultatPeriodeCore> resultatPeriodeCoreListe) {
     List<Grunnlag> beregnedeGrunnlagListe = new ArrayList<>();
-    for(var resultatPeriode : resultatPeriodeCoreListe) {
-      beregnedeGrunnlagListe.addAll(resultatPeriode.getBeregnedeGrunnlag().getInntektBPListe().stream().map(inntektBase -> new Grunnlag(inntektBase.getReferanse(), GrunnlagType.INNTEKT, tilJsonNode(new BPInntekt(resultatPeriode.getPeriode().getDatoFom(), resultatPeriode.getPeriode().getDatoTil(), Rolle.BP, inntektBase.getInntektType().toString(), inntektBase.getInntektBelop())))).toList());
-      beregnedeGrunnlagListe.addAll(resultatPeriode.getBeregnedeGrunnlag().getInntektBMListe().stream().map(inntektBase -> new Grunnlag(inntektBase.getReferanse(), GrunnlagType.INNTEKT, tilJsonNode(new BMInntekt(resultatPeriode.getPeriode().getDatoFom(), resultatPeriode.getPeriode().getDatoTil(), inntektBase.getInntektType().toString(), inntektBase.getInntektBelop(), Rolle.BM, inntektBase.getDeltFordel(), inntektBase.getSkatteklasse2())))).toList());
-      beregnedeGrunnlagListe.addAll(resultatPeriode.getBeregnedeGrunnlag().getInntektBBListe().stream().map(inntektBase -> new Grunnlag(inntektBase.getReferanse(), GrunnlagType.INNTEKT, tilJsonNode(new SBInntekt(resultatPeriode.getPeriode().getDatoFom(), resultatPeriode.getPeriode().getDatoTil(), Rolle.SB, inntektBase.getInntektType().toString(), inntektBase.getInntektBelop(), null)))).toList());
+    for (var resultatPeriode : resultatPeriodeCoreListe) {
+      beregnedeGrunnlagListe.addAll(resultatPeriode.getBeregnedeGrunnlag().getInntektBPListe().stream().map(
+          inntektBase -> new Grunnlag(inntektBase.getReferanse(), GrunnlagType.INNTEKT, tilJsonNode(
+              new BPInntekt(resultatPeriode.getPeriode().getDatoFom(), resultatPeriode.getPeriode().getDatoTil(), Rolle.BP,
+                  inntektBase.getInntektType().toString(), inntektBase.getInntektBelop())))).toList());
+      beregnedeGrunnlagListe.addAll(resultatPeriode.getBeregnedeGrunnlag().getInntektBMListe().stream().map(
+          inntektBase -> new Grunnlag(inntektBase.getReferanse(), GrunnlagType.INNTEKT, tilJsonNode(
+              new BMInntekt(resultatPeriode.getPeriode().getDatoFom(), resultatPeriode.getPeriode().getDatoTil(),
+                  inntektBase.getInntektType().toString(), inntektBase.getInntektBelop(), Rolle.BM, inntektBase.getDeltFordel(),
+                  inntektBase.getSkatteklasse2())))).toList());
+      beregnedeGrunnlagListe.addAll(resultatPeriode.getBeregnedeGrunnlag().getInntektBBListe().stream().map(
+          inntektBase -> new Grunnlag(inntektBase.getReferanse(), GrunnlagType.INNTEKT, tilJsonNode(
+              new SBInntekt(resultatPeriode.getPeriode().getDatoFom(), resultatPeriode.getPeriode().getDatoTil(), Rolle.SB,
+                  inntektBase.getInntektType().toString(), inntektBase.getInntektBelop(), null)))).toList());
     }
     return beregnedeGrunnlagListe;
   }
@@ -229,25 +244,26 @@ public class BeregnSaertilskuddService {
     resultatGrunnlagListe.addAll(beregnTotalSaertilskuddGrunnlag.getGrunnlagListe().stream()
         .filter(grunnlag -> grunnlagReferanseListe.contains(grunnlag.getReferanse()))
         .map(grunnlag -> new Grunnlag(grunnlag.getReferanse(), grunnlag.getType(), grunnlag.getInnhold()))
-        .collect(toList()));
+        .toList());
 
     // Mapper ut delberegninger som er brukt som grunnlag
     resultatGrunnlagListe.addAll(beregnSaertilskuddGrunnlagCore.getBidragsevnePeriodeListe().stream()
         .filter(grunnlag -> grunnlagReferanseListe.contains(grunnlag.getReferanse()))
         .map(grunnlag -> new Grunnlag(grunnlag.getReferanse(),
-            GrunnlagType.BIDRAGSEVNE, lagInnholdBidragsevne(grunnlag, bidragsevneResultatFraCore))).collect(toList()));
+            GrunnlagType.BIDRAGSEVNE, lagInnholdBidragsevne(grunnlag, bidragsevneResultatFraCore)))
+        .toList());
 
     resultatGrunnlagListe.addAll(beregnSaertilskuddGrunnlagCore.getBPsAndelSaertilskuddPeriodeListe().stream()
         .filter(grunnlag -> grunnlagReferanseListe.contains(grunnlag.getReferanse()))
         .map(grunnlag -> new Grunnlag(grunnlag.getReferanse(), GrunnlagType.BPSANDELSAERTILSKUDD,
             lagInnholdBPsAndelSaertilskudd(grunnlag, beregnBPsAndelSaertilskuddResultatCore)))
-        .collect(toList()));
+        .toList());
 
     resultatGrunnlagListe.addAll(beregnSaertilskuddGrunnlagCore.getSamvaersfradragPeriodeListe().stream()
         .filter(grunnlag -> grunnlagReferanseListe.contains(grunnlag.getReferanse()))
         .map(grunnlag -> new Grunnlag(grunnlag.getReferanse(), GrunnlagType.SAMVAERSFRADRAG,
             lagInnholdSamvaersfradrag(grunnlag, samvaersfradragResultatFraCore)))
-        .collect(toList()));
+        .toList());
 
     return resultatGrunnlagListe;
   }
@@ -266,7 +282,8 @@ public class BeregnSaertilskuddService {
       BeregnBPsAndelSaertilskuddResultatCore beregnBPsAndelSaertilskuddResultatCore) {
     var grunnlagReferanseListe = getReferanseListeFromResultatPeriodeCore(beregnBPsAndelSaertilskuddResultatCore.getResultatPeriodeListe(),
         bPsAndelSaertilskuddPeriodeCore.getPeriodeDatoFraTil().getDatoFom());
-    BPsAndelSaertilskuddResultatPeriode bPsAndelSaertilskudd = new BPsAndelSaertilskuddResultatPeriode(mapDato(bPsAndelSaertilskuddPeriodeCore.getPeriodeDatoFraTil().getDatoFom()),
+    BPsAndelSaertilskuddResultatPeriode bPsAndelSaertilskudd = new BPsAndelSaertilskuddResultatPeriode(
+        mapDato(bPsAndelSaertilskuddPeriodeCore.getPeriodeDatoFraTil().getDatoFom()),
         mapDato(bPsAndelSaertilskuddPeriodeCore.getPeriodeDatoFraTil().getDatoTil()), bPsAndelSaertilskuddPeriodeCore.getBPsAndelSaertilskuddBelop(),
         bPsAndelSaertilskuddPeriodeCore.getBPsAndelSaertilskuddProsent(), bPsAndelSaertilskuddPeriodeCore.getBarnetErSelvforsorget(),
         grunnlagReferanseListe);
@@ -278,7 +295,8 @@ public class BeregnSaertilskuddService {
       BeregnSamvaersfradragResultatCore beregnSamvaersfradragResultatCore) {
     var grunnlagReferanseListe = getReferanseListeFromResultatPeriodeCore(beregnSamvaersfradragResultatCore.getResultatPeriodeListe(),
         samvaersfradragPeriodeCore.getPeriodeDatoFraTil().getDatoFom());
-    SamvaersfradragResultatPeriode samvaersfradrag = new SamvaersfradragResultatPeriode(mapDato(samvaersfradragPeriodeCore.getPeriodeDatoFraTil().getDatoFom()),
+    SamvaersfradragResultatPeriode samvaersfradrag = new SamvaersfradragResultatPeriode(
+        mapDato(samvaersfradragPeriodeCore.getPeriodeDatoFraTil().getDatoFom()),
         mapDato(samvaersfradragPeriodeCore.getPeriodeDatoFraTil().getDatoTil()), samvaersfradragPeriodeCore.getSamvaersfradragBelop(),
         samvaersfradragPeriodeCore.getBarnPersonId(), grunnlagReferanseListe);
     return tilJsonNode(samvaersfradrag);
@@ -296,7 +314,7 @@ public class BeregnSaertilskuddService {
               return new Grunnlag(sjablon.getReferanse(), GrunnlagType.SJABLON, tilJsonNode(sjablonPeriode));
             }
         )
-        .collect(toList());
+        .toList();
   }
 
   private List<String> getReferanseListeFromResultatPeriodeCore(List<? extends IResultatPeriode> resultatPeriodeListe, LocalDate datoFom) {
@@ -418,20 +436,20 @@ public class BeregnSaertilskuddService {
   private SjablonListe hentSjabloner() {
 
     // Henter sjabloner for sjablontall
-    var sjablonSjablontallListe = Optional.ofNullable(sjablonService.hentSjablonSjablontall().getResponseEntity().getBody()).orElse(emptyList());
+    var sjablonSjablontallListe = Optional.ofNullable(sjablonConsumer.hentSjablonSjablontall().getResponseEntity().getBody()).orElse(emptyList());
     LOGGER.debug("Antall sjabloner hentet av type Sjablontall: {}", sjablonSjablontallListe.size());
 
     // Henter sjabloner for samværsfradrag
-    var sjablonSamvaersfradragListe = Optional.ofNullable(sjablonService.hentSjablonSamvaersfradrag().getResponseEntity().getBody())
+    var sjablonSamvaersfradragListe = Optional.ofNullable(sjablonConsumer.hentSjablonSamvaersfradrag().getResponseEntity().getBody())
         .orElse(emptyList());
     LOGGER.debug("Antall sjabloner hentet av type Samværsfradrag: {}", sjablonSamvaersfradragListe.size());
 
     // Henter sjabloner for bidragsevne
-    var sjablonBidragsevneListe = Optional.ofNullable(sjablonService.hentSjablonBidragsevne().getResponseEntity().getBody()).orElse(emptyList());
+    var sjablonBidragsevneListe = Optional.ofNullable(sjablonConsumer.hentSjablonBidragsevne().getResponseEntity().getBody()).orElse(emptyList());
     LOGGER.debug("Antall sjabloner hentet av type Bidragsevne: {}", sjablonBidragsevneListe.size());
 
     // Henter sjabloner for trinnvis skattesats
-    var sjablonTrinnvisSkattesatsListe = Optional.ofNullable(sjablonService.hentSjablonTrinnvisSkattesats().getResponseEntity().getBody())
+    var sjablonTrinnvisSkattesatsListe = Optional.ofNullable(sjablonConsumer.hentSjablonTrinnvisSkattesats().getResponseEntity().getBody())
         .orElse(emptyList());
     LOGGER.debug("Antall sjabloner hentet av type Trinnvis skattesats: {}", sjablonTrinnvisSkattesatsListe.size());
 

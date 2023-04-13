@@ -20,7 +20,7 @@ public class SjablonApiStub {
   }
 
   private void settOppSjablonSjablontallStub() {
-    var url = "/sjablon/sjablontall?all=true";
+    var url = "/bidrag-sjablon/sjablontall/all";
 
     stubFor(
         get(urlEqualTo(url))
@@ -161,7 +161,7 @@ public class SjablonApiStub {
 
 
   private void settOppSjablonSamvaersfradragStub() {
-    var url = "/sjablon/samvaersfradrag?all=true";
+    var url = "/bidrag-sjablon/samvaersfradrag/all";
 
     stubFor(
         get(urlEqualTo(url))
@@ -385,7 +385,7 @@ public class SjablonApiStub {
   }
 
   private void settOppSjablonBidragsevneStub() {
-    var url = "/sjablon/bidragsevner?all=true";
+    var url = "/bidrag-sjablon/bidragsevner/all";
 
     stubFor(
         get(urlEqualTo(url))
@@ -415,7 +415,7 @@ public class SjablonApiStub {
   }
 
   private void settOppSjablonTrinnvisSkattesatsStub() {
-    var url = "/sjablon/trinnvisskattesats?all=true";
+    var url = "/bidrag-sjablon/trinnvisskattesats/all";
 
     stubFor(
         get(urlEqualTo(url))

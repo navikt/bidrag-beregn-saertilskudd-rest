@@ -1,4 +1,4 @@
-package no.nav.bidrag.beregn.saertilskudd.rest;
+package no.nav.bidrag.beregn.saertilskudd.rest.controller;
 
 import java.util.ArrayList;
 import java.util.List;

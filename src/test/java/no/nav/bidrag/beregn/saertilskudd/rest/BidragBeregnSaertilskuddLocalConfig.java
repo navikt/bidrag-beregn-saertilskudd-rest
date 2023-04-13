@@ -10,9 +10,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
+@Profile(LOCAL)
 @Configuration
 @AutoConfigureWireMock(port = 8096)
-@Profile(LOCAL)
 public class BidragBeregnSaertilskuddLocalConfig {
 
   @Bean
@@ -23,5 +23,4 @@ public class BidragBeregnSaertilskuddLocalConfig {
 
     return options;
   }
-
 }

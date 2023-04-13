@@ -1,30 +1,10 @@
-BIDRAGGCPPROXY_URL: http://bidrag-gcp-proxy.dev-fss.nais.io
+BIDRAGSJABLON_URL: https://bidrag-sjablon.dev-fss-pub.nais.io
 
 springdoc:
   packages-to-scan: no.nav.bidrag.beregn.saertilskudd.rest.controller
   swagger-ui:
     path: /
 
-spring:
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          issuer-uri: ${AZURE_OPENID_CONFIG_ISSUER}
-      client:
-        registration:
-          bidraggcpproxy:
-            provider: aad
-            client-id: ${AZURE_APP_CLIENT_ID}
-            client-secret: ${AZURE_APP_CLIENT_SECRET}
-            authorization-grant-type: client_credentials
-            scope: api://${BIDRAGGCPPROXY_SCOPE}/.default
-        provider:
-          aad:
-            token-uri: ${AZURE_OPENID_CONFIG_TOKEN_ENDPOINT}
-            jwk-set-uri: ${AZURE_OPENID_CONFIG_JWKS_URI}
-
-# OIDC
 no.nav.security.jwt:
   issuer:
     aad:

@@ -1,28 +1,16 @@
 package no.nav.bidrag.beregn.saertilskudd.rest.mapper;
 
-import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
-import static java.util.stream.Collectors.toList;
-
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.List;
 import no.nav.bidrag.beregn.bidragsevne.dto.BeregnBidragsevneResultatCore;
 import no.nav.bidrag.beregn.bpsandelsaertilskudd.dto.BeregnBPsAndelSaertilskuddResultatCore;
 import no.nav.bidrag.beregn.felles.dto.PeriodeCore;
-import no.nav.bidrag.beregn.felles.dto.SjablonInnholdCore;
-import no.nav.bidrag.beregn.felles.dto.SjablonNokkelCore;
-import no.nav.bidrag.beregn.felles.dto.SjablonPeriodeCore;
-import no.nav.bidrag.beregn.felles.enums.SjablonInnholdNavn;
-import no.nav.bidrag.beregn.felles.enums.SjablonNavn;
-import no.nav.bidrag.beregn.felles.enums.SjablonNokkelNavn;
 import no.nav.bidrag.beregn.saertilskudd.dto.BPsAndelSaertilskuddPeriodeCore;
 import no.nav.bidrag.beregn.saertilskudd.dto.BeregnSaertilskuddGrunnlagCore;
 import no.nav.bidrag.beregn.saertilskudd.dto.BidragsevnePeriodeCore;
 import no.nav.bidrag.beregn.saertilskudd.dto.LopendeBidragPeriodeCore;
 import no.nav.bidrag.beregn.saertilskudd.dto.SamvaersfradragPeriodeCore;
-import no.nav.bidrag.beregn.saertilskudd.rest.consumer.Bidragsevne;
 import no.nav.bidrag.beregn.saertilskudd.rest.consumer.SjablonListe;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BeregnTotalSaertilskuddGrunnlag;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.Grunnlag;
@@ -43,7 +31,7 @@ public class SaertilskuddCoreMapper extends CoreMapper {
                 byggReferanseForDelberegning("Delberegning_BP_Bidragsevne", resultat.getPeriode().getDatoFom()),
                 new PeriodeCore(resultat.getPeriode().getDatoFom(), resultat.getPeriode().getDatoTil()),
                 resultat.getResultatBeregning().getResultatEvneBelop()))
-            .collect(toList());
+            .toList();
 
     // Løp gjennom output fra beregning av BPs andel særtilskudd og bygg opp ny input-liste til core
     var bpAndelSaertilskuddPeriodeCoreListe =
@@ -54,7 +42,7 @@ public class SaertilskuddCoreMapper extends CoreMapper {
                 new PeriodeCore(resultat.getPeriode().getDatoFom(), resultat.getPeriode().getDatoTil()),
                 resultat.getResultatBeregning().getResultatAndelProsent(), resultat.getResultatBeregning().getResultatAndelBelop(),
                 resultat.getResultatBeregning().getBarnetErSelvforsorget()))
-            .collect(toList());
+            .toList();
 
     // Løp gjennom output fra beregning av samværsfradrag og bygg opp ny input-liste til core
     var samvaersfradragPeriodeCoreListe =
@@ -69,7 +57,7 @@ public class SaertilskuddCoreMapper extends CoreMapper {
                             resultatperiode.getPeriode().getDatoTil()),
                         resultatberegning.getBarnPersonId(),
                         resultatberegning.getResultatSamvaersfradragBelop())))
-            .collect(toList());
+            .toList();
 
     var andreLopendeBidragListe = new ArrayList<LopendeBidragPeriodeCore>();
 
