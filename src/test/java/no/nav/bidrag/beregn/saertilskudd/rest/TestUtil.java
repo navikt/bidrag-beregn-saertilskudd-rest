@@ -1,5 +1,6 @@
 package no.nav.bidrag.beregn.saertilskudd.rest;
 
+import static com.fasterxml.jackson.module.kotlin.ExtensionsKt.jacksonObjectMapper;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 
@@ -16,6 +17,8 @@ import no.nav.bidrag.beregn.bpsandelsaertilskudd.dto.BeregnedeGrunnlagCore;
 import no.nav.bidrag.beregn.felles.dto.AvvikCore;
 import no.nav.bidrag.beregn.felles.dto.PeriodeCore;
 import no.nav.bidrag.beregn.saertilskudd.dto.BeregnSaertilskuddResultatCore;
+import no.nav.bidrag.beregn.saertilskudd.dto.ResultatBeregningCore;
+import no.nav.bidrag.beregn.saertilskudd.dto.ResultatPeriodeCore;
 import no.nav.bidrag.beregn.saertilskudd.rest.consumer.Bidragsevne;
 import no.nav.bidrag.beregn.saertilskudd.rest.consumer.Samvaersfradrag;
 import no.nav.bidrag.beregn.saertilskudd.rest.consumer.Sjablontall;
@@ -40,21 +43,15 @@ import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.Skatteklasse;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.SoknadsBarnInfo;
 import no.nav.bidrag.beregn.samvaersfradrag.dto.BeregnSamvaersfradragResultatCore;
 
-import static com.fasterxml.jackson.module.kotlin.ExtensionsKt.jacksonObjectMapper;
-
 public class TestUtil {
 
   public static final String BIDRAGSEVNE_REFERANSE = "BIDRAGSEVNE_REFERANSE";
-  public static final String LOPENDE_BIDRAG_REFERANSE = "LOPENDE_BIDRAG_REFERANSE";
   public static final String BPS_ANDEL_SAERTILSKUDD_REFERANSE = "BPS_ANDEL_SAERTILSKUDD_REFERANSE";
   public static final String SAMVAERSFRADRAG_REFERANSE = "SAMVAERSFRADRAG_REFERANSE";
-
   public static final String INNTEKT_REFERANSE = "INNTEKT_REFERANSE";
   public static final String SKATTEKLASSE_REFERANSE = "SKATTEKLASSE_REFERANSE";
   public static final String BOSTATUS_REFERANSE = "BOSTATUS_REFERANSE";
   public static final String BARN_I_HUSSTAND_REFERANSE = "BARN_I_HUSSTAND_REFERANSE";
-  public static final String SAERFRADRAG_REFERANSE = "SAERFRADRAG_REFERANSE";
-  public static final String NETTO_SAERTILSKUDD_REFERANSE = "NETTO_SAERTILSKUDD_REFERANSE";
   public static final String SAMVAERSKLASSE_REFERANSE = "SAMVAERSKLASSE_REFERANSE";
 
 
@@ -75,7 +72,7 @@ public class TestUtil {
         tilJsonNodeInnhold(new BPInntekt(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01"),
             Rolle.BP, "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER", BigDecimal.valueOf(500000)))));
     grunnlagListe.add(new Grunnlag("Mottatt_BarnIHusstand_20200801", GrunnlagType.BARN_I_HUSSTAND,
-        tilJsonNodeInnhold(new BarnIHusstand(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01"), Double.valueOf(0)))));
+        tilJsonNodeInnhold(new BarnIHusstand(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01"), (double) 0))));
     grunnlagListe.add(new Grunnlag("Mottatt_Bostatus_20200801", GrunnlagType.BOSTATUS,
         tilJsonNodeInnhold(new Bostatus(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01"), "ALENE"))));
     grunnlagListe.add(new Grunnlag("Mottatt_Saerfradrag_20200801", GrunnlagType.SAERFRADRAG,
@@ -90,7 +87,7 @@ public class TestUtil {
         new LopendeBidrag(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01"), 1, BigDecimal.valueOf(2500), BigDecimal.valueOf(2957),
             BigDecimal.valueOf(2500), BigDecimal.valueOf(457)))));
 
-    return new BeregnTotalSaertilskuddGrunnlag(LocalDate.parse("2021-08-19"), LocalDate.parse("2021-09-19"), grunnlagListe);
+    return new BeregnTotalSaertilskuddGrunnlag(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01"), grunnlagListe);
   }
 
   public static JsonNode tilJsonNodeInnhold(Object object) {
@@ -227,6 +224,15 @@ public class TestUtil {
         "periodeDatoTil må være etter periodeDatoFra i samvaersklassePeriodeListe: datoFra=2018-04-01, datoTil=2018-03-01",
         "DATO_FRA_ETTER_DATO_TIL"));
     return new BeregnSamvaersfradragResultatCore(emptyList(), emptyList(), avvikListe);
+  }
+
+  // Bygger opp BeregnSaertilskuddResultatCore
+  public static BeregnSaertilskuddResultatCore dummySaertilskuddResultatCore() {
+    var beregnetSaertilskuddPeriodeListe = new ArrayList<ResultatPeriodeCore>();
+    beregnetSaertilskuddPeriodeListe.add(new ResultatPeriodeCore(new PeriodeCore(LocalDate.parse("2017-01-01"), LocalDate.parse("2019-01-01")),
+        1, new ResultatBeregningCore(BigDecimal.valueOf(100), "RESULTATKODE"),
+        List.of(INNTEKT_REFERANSE, BIDRAGSEVNE_REFERANSE)));
+    return new BeregnSaertilskuddResultatCore(beregnetSaertilskuddPeriodeListe, emptyList());
   }
 
   // Bygger opp BeregnSaertilskuddResultatCore med avvik

@@ -53,7 +53,7 @@ public abstract class CoreMapper {
             sjablontallMap.getOrDefault(sjablon.getTypeSjablon(), SjablonTallNavn.DUMMY).getNavn(),
             emptyList(),
             singletonList(new SjablonInnholdCore(SjablonInnholdNavn.SJABLON_VERDI.getNavn(), sjablon.getVerdi()))))
-        .collect(toList());
+        .toList();
   }
 
   // Mapper sjabloner av typen trinnvis skattesats
@@ -73,7 +73,7 @@ public abstract class CoreMapper {
             emptyList(),
             asList(new SjablonInnholdCore(SjablonInnholdNavn.INNTEKTSGRENSE_BELOP.getNavn(), sjablon.getInntektgrense()),
                 new SjablonInnholdCore(SjablonInnholdNavn.SKATTESATS_PROSENT.getNavn(), sjablon.getSats()))))
-        .collect(toList());
+        .toList();
   }
 
   // Sjekker om en type SjablonTall er i bruk for en delberegning

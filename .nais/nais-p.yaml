@@ -12,8 +12,7 @@ spec:
   accessPolicy:
     outbound:
       external:
-        - host: bidrag-gcp-proxy.prod-fss-pub.nais.io
-  image: {{ image }}
+        - host: bidrag-sjablon.prod-fss-pub.nais.io
   liveness:
     path: /actuator/health
     initialDelay: 20
@@ -39,7 +38,7 @@ spec:
   vault:
     enabled: false
   env:
-    - name: BIDRAGGCPPROXY_URL
-      value: https://bidrag-gcp-proxy.prod-fss-pub.nais.io
-    - name: BIDRAGGCPPROXY_SCOPE
-      value: prod-fss.bidrag.bidrag-gcp-proxy
+    - name: BIDRAGSJABLON_URL
+      value: https://bidrag-sjablon.prod-fss-pub.nais.io
+    - name: BIDRAGSJABLON_SCOPE
+      value: prod-fss.bidrag.bidrag-sjablon

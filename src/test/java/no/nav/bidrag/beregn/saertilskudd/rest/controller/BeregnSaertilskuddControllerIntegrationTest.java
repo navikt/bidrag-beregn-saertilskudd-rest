@@ -1,19 +1,18 @@
 package no.nav.bidrag.beregn.saertilskudd.rest.controller;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.springframework.http.HttpStatus.OK;
 
 import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import no.nav.bidrag.beregn.saertilskudd.rest.BidragBeregnSaertilskuddOverridesConfig;
 import no.nav.bidrag.beregn.saertilskudd.rest.BidragBeregnSaertilskuddTest;
-import no.nav.bidrag.beregn.saertilskudd.rest.SaertilskuddDelberegningResultat;
 import no.nav.bidrag.beregn.saertilskudd.rest.TestUtil;
 import no.nav.bidrag.beregn.saertilskudd.rest.consumer.wiremock_stub.SjablonApiStub;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BeregnetTotalSaertilskuddResultat;
+import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.Grunnlag;
 import no.nav.bidrag.commons.web.test.HttpHeaderTestRestTemplate;
 import no.nav.security.token.support.spring.test.EnableMockOAuth2Server;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,17 +23,15 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 
 @SpringBootTest(classes = BidragBeregnSaertilskuddTest.class, webEnvironment = WebEnvironment.RANDOM_PORT)
-@Import(BidragBeregnSaertilskuddOverridesConfig.class)
 @AutoConfigureWireMock(port = 8096)
 @EnableMockOAuth2Server
-public class BeregnSaertilskuddControllerIntegrationTest {
+class BeregnSaertilskuddControllerIntegrationTest {
 
   @Autowired
   private HttpHeaderTestRestTemplate httpHeaderTestRestTemplate;
@@ -212,14 +209,14 @@ public class BeregnSaertilskuddControllerIntegrationTest {
     var saertilskuddDelberegningResultat = new SaertilskuddDelberegningResultat(totalSaertilskuddResultat);
 
     var alleReferanser = TestUtil.hentAlleReferanser(totalSaertilskuddResultat);
-    var referanserIGrunnlagListe = totalSaertilskuddResultat.getGrunnlagListe().stream().map(grunnlag -> grunnlag.getReferanse()).toList();
+    var referanserIGrunnlagListe = totalSaertilskuddResultat.getGrunnlagListe().stream().map(Grunnlag::getReferanse).toList();
 
     assertAll(
         () -> assertThat(responseEntity.getStatusCode()).isEqualTo(OK),
         () -> assertThat(totalSaertilskuddResultat).isNotNull(),
 
         () -> assertThat(totalSaertilskuddResultat.getBeregnetSaertilskuddPeriodeListe()).isNotNull(),
-        () -> assertThat(totalSaertilskuddResultat.getBeregnetSaertilskuddPeriodeListe().size()).isEqualTo(1),
+        () -> assertThat(totalSaertilskuddResultat.getBeregnetSaertilskuddPeriodeListe()).hasSize(1),
         () -> assertThat(totalSaertilskuddResultat.getBeregnetSaertilskuddPeriodeListe().get(0).getResultat().getBelop()).isEqualTo(forventetSaertilskuddBelopBarn),
         () -> assertThat(totalSaertilskuddResultat.getBeregnetSaertilskuddPeriodeListe().get(0).getResultat().getKode()).isEqualTo(forventetSaertilskuddResultatkodeBarn),
         () -> assertThat(saertilskuddDelberegningResultat.bidragsevneListe).size().isEqualTo(1),
@@ -229,7 +226,7 @@ public class BeregnSaertilskuddControllerIntegrationTest {
         () -> assertThat(saertilskuddDelberegningResultat.bpsAndelSaertilskuddListe.get(0).getProsent()).isEqualTo(forventetBPAndelSaertilskuddProsentBarn),
         () -> assertThat(saertilskuddDelberegningResultat.samvaersfradragListe).size().isEqualTo(1),
         () -> assertThat(saertilskuddDelberegningResultat.samvaersfradragListe.get(0).getBelop()).isEqualTo(forventetSamvaersfradragBelopBarn1),
-        () -> assertThat(referanserIGrunnlagListe.containsAll(alleReferanser)).isTrue()
+        () -> assertThat(referanserIGrunnlagListe).containsAll(alleReferanser)
     );
   }
 
@@ -243,7 +240,7 @@ public class BeregnSaertilskuddControllerIntegrationTest {
     var saertilskuddDelberegningResultat = new SaertilskuddDelberegningResultat(totalSaertilskuddResultat);
 
     var alleReferanser = TestUtil.hentAlleReferanser(totalSaertilskuddResultat);
-    var referanserIGrunnlagListe = totalSaertilskuddResultat.getGrunnlagListe().stream().map(grunnlag -> grunnlag.getReferanse()).toList();
+    var referanserIGrunnlagListe = totalSaertilskuddResultat.getGrunnlagListe().stream().map(Grunnlag::getReferanse).toList();
 
 
     assertAll(
@@ -251,25 +248,25 @@ public class BeregnSaertilskuddControllerIntegrationTest {
         () -> assertThat(totalSaertilskuddResultat).isNotNull(),
 
         // Sjekk BeregnBPBidragsevneResultat
-        () -> assertThat(saertilskuddDelberegningResultat.bidragsevneListe.size()).isEqualTo(1),
+        () -> assertThat(saertilskuddDelberegningResultat.bidragsevneListe).hasSize(1),
         () -> assertThat(saertilskuddDelberegningResultat.bidragsevneListe.get(0).getBelop()).isEqualTo(forventetBidragsevneBelop),
 
         // Sjekk BeregnBPAndelSaertilskuddResultat
-        () -> assertThat(saertilskuddDelberegningResultat.bpsAndelSaertilskuddListe.size()).isEqualTo(1),
+        () -> assertThat(saertilskuddDelberegningResultat.bpsAndelSaertilskuddListe).hasSize(1),
         () -> assertThat(saertilskuddDelberegningResultat.bpsAndelSaertilskuddListe.get(0).getBelop()).isEqualTo(forventetBPAndelSaertilskuddBelopBarn),
         () -> assertThat(saertilskuddDelberegningResultat.bpsAndelSaertilskuddListe.get(0).getProsent()).isEqualTo(forventetBPAndelSaertilskuddProsentBarn),
 
         // Sjekk BeregnBPSamvaersfradragResultat
-        () -> assertThat(saertilskuddDelberegningResultat.samvaersfradragListe.size()).isEqualTo(2),
+        () -> assertThat(saertilskuddDelberegningResultat.samvaersfradragListe).hasSize(2),
         () -> assertThat(saertilskuddDelberegningResultat.samvaersfradragListe.get(0).getBelop()).isEqualTo(forventetSamvaersfradragBelopBarn1),
         () -> assertThat(saertilskuddDelberegningResultat.samvaersfradragListe.get(1).getBelop()).isEqualTo(forventetSamvaersfradragBelopBarn2),
 
-        () -> assertThat(totalSaertilskuddResultat.getBeregnetSaertilskuddPeriodeListe().size()).isEqualTo(1),
+        () -> assertThat(totalSaertilskuddResultat.getBeregnetSaertilskuddPeriodeListe()).hasSize(1),
 
         () -> assertThat(totalSaertilskuddResultat.getBeregnetSaertilskuddPeriodeListe().get(0).getResultat().getBelop()).isEqualTo(forventetSaertilskuddBelopBarn),
         () -> assertThat(totalSaertilskuddResultat.getBeregnetSaertilskuddPeriodeListe().get(0).getResultat()
             .getKode()).isEqualTo(forventetSaertilskuddResultatkodeBarn),
-        () -> assertThat(referanserIGrunnlagListe.containsAll(alleReferanser)).isTrue()
+        () -> assertThat(referanserIGrunnlagListe).containsAll(alleReferanser)
     );
   }
 
