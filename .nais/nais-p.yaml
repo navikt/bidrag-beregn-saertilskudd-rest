@@ -13,6 +13,7 @@ spec:
     outbound:
       external:
         - host: bidrag-sjablon.prod-fss-pub.nais.io
+  image: {{ image }}
   liveness:
     path: /actuator/health
     initialDelay: 20
@@ -35,8 +36,6 @@ spec:
       memory: 512Mi
   ingresses:
     - https://bidrag-beregn-saertilskudd-rest.intern.nav.no
-  vault:
-    enabled: false
   env:
     - name: BIDRAGSJABLON_URL
       value: https://bidrag-sjablon.prod-fss-pub.nais.io
