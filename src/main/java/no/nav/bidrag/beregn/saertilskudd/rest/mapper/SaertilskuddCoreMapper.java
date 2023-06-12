@@ -24,40 +24,37 @@ public class SaertilskuddCoreMapper extends CoreMapper {
       BeregnBidragsevneResultatCore beregnBidragsevneResultatCore, BeregnBPsAndelSaertilskuddResultatCore beregnBPsAndelSaertilskuddResultatCore,
       BeregnSamvaersfradragResultatCore beregnSamvaersfradragResultatCore, Integer soknadsBarnId, SjablonListe sjablonListe) {
     // Løp gjennom output fra beregning av bidragsevne og bygg opp ny input-liste til core
-    var bidragsevnePeriodeCoreListe =
-        beregnBidragsevneResultatCore.getResultatPeriodeListe()
-            .stream()
-            .map(resultat -> new BidragsevnePeriodeCore(
-                byggReferanseForDelberegning("Delberegning_BP_Bidragsevne", resultat.getPeriode().getDatoFom()),
-                new PeriodeCore(resultat.getPeriode().getDatoFom(), resultat.getPeriode().getDatoTil()),
-                resultat.getResultatBeregning().getResultatEvneBelop()))
-            .toList();
+    var bidragsevnePeriodeCoreListe = beregnBidragsevneResultatCore.getResultatPeriodeListe()
+        .stream()
+        .map(resultat -> new BidragsevnePeriodeCore(
+            byggReferanseForDelberegning("Delberegning_BP_Bidragsevne", resultat.getPeriode().getDatoFom()),
+            new PeriodeCore(resultat.getPeriode().getDatoFom(), resultat.getPeriode().getDatoTil()),
+            resultat.getResultatBeregning().getResultatEvneBelop()))
+        .toList();
 
     // Løp gjennom output fra beregning av BPs andel særtilskudd og bygg opp ny input-liste til core
-    var bpAndelSaertilskuddPeriodeCoreListe =
-        beregnBPsAndelSaertilskuddResultatCore.getResultatPeriodeListe()
-            .stream()
-            .map(resultat -> new BPsAndelSaertilskuddPeriodeCore(
-                byggReferanseForDelberegning("Delberegning_BP_AndelSaertilskudd", resultat.getPeriode().getDatoFom()),
-                new PeriodeCore(resultat.getPeriode().getDatoFom(), resultat.getPeriode().getDatoTil()),
-                resultat.getResultatBeregning().getResultatAndelProsent(), resultat.getResultatBeregning().getResultatAndelBelop(),
-                resultat.getResultatBeregning().getBarnetErSelvforsorget()))
-            .toList();
+    var bpAndelSaertilskuddPeriodeCoreListe = beregnBPsAndelSaertilskuddResultatCore.getResultatPeriodeListe()
+        .stream()
+        .map(resultat -> new BPsAndelSaertilskuddPeriodeCore(
+            byggReferanseForDelberegning("Delberegning_BP_AndelSaertilskudd", resultat.getPeriode().getDatoFom()),
+            new PeriodeCore(resultat.getPeriode().getDatoFom(), resultat.getPeriode().getDatoTil()),
+            resultat.getResultatBeregning().getResultatAndelProsent(), resultat.getResultatBeregning().getResultatAndelBelop(),
+            resultat.getResultatBeregning().getBarnetErSelvforsorget()))
+        .toList();
 
     // Løp gjennom output fra beregning av samværsfradrag og bygg opp ny input-liste til core
-    var samvaersfradragPeriodeCoreListe =
-        beregnSamvaersfradragResultatCore.getResultatPeriodeListe()
+    var samvaersfradragPeriodeCoreListe = beregnSamvaersfradragResultatCore.getResultatPeriodeListe()
+        .stream()
+        .flatMap(resultatperiode -> resultatperiode.getResultatBeregningListe()
             .stream()
-            .flatMap(resultatperiode -> resultatperiode.getResultatBeregningListe()
-                .stream()
-                .map(resultatberegning ->
-                    new SamvaersfradragPeriodeCore(
-                        byggReferanseForDelberegning("Delberegning_BP_Samvaersfradrag", resultatperiode.getPeriode().getDatoFom()),
-                        new PeriodeCore(resultatperiode.getPeriode().getDatoFom(),
-                            resultatperiode.getPeriode().getDatoTil()),
-                        resultatberegning.getBarnPersonId(),
-                        resultatberegning.getResultatSamvaersfradragBelop())))
-            .toList();
+            .map(resultatberegning ->
+                new SamvaersfradragPeriodeCore(
+                    byggReferanseForDelberegning("Delberegning_BP_Samvaersfradrag", resultatperiode.getPeriode().getDatoFom()),
+                    new PeriodeCore(resultatperiode.getPeriode().getDatoFom(),
+                        resultatperiode.getPeriode().getDatoTil()),
+                    resultatberegning.getBarnPersonId(),
+                    resultatberegning.getResultatSamvaersfradragBelop())))
+        .toList();
 
     var andreLopendeBidragListe = new ArrayList<LopendeBidragPeriodeCore>();
 

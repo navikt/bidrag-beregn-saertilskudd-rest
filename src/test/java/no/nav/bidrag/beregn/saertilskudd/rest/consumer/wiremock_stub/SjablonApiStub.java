@@ -455,5 +455,4 @@ public class SjablonApiStub {
                                 + "\"brukerid\": \"A100364 \","
                                 + "\"tidspktEndret\": \"2020-05-17T14:15:49.233\"}]"))));
   }
-
 }

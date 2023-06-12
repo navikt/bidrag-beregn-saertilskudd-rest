@@ -20,8 +20,7 @@ import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.SBInntekt;
 public class BPAndelSaertilskuddCoreMapper extends CoreMapper {
 
   public BeregnBPsAndelSaertilskuddGrunnlagCore mapBPsAndelSaertilskuddGrunnlagTilCore(
-      BeregnTotalSaertilskuddGrunnlag beregnTotalSaertilskuddGrunnlag,
-      Map<String, SjablonTallNavn> sjablontallMap, SjablonListe sjablonListe) {
+      BeregnTotalSaertilskuddGrunnlag beregnTotalSaertilskuddGrunnlag, Map<String, SjablonTallNavn> sjablontallMap, SjablonListe sjablonListe) {
     var nettoSaertilskuddPeriodeListe = new ArrayList<NettoSaertilskuddPeriodeCore>();
     var inntektBPPeriodeListe = new ArrayList<InntektPeriodeCore>();
     var inntektBMPeriodeListe = new ArrayList<InntektPeriodeCore>();
@@ -33,13 +32,13 @@ public class BPAndelSaertilskuddCoreMapper extends CoreMapper {
         case INNTEKT -> {
           InntektRolle inntektRolle = grunnlagTilObjekt(grunnlag, InntektRolle.class);
           Rolle rolle = inntektRolle.getRolle();
-          if (rolle.equals(rolle.BP)) {
+          if (rolle.equals(Rolle.BP)) {
             BPInntekt bpInntekt = grunnlagTilObjekt(grunnlag, BPInntekt.class);
             inntektBPPeriodeListe.add(bpInntekt.tilBPsAndelSaertilskuddCore(grunnlag.getReferanse()));
-          } else if (rolle.equals(rolle.BM)) {
+          } else if (rolle.equals(Rolle.BM)) {
             BMInntekt bmInntekt = grunnlagTilObjekt(grunnlag, BMInntekt.class);
             inntektBMPeriodeListe.add(bmInntekt.tilCore(grunnlag.getReferanse()));
-          } else if (rolle.equals(rolle.SB)) {
+          } else if (rolle.equals(Rolle.SB)) {
             SBInntekt sbInntekt = grunnlagTilObjekt(grunnlag, SBInntekt.class);
             inntektBBPeriodeListe.add(sbInntekt.tilCore(grunnlag.getReferanse()));
           }

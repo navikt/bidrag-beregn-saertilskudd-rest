@@ -4,7 +4,6 @@ import static com.fasterxml.jackson.module.kotlin.ExtensionsKt.jacksonObjectMapp
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
-import static java.util.stream.Collectors.toList;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -77,7 +76,7 @@ public abstract class CoreMapper {
   }
 
   // Sjekker om en type SjablonTall er i bruk for en delberegning
-  private boolean filtrerSjablonTall(SjablonTallNavn sjablonTallNavn, String delberegning) {
+  private static boolean filtrerSjablonTall(SjablonTallNavn sjablonTallNavn, String delberegning) {
 
     return switch (delberegning) {
       case SAERTILSKUDD -> sjablonTallNavn.getSaertilskudd();
@@ -106,7 +105,7 @@ public abstract class CoreMapper {
             asList(new SjablonInnholdCore(SjablonInnholdNavn.ANTALL_DAGER_TOM.getNavn(), BigDecimal.valueOf(sjablon.getAntDagerTom())),
                 new SjablonInnholdCore(SjablonInnholdNavn.ANTALL_NETTER_TOM.getNavn(), BigDecimal.valueOf(sjablon.getAntNetterTom())),
                 new SjablonInnholdCore(SjablonInnholdNavn.FRADRAG_BELOP.getNavn(), sjablon.getBelopFradrag()))))
-        .collect(toList());
+        .toList();
   }
 
   protected Map<String, SjablonTallNavn> mapSjablontall() {
@@ -120,8 +119,7 @@ public abstract class CoreMapper {
   public static <T> T grunnlagTilObjekt(Grunnlag grunnlag, Class<T> contentClass) {
     try {
       jacksonObjectMapper().registerModule(new JavaTimeModule());
-      T objekt = jacksonObjectMapper().readValue(grunnlag.getInnhold().toString(), contentClass);
-      return objekt;
+      return jacksonObjectMapper().readValue(grunnlag.getInnhold().toString(), contentClass);
     } catch (JsonProcessingException e) {
       throw new UgyldigInputException("Kunne ikke deserialisere " + contentClass.getName() + ". " + e.getMessage());
     }

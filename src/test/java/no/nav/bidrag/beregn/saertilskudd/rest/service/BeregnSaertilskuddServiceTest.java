@@ -29,8 +29,9 @@ import no.nav.bidrag.commons.web.HttpResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -38,6 +39,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 
 @SpringBootTest(classes = BidragBeregnSaertilskuddTest.class, webEnvironment = WebEnvironment.RANDOM_PORT)
+@ExtendWith(MockitoExtension.class)
 @DisplayName("BeregnSaertilskuddServiceTest")
 class BeregnSaertilskuddServiceTest {
 
@@ -57,7 +59,6 @@ class BeregnSaertilskuddServiceTest {
 
   @BeforeEach
   void settOppSjablonMocks() {
-    MockitoAnnotations.initMocks(this);
     when(sjablonConsumerMock.hentSjablonSjablontall())
         .thenReturn(HttpResponse.Companion.from(HttpStatus.OK, TestUtil.dummySjablonSjablontallListe()));
     when(sjablonConsumerMock.hentSjablonSamvaersfradrag())
@@ -173,8 +174,7 @@ class BeregnSaertilskuddServiceTest {
   @DisplayName("Skal kaste UgyldigInputException ved feil retur fra BPsAndelSaertilskuddCore")
   void skalKasteUgyldigInputExceptionVedFeilReturFraBPsAndelSaertilskuddCore() {
     when(bidragsevneCoreMock.beregnBidragsevne(any())).thenReturn(TestUtil.dummyBidragsevneResultatCore());
-    when(bpAndelSaertilskuddCoreMock.beregnBPsAndelSaertilskudd(any()))
-        .thenReturn(TestUtil.dummyBPsAndelSaertilskuddResultatCoreMedAvvik());
+    when(bpAndelSaertilskuddCoreMock.beregnBPsAndelSaertilskudd(any())).thenReturn(TestUtil.dummyBPsAndelSaertilskuddResultatCoreMedAvvik());
 
     assertThatExceptionOfType(UgyldigInputException.class)
         .isThrownBy(() -> beregnSaertilskuddService.beregn(TestUtil.byggTotalSaertilskuddGrunnlag()))

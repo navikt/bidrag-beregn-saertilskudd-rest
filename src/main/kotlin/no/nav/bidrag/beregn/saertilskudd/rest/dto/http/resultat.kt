@@ -12,10 +12,10 @@ data class BeregnetTotalSaertilskuddResultat(
     @Schema(description = "Liste over grunnlag brukt i beregning") var grunnlagListe: List<Grunnlag> = emptyList()
 ) {
 
-  constructor(beregnetSaertilskuddResultatCore: BeregnSaertilskuddResultatCore, grunnlagListe: List<Grunnlag>) : this(
-      beregnetSaertilskuddPeriodeListe = beregnetSaertilskuddResultatCore.resultatPeriodeListe.map { ResultatPeriode(it) },
-      grunnlagListe = grunnlagListe
-  )
+    constructor(beregnetSaertilskuddResultatCore: BeregnSaertilskuddResultatCore, grunnlagListe: List<Grunnlag>) : this(
+        beregnetSaertilskuddPeriodeListe = beregnetSaertilskuddResultatCore.resultatPeriodeListe.map { ResultatPeriode(it) },
+        grunnlagListe = grunnlagListe
+    )
 }
 
 @Schema(description = "Resultatet av en beregning for en gitt periode")
@@ -26,12 +26,12 @@ data class ResultatPeriode(
     @Schema(description = "Beregnet grunnlag innhold") var grunnlagReferanseListe: List<String> = emptyList()
 ) {
 
-  constructor(resultatPeriode: ResultatPeriodeCore) : this(
-      barn = resultatPeriode.soknadsbarnPersonId,
-      periode = Periode(resultatPeriode.periode),
-      resultat = ResultatBeregning(resultatPeriode.resultat),
-      grunnlagReferanseListe = resultatPeriode.grunnlagReferanseListe
-  )
+    constructor(resultatPeriode: ResultatPeriodeCore) : this(
+        barn = resultatPeriode.soknadsbarnPersonId,
+        periode = Periode(resultatPeriode.periode),
+        resultat = ResultatBeregning(resultatPeriode.resultat),
+        grunnlagReferanseListe = resultatPeriode.grunnlagReferanseListe
+    )
 }
 
 @Schema(description = "Resultatet av en beregning")
@@ -40,16 +40,30 @@ data class ResultatBeregning(
     @Schema(description = "Resultat kode") var kode: String = ""
 ) {
 
-  constructor(resultatBeregning: ResultatBeregningCore) : this(
-      belop = resultatBeregning.belop,
-      kode = resultatBeregning.kode
-  )
+    constructor(resultatBeregning: ResultatBeregningCore) : this(
+        belop = resultatBeregning.belop,
+        kode = resultatBeregning.kode
+    )
 }
 
-class BidragsevneResultatPeriode(datoFom: LocalDate, datoTil: LocalDate, val belop: BigDecimal, val grunnlagReferanseListe: List<String>) : BasePeriode(datoFom, datoTil) {}
+class BidragsevneResultatPeriode(datoFom: LocalDate, datoTil: LocalDate, val belop: BigDecimal, val grunnlagReferanseListe: List<String>) :
+    BasePeriode(datoFom, datoTil)
 
-class BPsAndelSaertilskuddResultatPeriode(datoFom: LocalDate, datoTil: LocalDate, val belop: BigDecimal, val prosent: BigDecimal, val selvforsorget: Boolean, val grunnlagReferanseListe: List<String>) : BasePeriode(datoFom, datoTil) {}
+class BPsAndelSaertilskuddResultatPeriode(
+    datoFom: LocalDate,
+    datoTil: LocalDate,
+    val belop: BigDecimal,
+    val prosent: BigDecimal,
+    val selvforsorget: Boolean,
+    val grunnlagReferanseListe: List<String>
+) : BasePeriode(datoFom, datoTil)
 
-class SamvaersfradragResultatPeriode(datoFom: LocalDate, datoTil: LocalDate, val belop: BigDecimal, val barn: Int, val grunnlagReferanseListe: List<String>) : BasePeriode(datoFom, datoTil) {}
+class SamvaersfradragResultatPeriode(
+    datoFom: LocalDate,
+    datoTil: LocalDate,
+    val belop: BigDecimal,
+    val barn: Int,
+    val grunnlagReferanseListe: List<String>
+) : BasePeriode(datoFom, datoTil)
 
-class SjablonResultatPeriode(datoFom: LocalDate, datoTil: LocalDate, val sjablonNavn: String, val sjablonVerdi: Int) : BasePeriode(datoFom, datoTil) {}
+class SjablonResultatPeriode(datoFom: LocalDate, datoTil: LocalDate, val sjablonNavn: String, val sjablonVerdi: Int) : BasePeriode(datoFom, datoTil)
