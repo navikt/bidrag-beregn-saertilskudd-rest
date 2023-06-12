@@ -13,7 +13,7 @@ spec:
     outbound:
       external:
         - host: bidrag-sjablon.prod-fss-pub.nais.io
-  image: {{ image }}
+  image: { { image } }
   liveness:
     path: /actuator/health
     initialDelay: 20
@@ -27,6 +27,8 @@ spec:
   prometheus:
     enabled: true
     path: /actuator/prometheus
+  secureLogs:
+    enabled: true
   resources:
     limits:
       cpu: 1000m

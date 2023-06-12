@@ -2,6 +2,7 @@ package no.nav.bidrag.beregn.saertilskudd.rest.service;
 
 import static java.util.Collections.emptyList;
 import static java.util.Comparator.comparing;
+import static no.nav.bidrag.beregn.saertilskudd.rest.BidragBeregnSaertilskudd.SECURE_LOGGER;
 import static no.nav.bidrag.beregn.saertilskudd.rest.mapper.CoreMapper.grunnlagTilObjekt;
 import static no.nav.bidrag.beregn.saertilskudd.rest.mapper.CoreMapper.tilJsonNode;
 
@@ -367,8 +368,8 @@ public class BeregnSaertilskuddService {
 
     BeregnBPsAndelSaertilskuddResultatCore bpAndelSaertilskuddResultatFraCore;
 
-    if (LOGGER.isDebugEnabled()) {
-      LOGGER.debug("BPs andel av særtilskudd - grunnlag for beregning: {}", bpAndelSaertilskuddGrunnlagTilCore);
+    if (SECURE_LOGGER.isDebugEnabled()) {
+      SECURE_LOGGER.debug("BPs andel av særtilskudd - grunnlag for beregning: {}", bpAndelSaertilskuddGrunnlagTilCore);
     }
 
     // Kaller core-modulen for beregning av BPs andel av særtilskudd
@@ -382,7 +383,10 @@ public class BeregnSaertilskuddService {
       LOGGER.error("Ugyldig input ved beregning av BPs andel av særtilskudd. Følgende avvik ble funnet: " + System.lineSeparator()
           + bpAndelSaertilskuddResultatFraCore.getAvvikListe().stream().map(AvvikCore::getAvvikTekst)
           .collect(Collectors.joining(System.lineSeparator())));
-      LOGGER.info("BPs andel av særtilskudd - grunnlag for beregning:" + System.lineSeparator()
+      SECURE_LOGGER.error("Ugyldig input ved beregning av BPs andel av særtilskudd. Følgende avvik ble funnet: " + System.lineSeparator()
+          + bpAndelSaertilskuddResultatFraCore.getAvvikListe().stream().map(AvvikCore::getAvvikTekst)
+          .collect(Collectors.joining(System.lineSeparator())));
+      SECURE_LOGGER.info("BPs andel av særtilskudd - grunnlag for beregning:" + System.lineSeparator()
           + "beregnDatoFra= " + bpAndelSaertilskuddGrunnlagTilCore.getBeregnDatoFra() + System.lineSeparator()
           + "beregnDatoTil= " + bpAndelSaertilskuddGrunnlagTilCore.getBeregnDatoTil() + System.lineSeparator()
           + "nettoSaertilskuddPeriodeListe= " + bpAndelSaertilskuddGrunnlagTilCore.getNettoSaertilskuddPeriodeListe() + System.lineSeparator()
@@ -393,8 +397,8 @@ public class BeregnSaertilskuddService {
           + bpAndelSaertilskuddResultatFraCore.getAvvikListe().stream().map(AvvikCore::getAvvikTekst).collect(Collectors.joining("; ")));
     }
 
-    if (LOGGER.isDebugEnabled()) {
-      LOGGER.debug("BPs andel av særtilskudd - resultat av beregning: {}", bpAndelSaertilskuddResultatFraCore.getResultatPeriodeListe());
+    if (SECURE_LOGGER.isDebugEnabled()) {
+      SECURE_LOGGER.debug("BPs andel av særtilskudd - resultat av beregning: {}", bpAndelSaertilskuddResultatFraCore.getResultatPeriodeListe());
     }
 
     return bpAndelSaertilskuddResultatFraCore;
@@ -405,8 +409,8 @@ public class BeregnSaertilskuddService {
 
     BeregnSamvaersfradragResultatCore samvaersfradragResultatFraCore;
 
-    if (LOGGER.isDebugEnabled()) {
-      LOGGER.debug("Samværsfradrag - grunnlag for beregning: {}", samvaersfradragGrunnlagTilCore);
+    if (SECURE_LOGGER.isDebugEnabled()) {
+      SECURE_LOGGER.debug("Samværsfradrag - grunnlag for beregning: {}", samvaersfradragGrunnlagTilCore);
     }
 
     // Kaller core-modulen for beregning av samværsfradrag
@@ -420,7 +424,10 @@ public class BeregnSaertilskuddService {
       LOGGER.error("Ugyldig input ved beregning av samværsfradrag. Følgende avvik ble funnet: " + System.lineSeparator()
           + samvaersfradragResultatFraCore.getAvvikListe().stream().map(AvvikCore::getAvvikTekst)
           .collect(Collectors.joining(System.lineSeparator())));
-      LOGGER.info("Samværsfradrag - grunnlag for beregning: " + System.lineSeparator()
+      SECURE_LOGGER.error("Ugyldig input ved beregning av samværsfradrag. Følgende avvik ble funnet: " + System.lineSeparator()
+          + samvaersfradragResultatFraCore.getAvvikListe().stream().map(AvvikCore::getAvvikTekst)
+          .collect(Collectors.joining(System.lineSeparator())));
+      SECURE_LOGGER.info("Samværsfradrag - grunnlag for beregning: " + System.lineSeparator()
           + "beregnDatoFra= " + samvaersfradragGrunnlagTilCore.getBeregnDatoFra() + System.lineSeparator()
           + "beregnDatoTil= " + samvaersfradragGrunnlagTilCore.getBeregnDatoTil() + System.lineSeparator()
           + "samvaersklassePeriodeListe= " + samvaersfradragGrunnlagTilCore.getSamvaersklassePeriodeListe() + System.lineSeparator());
@@ -428,8 +435,8 @@ public class BeregnSaertilskuddService {
           + samvaersfradragResultatFraCore.getAvvikListe().stream().map(AvvikCore::getAvvikTekst).collect(Collectors.joining("; ")));
     }
 
-    if (LOGGER.isDebugEnabled()) {
-      LOGGER.debug("Samværsfradrag - resultat av beregning: {}", samvaersfradragResultatFraCore.getResultatPeriodeListe());
+    if (SECURE_LOGGER.isDebugEnabled()) {
+      SECURE_LOGGER.debug("Samværsfradrag - resultat av beregning: {}", samvaersfradragResultatFraCore.getResultatPeriodeListe());
     }
 
     return samvaersfradragResultatFraCore;
@@ -440,8 +447,8 @@ public class BeregnSaertilskuddService {
 
     BeregnSaertilskuddResultatCore saertilskuddResultatFraCore;
 
-    if (LOGGER.isDebugEnabled()) {
-      LOGGER.debug("Særtilskudd - grunnlag for beregning: {}", saertilskuddGrunnlagTilCore);
+    if (SECURE_LOGGER.isDebugEnabled()) {
+      SECURE_LOGGER.debug("Særtilskudd - grunnlag for beregning: {}", saertilskuddGrunnlagTilCore);
     }
 
     // Kaller core-modulen for beregning av særtilskudd
@@ -455,7 +462,10 @@ public class BeregnSaertilskuddService {
       LOGGER.error("Ugyldig input ved beregning av særtilskudd. Følgende avvik ble funnet: " + System.lineSeparator()
           + saertilskuddResultatFraCore.getAvvikListe().stream().map(AvvikCore::getAvvikTekst)
           .collect(Collectors.joining(System.lineSeparator())));
-      LOGGER.info("Særtilskudd - grunnlag for beregning: " + System.lineSeparator()
+      SECURE_LOGGER.error("Ugyldig input ved beregning av særtilskudd. Følgende avvik ble funnet: " + System.lineSeparator()
+          + saertilskuddResultatFraCore.getAvvikListe().stream().map(AvvikCore::getAvvikTekst)
+          .collect(Collectors.joining(System.lineSeparator())));
+      SECURE_LOGGER.info("Særtilskudd - grunnlag for beregning: " + System.lineSeparator()
           + "beregnDatoFra= " + saertilskuddGrunnlagTilCore.getBeregnDatoFra() + System.lineSeparator()
           + "beregnDatoTil= " + saertilskuddGrunnlagTilCore.getBeregnDatoTil() + System.lineSeparator()
           + "soknadsbarnPersonId= " + saertilskuddGrunnlagTilCore.getSoknadsbarnPersonId() + System.lineSeparator()
@@ -467,8 +477,8 @@ public class BeregnSaertilskuddService {
           + saertilskuddResultatFraCore.getAvvikListe().stream().map(AvvikCore::getAvvikTekst).collect(Collectors.joining("; ")));
     }
 
-    if (LOGGER.isDebugEnabled()) {
-      LOGGER.debug("Særtilskudd - resultat av beregning: {}", saertilskuddResultatFraCore.getResultatPeriodeListe());
+    if (SECURE_LOGGER.isDebugEnabled()) {
+      SECURE_LOGGER.debug("Særtilskudd - resultat av beregning: {}", saertilskuddResultatFraCore.getResultatPeriodeListe());
     }
 
     return saertilskuddResultatFraCore;
