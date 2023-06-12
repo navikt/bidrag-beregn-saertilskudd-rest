@@ -26,21 +26,23 @@ import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BeregnetTotalSaertilskudd
 import no.nav.bidrag.beregn.saertilskudd.rest.service.BeregnSaertilskuddService;
 import no.nav.bidrag.commons.web.HttpResponse;
 import no.nav.bidrag.commons.web.test.HttpHeaderTestRestTemplate;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.MockitoAnnotations;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 
 @DisplayName("BeregnSaertilskuddControllerMockTest")
 @SpringBootTest(classes = BidragBeregnSaertilskuddTest.class, webEnvironment = WebEnvironment.RANDOM_PORT)
+@ExtendWith(MockitoExtension.class)
 class BeregnSaertilskuddControllerMockTest {
 
   @Autowired
@@ -49,11 +51,6 @@ class BeregnSaertilskuddControllerMockTest {
   private int port;
   @MockBean
   private BeregnSaertilskuddService beregnSaertilskuddServiceMock;
-
-  @BeforeEach
-  void initMocks() {
-    MockitoAnnotations.initMocks(this);
-  }
 
   @Test
   @DisplayName("Skal returnere total særtilskudd resultat ved gyldig input")
@@ -85,38 +82,28 @@ class BeregnSaertilskuddControllerMockTest {
         () -> assertThat(totalSaertilskuddResultat).isNotNull(),
 
         () -> assertThat(saertilskuddDelberegningResultat.bidragsevneListe).hasSize(1),
-        () -> assertThat(
-            saertilskuddDelberegningResultat.bidragsevneListe.get(0).getDatoFom())
-            .isEqualTo(LocalDate.parse("2020-08-01")),
-        () -> assertThat(
-            saertilskuddDelberegningResultat.bidragsevneListe.get(0).getDatoTil())
-            .isEqualTo(LocalDate.parse("2020-09-01")),
-        () -> assertThat(
-            saertilskuddDelberegningResultat.bidragsevneListe.get(0).getBelop()).isEqualByComparingTo(BigDecimal.valueOf(100)),
+        () -> assertThat(saertilskuddDelberegningResultat.bidragsevneListe.get(0).getDatoFom()).isEqualTo(LocalDate.parse("2020-08-01")),
+        () -> assertThat(saertilskuddDelberegningResultat.bidragsevneListe.get(0).getDatoTil()).isEqualTo(LocalDate.parse("2020-09-01")),
+        () -> assertThat(saertilskuddDelberegningResultat.bidragsevneListe.get(0).getBelop()).isEqualByComparingTo(BigDecimal.valueOf(100)),
 
         () -> assertThat(saertilskuddDelberegningResultat.bpsAndelSaertilskuddListe).hasSize(1),
-        () -> assertThat(
-            saertilskuddDelberegningResultat.bpsAndelSaertilskuddListe.get(0).getDatoFom()).isEqualTo(LocalDate.parse("2020-08-01")),
-        () -> assertThat(
-            saertilskuddDelberegningResultat.bpsAndelSaertilskuddListe.get(0).getDatoTil()).isEqualTo(LocalDate.parse("2020-09-01")),
+        () -> assertThat(saertilskuddDelberegningResultat.bpsAndelSaertilskuddListe.get(0).getDatoFom()).isEqualTo(LocalDate.parse("2020-08-01")),
+        () -> assertThat(saertilskuddDelberegningResultat.bpsAndelSaertilskuddListe.get(0).getDatoTil()).isEqualTo(LocalDate.parse("2020-09-01")),
         () -> assertThat(saertilskuddDelberegningResultat.bpsAndelSaertilskuddListe.get(0).getProsent()).isEqualByComparingTo(BigDecimal.valueOf(10)),
         () -> assertThat(saertilskuddDelberegningResultat.bpsAndelSaertilskuddListe.get(0).getBelop()).isEqualByComparingTo(BigDecimal.valueOf(100)),
 
         () -> assertThat(saertilskuddDelberegningResultat.samvaersfradragListe).hasSize(1),
-        () -> assertThat(
-            saertilskuddDelberegningResultat.samvaersfradragListe.get(0).getDatoFom()).isEqualTo(LocalDate.parse("2020-08-01")),
-        () -> assertThat(
-            saertilskuddDelberegningResultat.samvaersfradragListe.get(0).getDatoTil()).isEqualTo(LocalDate.parse("2020-09-01")),
+        () -> assertThat(saertilskuddDelberegningResultat.samvaersfradragListe.get(0).getDatoFom()).isEqualTo(LocalDate.parse("2020-08-01")),
+        () -> assertThat(saertilskuddDelberegningResultat.samvaersfradragListe.get(0).getDatoTil()).isEqualTo(LocalDate.parse("2020-09-01")),
         () -> assertThat(saertilskuddDelberegningResultat.samvaersfradragListe.get(0).getBelop()).isEqualByComparingTo(BigDecimal.valueOf(100)),
         () -> assertThat(totalSaertilskuddResultat.getBeregnetSaertilskuddPeriodeListe()).hasSize(1),
-        () -> assertThat(totalSaertilskuddResultat.getBeregnetSaertilskuddPeriodeListe().get(0).getPeriode()
-            .getDatoFom()).isEqualTo(LocalDate.parse("2020-08-01")),
-        () -> assertThat(totalSaertilskuddResultat.getBeregnetSaertilskuddPeriodeListe().get(0).getPeriode()
-            .getDatoTil()).isEqualTo(LocalDate.parse("2020-09-01")),
-        () -> assertThat(totalSaertilskuddResultat.getBeregnetSaertilskuddPeriodeListe().get(0).getResultat()
-            .getBelop()).isEqualByComparingTo(BigDecimal.valueOf(100)),
-        () -> assertThat(totalSaertilskuddResultat.getBeregnetSaertilskuddPeriodeListe().get(0).getResultat()
-            .getKode()).isEqualTo("RESULTATKODE")
+        () -> assertThat(totalSaertilskuddResultat.getBeregnetSaertilskuddPeriodeListe().get(0).getPeriode().getDatoFom()).isEqualTo(
+            LocalDate.parse("2020-08-01")),
+        () -> assertThat(totalSaertilskuddResultat.getBeregnetSaertilskuddPeriodeListe().get(0).getPeriode().getDatoTil()).isEqualTo(
+            LocalDate.parse("2020-09-01")),
+        () -> assertThat(totalSaertilskuddResultat.getBeregnetSaertilskuddPeriodeListe().get(0).getResultat().getBelop()).isEqualByComparingTo(
+            BigDecimal.valueOf(100)),
+        () -> assertThat(totalSaertilskuddResultat.getBeregnetSaertilskuddPeriodeListe().get(0).getResultat().getKode()).isEqualTo("RESULTATKODE")
     );
   }
 

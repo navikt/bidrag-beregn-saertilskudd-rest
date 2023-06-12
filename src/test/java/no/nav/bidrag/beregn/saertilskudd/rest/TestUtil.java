@@ -69,8 +69,8 @@ public class TestUtil {
         new BMInntekt(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01"), "UTVIDET_BARNETRYGD", BigDecimal.valueOf(12688),
             Rolle.BM, false, false))));
     grunnlagListe.add(new Grunnlag("Mottatt_Inntekt_AG_20200801_BP", GrunnlagType.INNTEKT,
-        tilJsonNodeInnhold(new BPInntekt(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01"),
-            Rolle.BP, "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER", BigDecimal.valueOf(500000)))));
+        tilJsonNodeInnhold(new BPInntekt(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01"), Rolle.BP, "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
+            BigDecimal.valueOf(500000)))));
     grunnlagListe.add(new Grunnlag("Mottatt_BarnIHusstand_20200801", GrunnlagType.BARN_I_HUSSTAND,
         tilJsonNodeInnhold(new BarnIHusstand(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01"), (double) 0))));
     grunnlagListe.add(new Grunnlag("Mottatt_Bostatus_20200801", GrunnlagType.BOSTATUS,
@@ -98,15 +98,15 @@ public class TestUtil {
   public static List<String> hentAlleReferanser(BeregnetTotalSaertilskuddResultat beregnetTotalSaertilskuddResultat) {
     List<String> alleReferanser = new ArrayList<>();
 
-    for(ResultatPeriode resultatPeriode : beregnetTotalSaertilskuddResultat.getBeregnetSaertilskuddPeriodeListe()) {
+    for (ResultatPeriode resultatPeriode : beregnetTotalSaertilskuddResultat.getBeregnetSaertilskuddPeriodeListe()) {
       alleReferanser.addAll(resultatPeriode.getGrunnlagReferanseListe());
     }
 
-    for(Grunnlag grunnlag : beregnetTotalSaertilskuddResultat.getGrunnlagListe()) {
+    for (Grunnlag grunnlag : beregnetTotalSaertilskuddResultat.getGrunnlagListe()) {
       if (grunnlag.getInnhold().has("grunnlagReferanseListe")) {
         var grunnlagReferanseListe = grunnlag.getInnhold().get("grunnlagReferanseListe");
         if (grunnlagReferanseListe.isArray()) {
-          for(JsonNode grunnlagReferanse : grunnlagReferanseListe) {
+          for (JsonNode grunnlagReferanse : grunnlagReferanseListe) {
             alleReferanser.add(grunnlagReferanse.asText());
           }
         }
@@ -118,8 +118,8 @@ public class TestUtil {
   // Bygger opp BeregnBidragsevneResultat
   public static Grunnlag dummyBidragsevneResultat() {
     ObjectMapper objectMapper = new ObjectMapper();
-    var bidragsevne = new no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BidragsevneResultatPeriode(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01"),
-        BigDecimal.valueOf(100), new ArrayList<>() {{
+    var bidragsevne = new no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BidragsevneResultatPeriode(LocalDate.parse("2020-08-01"),
+        LocalDate.parse("2020-09-01"), BigDecimal.valueOf(100), new ArrayList<>() {{
       add(INNTEKT_REFERANSE);
       add(SKATTEKLASSE_REFERANSE);
       add(BOSTATUS_REFERANSE);
@@ -158,8 +158,8 @@ public class TestUtil {
   // Bygger opp BeregnBPAndelSaertilskuddResultat
   public static Grunnlag dummyBPsAndelSaertilskuddResultat() {
     ObjectMapper objectMapper = new ObjectMapper();
-    var bpsAndelSaertilskudd = new BPsAndelSaertilskuddResultatPeriode(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01"), BigDecimal.valueOf(100),
-        BigDecimal.valueOf(10), false, new ArrayList<>() {{
+    var bpsAndelSaertilskudd = new BPsAndelSaertilskuddResultatPeriode(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01"),
+        BigDecimal.valueOf(100), BigDecimal.valueOf(10), false, new ArrayList<>() {{
       add(INNTEKT_REFERANSE);
       add(INNTEKT_REFERANSE);
       add(INNTEKT_REFERANSE);

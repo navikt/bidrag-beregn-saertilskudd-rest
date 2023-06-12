@@ -2,7 +2,6 @@ package no.nav.bidrag.beregn.saertilskudd.rest.mapper;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
-import static java.util.stream.Collectors.toList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +27,6 @@ import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BarnIHusstand;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BeregnTotalSaertilskuddGrunnlag;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.Bostatus;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.Grunnlag;
-
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.InntektRolle;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.Rolle;
 import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.Saerfradrag;
@@ -39,11 +37,11 @@ public class BidragsevneCoreMapper extends CoreMapper {
   public BeregnBidragsevneGrunnlagCore mapBidragsevneGrunnlagTilCore(BeregnTotalSaertilskuddGrunnlag beregnTotalSaertilskuddGrunnlag,
       Map<String, SjablonTallNavn> sjablontallMap, SjablonListe sjablonListe) {
 
-    var inntektBPPeriodeListe = new ArrayList<InntektPeriodeCore>();
+    var inntektBPPeriodeCoreListe = new ArrayList<InntektPeriodeCore>();
     var skatteklassePeriodeCoreListe = new ArrayList<SkatteklassePeriodeCore>();
-    var bostatusPeriodeListe = new ArrayList<BostatusPeriodeCore>();
-    var antallBarnIEgetHusholdPeriodeListe = new ArrayList<AntallBarnIEgetHusholdPeriodeCore>();
-    var saerfradragPeriodeListe = new ArrayList<SaerfradragPeriodeCore>();
+    var bostatusPeriodeCoreListe = new ArrayList<BostatusPeriodeCore>();
+    var antallBarnIEgetHusholdPeriodeCoreListe = new ArrayList<AntallBarnIEgetHusholdPeriodeCore>();
+    var saerfradragPeriodeCoreListe = new ArrayList<SaerfradragPeriodeCore>();
     var sjablonPeriodeCoreListe = new ArrayList<SjablonPeriodeCore>();
 
     // Løper gjennom alle grunnlagene og identifiserer de som skal mappes til bidragsevne core
@@ -52,22 +50,22 @@ public class BidragsevneCoreMapper extends CoreMapper {
         case INNTEKT -> {
           InntektRolle inntektRolle = grunnlagTilObjekt(grunnlag, InntektRolle.class);
           Rolle rolle = inntektRolle.getRolle();
-          if (rolle.equals(rolle.BP)) {
+          if (rolle.equals(Rolle.BP)) {
             BPInntekt bpInntekt = grunnlagTilObjekt(grunnlag, BPInntekt.class);
-            inntektBPPeriodeListe.add(bpInntekt.tilCore(grunnlag.getReferanse()));
+            inntektBPPeriodeCoreListe.add(bpInntekt.tilCore(grunnlag.getReferanse()));
           }
         }
         case BARN_I_HUSSTAND -> {
           BarnIHusstand barnIHusstand = grunnlagTilObjekt(grunnlag, BarnIHusstand.class);
-          antallBarnIEgetHusholdPeriodeListe.add(barnIHusstand.tilCore(grunnlag.getReferanse()));
+          antallBarnIEgetHusholdPeriodeCoreListe.add(barnIHusstand.tilCore(grunnlag.getReferanse()));
         }
         case BOSTATUS -> {
           Bostatus bostatus = grunnlagTilObjekt(grunnlag, Bostatus.class);
-          bostatusPeriodeListe.add(bostatus.tilCore(grunnlag.getReferanse()));
+          bostatusPeriodeCoreListe.add(bostatus.tilCore(grunnlag.getReferanse()));
         }
         case SAERFRADRAG -> {
           Saerfradrag saerfradrag = grunnlagTilObjekt(grunnlag, Saerfradrag.class);
-          saerfradragPeriodeListe.add(saerfradrag.tilCore(grunnlag.getReferanse()));
+          saerfradragPeriodeCoreListe.add(saerfradrag.tilCore(grunnlag.getReferanse()));
         }
         case SKATTEKLASSE -> {
           Skatteklasse skatteklasse = grunnlagTilObjekt(grunnlag, Skatteklasse.class);
@@ -83,8 +81,8 @@ public class BidragsevneCoreMapper extends CoreMapper {
         .addAll(mapSjablonTrinnvisSkattesats(sjablonListe.getSjablonTrinnvisSkattesatsResponse(), beregnTotalSaertilskuddGrunnlag));
 
     return new BeregnBidragsevneGrunnlagCore(beregnTotalSaertilskuddGrunnlag.getBeregnDatoFra(), beregnTotalSaertilskuddGrunnlag.getBeregnDatoTil(),
-        inntektBPPeriodeListe, skatteklassePeriodeCoreListe, bostatusPeriodeListe, antallBarnIEgetHusholdPeriodeListe, saerfradragPeriodeListe,
-        sjablonPeriodeCoreListe);
+        inntektBPPeriodeCoreListe, skatteklassePeriodeCoreListe, bostatusPeriodeCoreListe, antallBarnIEgetHusholdPeriodeCoreListe,
+        saerfradragPeriodeCoreListe, sjablonPeriodeCoreListe);
   }
 
   private List<SjablonPeriodeCore> mapSjablonBidragsevne(List<Bidragsevne> sjablonBidragsevneListe,

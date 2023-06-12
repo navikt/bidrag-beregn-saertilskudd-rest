@@ -2,7 +2,6 @@ package no.nav.bidrag.beregn.saertilskudd.rest.service;
 
 import static java.util.Collections.emptyList;
 import static java.util.Comparator.comparing;
-import static java.util.stream.Collectors.toList;
 import static no.nav.bidrag.beregn.saertilskudd.rest.mapper.CoreMapper.grunnlagTilObjekt;
 import static no.nav.bidrag.beregn.saertilskudd.rest.mapper.CoreMapper.tilJsonNode;
 
@@ -124,11 +123,9 @@ public class BeregnSaertilskuddService {
     beregnTotalSaertilskuddGrunnlag.getGrunnlagListe().stream()
         .filter(grunnlag -> grunnlag.getType().equals(GrunnlagType.SAMVAERSKLASSE)).map(grunnlag -> grunnlagTilObjekt(grunnlag, Samvaersklasse.class))
         .forEach(samvaersklasse -> {
-          if (samvaersklasse.getSoknadsbarnId() == soknadsBarnInfo.getId()) {
-            if (!samvaersklasse.getSoknadsbarnFodselsdato().equals(soknadsBarnInfo.getFodselsdato())) {
-              throw new UgyldigInputException(
-                  "Fødselsdato for søknadsbarn stemmer ikke overens med fødselsdato til barnet i Samværsklasse-grunnlaget");
-            }
+          if ((samvaersklasse.getSoknadsbarnId() == soknadsBarnInfo.getId()) &&
+              (!samvaersklasse.getSoknadsbarnFodselsdato().equals(soknadsBarnInfo.getFodselsdato()))) {
+            throw new UgyldigInputException("Fødselsdato for søknadsbarn stemmer ikke overens med fødselsdato til barnet i Samværsklasse-grunnlaget");
           }
         });
     return soknadsBarnInfo;
@@ -178,8 +175,7 @@ public class BeregnSaertilskuddService {
     var unikeReferanserListe = grunnlagReferanseListe.stream().sorted(comparing(Grunnlag::getReferanse)).distinct().toList();
 
     // Bygger responsobjekt
-    return HttpResponse.Companion.from(HttpStatus.OK, new BeregnetTotalSaertilskuddResultat(saertilskuddResultatFraCore,
-        unikeReferanserListe));
+    return HttpResponse.Companion.from(HttpStatus.OK, new BeregnetTotalSaertilskuddResultat(saertilskuddResultatFraCore, unikeReferanserListe));
   }
 
   private List<Grunnlag> lagGrunnlagListeForDelberegning(BeregnTotalSaertilskuddGrunnlag beregnTotalSaertilskuddGrunnlag,
@@ -229,8 +225,7 @@ public class BeregnSaertilskuddService {
   // Barnebidrag
   private List<Grunnlag> lagGrunnlagReferanseListeSaertilskudd(BeregnTotalSaertilskuddGrunnlag beregnTotalSaertilskuddGrunnlag,
       BeregnSaertilskuddResultatCore beregnSaertilskuddResultatCore, BeregnSaertilskuddGrunnlagCore beregnSaertilskuddGrunnlagCore,
-      BeregnBidragsevneResultatCore bidragsevneResultatFraCore,
-      BeregnBPsAndelSaertilskuddResultatCore beregnBPsAndelSaertilskuddResultatCore,
+      BeregnBidragsevneResultatCore bidragsevneResultatFraCore, BeregnBPsAndelSaertilskuddResultatCore beregnBPsAndelSaertilskuddResultatCore,
       BeregnSamvaersfradragResultatCore samvaersfradragResultatFraCore) {
     var resultatGrunnlagListe = new ArrayList<Grunnlag>();
 
@@ -238,7 +233,8 @@ public class BeregnSaertilskuddService {
     var grunnlagReferanseListe = beregnSaertilskuddResultatCore.getResultatPeriodeListe().stream()
         .flatMap(resultatPeriodeCore -> resultatPeriodeCore.getGrunnlagReferanseListe().stream()
             .map(String::new))
-        .distinct().toList();
+        .distinct()
+        .toList();
 
     // Matcher mottatte grunnlag med grunnlag som er brukt i beregningen
     resultatGrunnlagListe.addAll(beregnTotalSaertilskuddGrunnlag.getGrunnlagListe().stream()
@@ -330,9 +326,18 @@ public class BeregnSaertilskuddService {
   // Kaller core for beregning av bidragsevne
   private BeregnBidragsevneResultatCore beregnBidragsevne(BeregnBidragsevneGrunnlagCore bidragsevneGrunnlagTilCore) {
 
+    BeregnBidragsevneResultatCore bidragsevneResultatFraCore;
+
+    if (LOGGER.isDebugEnabled()) {
+      LOGGER.debug("Bidragsevne - grunnlag for beregning: {}", bidragsevneGrunnlagTilCore);
+    }
+
     // Kaller core-modulen for beregning av bidragsevne
-    LOGGER.debug("Bidragsevne - grunnlag for beregning: {}", bidragsevneGrunnlagTilCore);
-    var bidragsevneResultatFraCore = bidragsevneCore.beregnBidragsevne(bidragsevneGrunnlagTilCore);
+    try {
+      bidragsevneResultatFraCore = bidragsevneCore.beregnBidragsevne(bidragsevneGrunnlagTilCore);
+    } catch (Exception e) {
+      throw new UgyldigInputException("Ugyldig input ved beregning av bidragsevne: " + e.getMessage());
+    }
 
     if (!bidragsevneResultatFraCore.getAvvikListe().isEmpty()) {
       LOGGER.error("Ugyldig input ved beregning av bidragsevne. Følgende avvik ble funnet: " + System.lineSeparator()
@@ -349,7 +354,10 @@ public class BeregnSaertilskuddService {
           + bidragsevneResultatFraCore.getAvvikListe().stream().map(AvvikCore::getAvvikTekst).collect(Collectors.joining("; ")));
     }
 
-    LOGGER.debug("Bidragsevne - resultat av beregning: {}", bidragsevneResultatFraCore.getResultatPeriodeListe());
+    if (LOGGER.isDebugEnabled()) {
+      LOGGER.debug("Bidragsevne - resultat av beregning: {}", bidragsevneResultatFraCore.getResultatPeriodeListe());
+    }
+
     return bidragsevneResultatFraCore;
   }
 
@@ -357,9 +365,18 @@ public class BeregnSaertilskuddService {
   private BeregnBPsAndelSaertilskuddResultatCore beregnBPAndelSaertilskudd(
       BeregnBPsAndelSaertilskuddGrunnlagCore bpAndelSaertilskuddGrunnlagTilCore) {
 
+    BeregnBPsAndelSaertilskuddResultatCore bpAndelSaertilskuddResultatFraCore;
+
+    if (LOGGER.isDebugEnabled()) {
+      LOGGER.debug("BPs andel av særtilskudd - grunnlag for beregning: {}", bpAndelSaertilskuddGrunnlagTilCore);
+    }
+
     // Kaller core-modulen for beregning av BPs andel av særtilskudd
-    LOGGER.debug("BPs andel av særtilskudd - grunnlag for beregning: {}", bpAndelSaertilskuddGrunnlagTilCore);
-    var bpAndelSaertilskuddResultatFraCore = bpAndelSaertilskuddCore.beregnBPsAndelSaertilskudd(bpAndelSaertilskuddGrunnlagTilCore);
+    try {
+      bpAndelSaertilskuddResultatFraCore = bpAndelSaertilskuddCore.beregnBPsAndelSaertilskudd(bpAndelSaertilskuddGrunnlagTilCore);
+    } catch (Exception e) {
+      throw new UgyldigInputException("Ugyldig input ved beregning av BPs andel av særtilskudd: " + e.getMessage());
+    }
 
     if (!bpAndelSaertilskuddResultatFraCore.getAvvikListe().isEmpty()) {
       LOGGER.error("Ugyldig input ved beregning av BPs andel av særtilskudd. Følgende avvik ble funnet: " + System.lineSeparator()
@@ -376,16 +393,28 @@ public class BeregnSaertilskuddService {
           + bpAndelSaertilskuddResultatFraCore.getAvvikListe().stream().map(AvvikCore::getAvvikTekst).collect(Collectors.joining("; ")));
     }
 
-    LOGGER.debug("BPs andel av særtilskudd - resultat av beregning: {}", bpAndelSaertilskuddResultatFraCore.getResultatPeriodeListe());
+    if (LOGGER.isDebugEnabled()) {
+      LOGGER.debug("BPs andel av særtilskudd - resultat av beregning: {}", bpAndelSaertilskuddResultatFraCore.getResultatPeriodeListe());
+    }
+
     return bpAndelSaertilskuddResultatFraCore;
   }
 
   // Kaller core for beregning av samværsfradrag
   private BeregnSamvaersfradragResultatCore beregnSamvaersfradrag(BeregnSamvaersfradragGrunnlagCore samvaersfradragGrunnlagTilCore) {
 
+    BeregnSamvaersfradragResultatCore samvaersfradragResultatFraCore;
+
+    if (LOGGER.isDebugEnabled()) {
+      LOGGER.debug("Samværsfradrag - grunnlag for beregning: {}", samvaersfradragGrunnlagTilCore);
+    }
+
     // Kaller core-modulen for beregning av samværsfradrag
-    LOGGER.debug("Samværsfradrag - grunnlag for beregning: {}", samvaersfradragGrunnlagTilCore);
-    var samvaersfradragResultatFraCore = samvaersfradragCore.beregnSamvaersfradrag(samvaersfradragGrunnlagTilCore);
+    try {
+      samvaersfradragResultatFraCore = samvaersfradragCore.beregnSamvaersfradrag(samvaersfradragGrunnlagTilCore);
+    } catch (Exception e) {
+      throw new UgyldigInputException("Ugyldig input ved beregning av samværsfradrag: " + e.getMessage());
+    }
 
     if (!samvaersfradragResultatFraCore.getAvvikListe().isEmpty()) {
       LOGGER.error("Ugyldig input ved beregning av samværsfradrag. Følgende avvik ble funnet: " + System.lineSeparator()
@@ -399,16 +428,28 @@ public class BeregnSaertilskuddService {
           + samvaersfradragResultatFraCore.getAvvikListe().stream().map(AvvikCore::getAvvikTekst).collect(Collectors.joining("; ")));
     }
 
-    LOGGER.debug("Samværsfradrag - resultat av beregning: {}", samvaersfradragResultatFraCore.getResultatPeriodeListe());
+    if (LOGGER.isDebugEnabled()) {
+      LOGGER.debug("Samværsfradrag - resultat av beregning: {}", samvaersfradragResultatFraCore.getResultatPeriodeListe());
+    }
+
     return samvaersfradragResultatFraCore;
   }
 
   // Kaller core for beregning av særtilskudd
   private BeregnSaertilskuddResultatCore beregnSaertilskudd(BeregnSaertilskuddGrunnlagCore saertilskuddGrunnlagTilCore) {
 
+    BeregnSaertilskuddResultatCore saertilskuddResultatFraCore;
+
+    if (LOGGER.isDebugEnabled()) {
+      LOGGER.debug("Særtilskudd - grunnlag for beregning: {}", saertilskuddGrunnlagTilCore);
+    }
+
     // Kaller core-modulen for beregning av særtilskudd
-    LOGGER.debug("Særtilskudd - grunnlag for beregning: {}", saertilskuddGrunnlagTilCore);
-    var saertilskuddResultatFraCore = saertilskuddCore.beregnSaertilskudd(saertilskuddGrunnlagTilCore);
+    try {
+      saertilskuddResultatFraCore = saertilskuddCore.beregnSaertilskudd(saertilskuddGrunnlagTilCore);
+    } catch (Exception e) {
+      throw new UgyldigInputException("Ugyldig input ved beregning av særtilskudd: " + e.getMessage());
+    }
 
     if (!saertilskuddResultatFraCore.getAvvikListe().isEmpty()) {
       LOGGER.error("Ugyldig input ved beregning av særtilskudd. Følgende avvik ble funnet: " + System.lineSeparator()
@@ -426,7 +467,10 @@ public class BeregnSaertilskuddService {
           + saertilskuddResultatFraCore.getAvvikListe().stream().map(AvvikCore::getAvvikTekst).collect(Collectors.joining("; ")));
     }
 
-    LOGGER.debug("Særtilskudd - resultat av beregning: {}", saertilskuddResultatFraCore.getResultatPeriodeListe());
+    if (LOGGER.isDebugEnabled()) {
+      LOGGER.debug("Særtilskudd - resultat av beregning: {}", saertilskuddResultatFraCore.getResultatPeriodeListe());
+    }
+
     return saertilskuddResultatFraCore;
   }
 
@@ -437,21 +481,29 @@ public class BeregnSaertilskuddService {
 
     // Henter sjabloner for sjablontall
     var sjablonSjablontallListe = Optional.ofNullable(sjablonConsumer.hentSjablonSjablontall().getResponseEntity().getBody()).orElse(emptyList());
-    LOGGER.debug("Antall sjabloner hentet av type Sjablontall: {}", sjablonSjablontallListe.size());
+    if (LOGGER.isDebugEnabled()) {
+      LOGGER.debug("Antall sjabloner hentet av type Sjablontall: {}", sjablonSjablontallListe.size());
+    }
 
     // Henter sjabloner for samværsfradrag
     var sjablonSamvaersfradragListe = Optional.ofNullable(sjablonConsumer.hentSjablonSamvaersfradrag().getResponseEntity().getBody())
         .orElse(emptyList());
-    LOGGER.debug("Antall sjabloner hentet av type Samværsfradrag: {}", sjablonSamvaersfradragListe.size());
+    if (LOGGER.isDebugEnabled()) {
+      LOGGER.debug("Antall sjabloner hentet av type Samværsfradrag: {}", sjablonSamvaersfradragListe.size());
+    }
 
     // Henter sjabloner for bidragsevne
     var sjablonBidragsevneListe = Optional.ofNullable(sjablonConsumer.hentSjablonBidragsevne().getResponseEntity().getBody()).orElse(emptyList());
-    LOGGER.debug("Antall sjabloner hentet av type Bidragsevne: {}", sjablonBidragsevneListe.size());
+    if (LOGGER.isDebugEnabled()) {
+      LOGGER.debug("Antall sjabloner hentet av type Bidragsevne: {}", sjablonBidragsevneListe.size());
+    }
 
     // Henter sjabloner for trinnvis skattesats
     var sjablonTrinnvisSkattesatsListe = Optional.ofNullable(sjablonConsumer.hentSjablonTrinnvisSkattesats().getResponseEntity().getBody())
         .orElse(emptyList());
-    LOGGER.debug("Antall sjabloner hentet av type Trinnvis skattesats: {}", sjablonTrinnvisSkattesatsListe.size());
+    if (LOGGER.isDebugEnabled()) {
+      LOGGER.debug("Antall sjabloner hentet av type Trinnvis skattesats: {}", sjablonTrinnvisSkattesatsListe.size());
+    }
 
     return new SjablonListe(sjablonSjablontallListe, sjablonSamvaersfradragListe, sjablonBidragsevneListe, sjablonTrinnvisSkattesatsListe);
   }

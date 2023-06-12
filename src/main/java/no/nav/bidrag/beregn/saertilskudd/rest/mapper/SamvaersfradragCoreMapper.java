@@ -29,7 +29,6 @@ public class SamvaersfradragCoreMapper extends CoreMapper {
         beregnTotalSaertilskuddGrunnlag));
 
     return new BeregnSamvaersfradragGrunnlagCore(beregnTotalSaertilskuddGrunnlag.getBeregnDatoFra(),
-        beregnTotalSaertilskuddGrunnlag.getBeregnDatoTil(),
-        samvaersklassePeriodeCoreListe, sjablonPeriodeCoreListe);
+        beregnTotalSaertilskuddGrunnlag.getBeregnDatoTil(), samvaersklassePeriodeCoreListe, sjablonPeriodeCoreListe);
   }
 }

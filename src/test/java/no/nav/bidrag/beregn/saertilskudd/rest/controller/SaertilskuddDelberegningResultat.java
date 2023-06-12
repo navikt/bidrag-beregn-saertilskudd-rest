@@ -22,7 +22,9 @@ public class SaertilskuddDelberegningResultat {
     for (ResultatPeriode resultatPeriode : beregnetTotalSaertilskuddResultat.getBeregnetSaertilskuddPeriodeListe()) {
       for (String referanse : resultatPeriode.getGrunnlagReferanseListe()) {
         Grunnlag resultatGrunnlag = beregnetTotalSaertilskuddResultat.getGrunnlagListe().stream()
-            .filter(grunnlag -> grunnlag.getReferanse().equals(referanse)).findFirst().orElse(null);
+            .filter(grunnlag -> grunnlag.getReferanse().equals(referanse))
+            .findFirst()
+            .orElse(null);
         if (resultatGrunnlag != null) {
           switch (resultatGrunnlag.getType()) {
             case BIDRAGSEVNE:
@@ -32,8 +34,7 @@ public class SaertilskuddDelberegningResultat {
               bpsAndelSaertilskuddListe.add(CoreMapper.grunnlagTilObjekt(resultatGrunnlag, BPsAndelSaertilskuddResultatPeriode.class));
               break;
             case SAMVAERSFRADRAG:
-              samvaersfradragListe.add(
-                  CoreMapper.grunnlagTilObjekt(resultatGrunnlag, SamvaersfradragResultatPeriode.class));
+              samvaersfradragListe.add(CoreMapper.grunnlagTilObjekt(resultatGrunnlag, SamvaersfradragResultatPeriode.class));
               break;
             case SJABLON:
               sjablonPeriodeListe.add(CoreMapper.grunnlagTilObjekt(resultatGrunnlag, SjablonResultatPeriode.class));
