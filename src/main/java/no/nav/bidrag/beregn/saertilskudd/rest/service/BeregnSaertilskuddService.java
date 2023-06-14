@@ -114,21 +114,25 @@ public class BeregnSaertilskuddService {
 
   //  Validerer at det kun er oppgitt ett SoknadsbarnInfo-grunnlag og at mapping til SoknadsBarnInfo objekt ikke feiler
   private SoknadsBarnInfo validerSoknadsbarn(BeregnTotalSaertilskuddGrunnlag beregnTotalSaertilskuddGrunnlag) {
-    List<Grunnlag> soknadsbarnInfoGrunnlag = beregnTotalSaertilskuddGrunnlag.getGrunnlagListe().stream()
+
+    List<Grunnlag> soknadsbarnInfoGrunnlagListe = beregnTotalSaertilskuddGrunnlag.getGrunnlagListe().stream()
         .filter(grunnlag -> grunnlag.getType().equals(GrunnlagType.SOKNADSBARN_INFO)).toList();
-    if (soknadsbarnInfoGrunnlag.size() != 1) {
+    if (soknadsbarnInfoGrunnlagListe.size() != 1) {
       throw new UgyldigInputException("Det må være nøyaktig ett søknadsbarn i beregningsgrunnlaget");
     }
-    SoknadsBarnInfo soknadsBarnInfo = grunnlagTilObjekt(soknadsbarnInfoGrunnlag.get(0), SoknadsBarnInfo.class);
+
+    SoknadsBarnInfo soknadsBarnInfo = grunnlagTilObjekt(soknadsbarnInfoGrunnlagListe.get(0), SoknadsBarnInfo.class);
 
     beregnTotalSaertilskuddGrunnlag.getGrunnlagListe().stream()
         .filter(grunnlag -> grunnlag.getType().equals(GrunnlagType.SAMVAERSKLASSE)).map(grunnlag -> grunnlagTilObjekt(grunnlag, Samvaersklasse.class))
         .forEach(samvaersklasse -> {
+          samvaersklasse.valider();
           if ((samvaersklasse.getSoknadsbarnId() == soknadsBarnInfo.getId()) &&
               (!samvaersklasse.getSoknadsbarnFodselsdato().equals(soknadsBarnInfo.getFodselsdato()))) {
             throw new UgyldigInputException("Fødselsdato for søknadsbarn stemmer ikke overens med fødselsdato til barnet i Samværsklasse-grunnlaget");
           }
         });
+
     return soknadsBarnInfo;
   }
 
@@ -252,7 +256,7 @@ public class BeregnSaertilskuddService {
 
     resultatGrunnlagListe.addAll(beregnSaertilskuddGrunnlagCore.getBPsAndelSaertilskuddPeriodeListe().stream()
         .filter(grunnlag -> grunnlagReferanseListe.contains(grunnlag.getReferanse()))
-        .map(grunnlag -> new Grunnlag(grunnlag.getReferanse(), GrunnlagType.BPSANDELSAERTILSKUDD,
+        .map(grunnlag -> new Grunnlag(grunnlag.getReferanse(), GrunnlagType.BP_ANDEL_SAERTILSKUDD,
             lagInnholdBPsAndelSaertilskudd(grunnlag, beregnBPsAndelSaertilskuddResultatCore)))
         .toList());
 

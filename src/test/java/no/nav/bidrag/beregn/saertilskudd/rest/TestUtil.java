@@ -164,7 +164,7 @@ public class TestUtil {
       add(INNTEKT_REFERANSE);
       add(INNTEKT_REFERANSE);
     }});
-    return new Grunnlag(BPS_ANDEL_SAERTILSKUDD_REFERANSE, GrunnlagType.BPSANDELSAERTILSKUDD, objectMapper.valueToTree(bpsAndelSaertilskudd));
+    return new Grunnlag(BPS_ANDEL_SAERTILSKUDD_REFERANSE, GrunnlagType.BP_ANDEL_SAERTILSKUDD, objectMapper.valueToTree(bpsAndelSaertilskudd));
   }
 
   // Bygger opp BeregnBPsAndelSaertilskuddResultatCore
