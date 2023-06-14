@@ -75,8 +75,13 @@ open class BasePeriode {
     }
 }
 
-open class InntektBase(datoFom: LocalDate, datoTil: LocalDate, val rolle: Rolle, val inntektType: String?, val belop: BigDecimal?) :
-    BasePeriode(datoFom, datoTil) {
+open class InntektBase(
+    datoFom: LocalDate,
+    datoTil: LocalDate,
+    val rolle: Rolle,
+    val inntektType: String?,
+    val belop: BigDecimal?
+) : BasePeriode(datoFom, datoTil) {
 
     fun validerInntekt() {
         if (inntektType == null) throw UgyldigInputException("inntektType kan ikke være null")
@@ -106,8 +111,13 @@ open class InntektBase(datoFom: LocalDate, datoTil: LocalDate, val rolle: Rolle,
     }
 }
 
-class BPInntekt(datoFom: LocalDate, datoTil: LocalDate, rolle: Rolle, inntektType: String?, belop: BigDecimal?) :
-    InntektBase(datoFom, datoTil, rolle, inntektType, belop) {
+class BPInntekt(
+    datoFom: LocalDate,
+    datoTil: LocalDate,
+    rolle: Rolle,
+    inntektType: String?,
+    belop: BigDecimal?
+) : InntektBase(datoFom, datoTil, rolle, inntektType, belop) {
 
     fun tilCore(referanse: String): InntektPeriodeCore = tilInntektPeriodeCore(referanse)
 
@@ -143,8 +153,14 @@ class BMInntekt(
     }
 }
 
-class SBInntekt(datoFom: LocalDate, datoTil: LocalDate, rolle: Rolle, inntektType: String?, belop: BigDecimal?, val soknadsbarnId: Int?) :
-    InntektBase(datoFom, datoTil, rolle, inntektType, belop) {
+class SBInntekt(
+    datoFom: LocalDate,
+    datoTil: LocalDate,
+    rolle: Rolle,
+    inntektType: String?,
+    belop: BigDecimal?,
+    val soknadsbarnId: Int?
+) : InntektBase(datoFom, datoTil, rolle, inntektType, belop) {
 
     fun valider() {
         validerInntekt()
@@ -157,7 +173,11 @@ class SBInntekt(datoFom: LocalDate, datoTil: LocalDate, rolle: Rolle, inntektTyp
     }
 }
 
-class BarnIHusstand(datoFom: LocalDate, datoTil: LocalDate, val antall: Double?) : BasePeriode(datoFom, datoTil) {
+class BarnIHusstand(
+    datoFom: LocalDate,
+    datoTil: LocalDate,
+    val antall: Double?
+) : BasePeriode(datoFom, datoTil) {
 
     fun valider() {
         if (antall == null) throw UgyldigInputException("antall kan ikke være null")
@@ -173,7 +193,11 @@ class BarnIHusstand(datoFom: LocalDate, datoTil: LocalDate, val antall: Double?)
     }
 }
 
-class Bostatus(datoFom: LocalDate, datoTil: LocalDate, val bostatusKode: String?) : BasePeriode(datoFom, datoTil) {
+class Bostatus(
+    datoFom: LocalDate,
+    datoTil: LocalDate,
+    val bostatusKode: String?
+) : BasePeriode(datoFom, datoTil) {
 
     fun valider() {
         if (bostatusKode == null) throw UgyldigInputException("bostatusKode kan ikke være null")
@@ -189,7 +213,11 @@ class Bostatus(datoFom: LocalDate, datoTil: LocalDate, val bostatusKode: String?
     }
 }
 
-class Saerfradrag(datoFom: LocalDate, datoTil: LocalDate, val saerfradragKode: String?) : BasePeriode(datoFom, datoTil) {
+class Saerfradrag(
+    datoFom: LocalDate,
+    datoTil: LocalDate,
+    val saerfradragKode: String?
+) : BasePeriode(datoFom, datoTil) {
 
     fun valider() {
         if (saerfradragKode == null) throw UgyldigInputException("saerfradragKode kan ikke være null")
@@ -205,7 +233,11 @@ class Saerfradrag(datoFom: LocalDate, datoTil: LocalDate, val saerfradragKode: S
     }
 }
 
-class Skatteklasse(datoFom: LocalDate, datoTil: LocalDate, val skatteklasseId: Int?) : BasePeriode(datoFom, datoTil) {
+class Skatteklasse(
+    datoFom: LocalDate,
+    datoTil: LocalDate,
+    val skatteklasseId: Int?
+) : BasePeriode(datoFom, datoTil) {
 
     fun valider() {
         if (skatteklasseId == null) throw UgyldigInputException("skatteklasseId kan ikke være null")
@@ -221,7 +253,11 @@ class Skatteklasse(datoFom: LocalDate, datoTil: LocalDate, val skatteklasseId: I
     }
 }
 
-class NettoSaertilskudd(datoFom: LocalDate, datoTil: LocalDate, val nettoSaertilskuddBelop: BigDecimal?) : BasePeriode(datoFom, datoTil) {
+class NettoSaertilskudd(
+    datoFom: LocalDate,
+    datoTil: LocalDate,
+    val nettoSaertilskuddBelop: BigDecimal?
+) : BasePeriode(datoFom, datoTil) {
 
     fun valider() {
         if (nettoSaertilskuddBelop == null) throw UgyldigInputException("nettoSaertilskuddBelop kan ikke være null")
@@ -238,9 +274,14 @@ class NettoSaertilskudd(datoFom: LocalDate, datoTil: LocalDate, val nettoSaertil
 }
 
 class Samvaersklasse(
-    datoFom: LocalDate, datoTil: LocalDate, val soknadsbarnId: Int?, @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    @JsonDeserialize(using = LocalDateDeserializer::class) @JsonSerialize(using = LocalDateSerializer::class)
-    val soknadsbarnFodselsdato: LocalDate?, val samvaersklasseId: String?
+    datoFom: LocalDate,
+    datoTil: LocalDate,
+    val soknadsbarnId: Int?,
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @JsonDeserialize(using = LocalDateDeserializer::class)
+    @JsonSerialize(using = LocalDateSerializer::class)
+    val soknadsbarnFodselsdato: LocalDate?,
+    val samvaersklasseId: String?
 ) : BasePeriode(datoFom, datoTil) {
 
     fun valider() {

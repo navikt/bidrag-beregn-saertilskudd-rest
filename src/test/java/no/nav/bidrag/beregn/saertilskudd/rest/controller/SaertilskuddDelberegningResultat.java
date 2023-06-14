@@ -30,7 +30,7 @@ public class SaertilskuddDelberegningResultat {
             case BIDRAGSEVNE:
               bidragsevneListe.add(CoreMapper.grunnlagTilObjekt(resultatGrunnlag, BidragsevneResultatPeriode.class));
               break;
-            case BPSANDELSAERTILSKUDD:
+            case BP_ANDEL_SAERTILSKUDD:
               bpsAndelSaertilskuddListe.add(CoreMapper.grunnlagTilObjekt(resultatGrunnlag, BPsAndelSaertilskuddResultatPeriode.class));
               break;
             case SAMVAERSFRADRAG:

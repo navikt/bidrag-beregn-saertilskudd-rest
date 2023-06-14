@@ -4,9 +4,9 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonValue
 
 enum class Rolle(@get:JsonValue val value: String) {
-  BP("BP"),
-  BM("BM"),
-  SB("SB");
+  BP("BIDRAGSPLIKTIG"),
+  BM("BIDRAGSMOTTAKER"),
+  SB("SOKNADSBARN");
 
   companion object {
 
