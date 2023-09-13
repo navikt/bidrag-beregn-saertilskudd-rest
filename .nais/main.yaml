@@ -1,13 +1,34 @@
 name: bidrag-beregn-saertilskudd-rest
 ingresses:
   - https://bidrag-beregn-saertilskudd-rest.intern.dev.nav.no/
+  - https://bidrag-beregn-saertilskudd-rest-feature.intern.dev.nav.no/
 azure_access_inbound:
+  - application: bidrag-ui
+    namespace: bidrag
+    cluster: dev-fss
+  - application: bidrag-behandling
+    namespace: bidrag
+    cluster: dev-gcp
   - application: bidrag-cucumber-cloud
     namespace: bidrag
     cluster: dev-gcp
   - application: bidrag-simuler-beregning
     namespace: bidrag
     cluster: dev-gcp
+
+  - application: bidrag-ui-feature
+    namespace: bidrag
+    cluster: dev-fss
+  - application: bidrag-behandling-feature
+    namespace: bidrag
+    cluster: dev-gcp
+  - application: bidrag-cucumber-cloud-feature
+    namespace: bidrag
+    cluster: dev-gcp
+  - application: bidrag-simuler-beregning-feature
+    namespace: bidrag
+    cluster: dev-gcp
 unsecured:
   bidragsjablon_url: bidrag-sjablon.dev-fss-pub.nais.io
   bidragsjablon_scope: dev-fss.bidrag.bidrag-sjablon
+  
