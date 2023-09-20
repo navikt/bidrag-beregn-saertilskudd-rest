@@ -26,8 +26,10 @@ abstract class CoreMapper {
     // Mapper sjabloner av typen sjablontall
     // Filtrerer bort de sjablonene som ikke brukes i den aktuelle delberegningen og de som ikke er innenfor intervallet beregnDatoFra-beregnDatoTil
     fun mapSjablonSjablontall(
-        sjablonSjablontallListe: List<Sjablontall>, delberegning: String,
-        beregnGrunnlag: BeregnGrunnlag, sjablontallMap: Map<String, SjablonTallNavn>
+        sjablonSjablontallListe: List<Sjablontall>,
+        delberegning: String,
+        beregnGrunnlag: BeregnGrunnlag,
+        sjablontallMap: Map<String, SjablonTallNavn>
     ): List<SjablonPeriodeCore> {
         val beregnDatoFra = beregnGrunnlag.beregnDatoFra
         val beregnDatoTil = beregnGrunnlag.beregnDatoTil
@@ -92,7 +94,8 @@ abstract class CoreMapper {
                     ),
                     Arrays.asList(
                         SjablonInnholdCore(
-                            SjablonInnholdNavn.ANTALL_DAGER_TOM.navn, BigDecimal.valueOf(
+                            SjablonInnholdNavn.ANTALL_DAGER_TOM.navn,
+                            BigDecimal.valueOf(
                                 antDagerTom!!.toLong()
                             )
                         ),

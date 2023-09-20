@@ -93,13 +93,18 @@ internal class DtoTest {
             .withMessage("belop kan ikke være null")
     }
 
-    //BMInntekt
+    // BMInntekt
     @Test
     @DisplayName("Skal kaste IllegalArgumentException når deltFordel er null")
     fun skalKasteIllegalArgumentExceptionNaarDeltFordelErNull() {
         val grunnlag = BMInntekt(
-            LocalDate.parse("2021-08-18"), LocalDate.parse("2022-08-18"), "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
-            BigDecimal.valueOf(400000), Rolle.BIDRAGSMOTTAKER, null, false
+            LocalDate.parse("2021-08-18"),
+            LocalDate.parse("2022-08-18"),
+            "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
+            BigDecimal.valueOf(400000),
+            Rolle.BIDRAGSMOTTAKER,
+            null,
+            false
         )
         Assertions.assertThatExceptionOfType(UgyldigInputException::class.java).isThrownBy { grunnlag.valider() }
             .withMessage("deltFordel kan ikke være null")
@@ -109,26 +114,35 @@ internal class DtoTest {
     @DisplayName("Skal kaste IllegalArgumentException når skatteklasse2 er null")
     fun skalKasteIllegalArgumentExceptionNaarSkatteklasse2ErNull() {
         val grunnlag = BMInntekt(
-            LocalDate.parse("2021-08-18"), LocalDate.parse("2022-08-18"), "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
-            BigDecimal.valueOf(400000), Rolle.BIDRAGSMOTTAKER, false, null
+            LocalDate.parse("2021-08-18"),
+            LocalDate.parse("2022-08-18"),
+            "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
+            BigDecimal.valueOf(400000),
+            Rolle.BIDRAGSMOTTAKER,
+            false,
+            null
         )
         Assertions.assertThatExceptionOfType(UgyldigInputException::class.java).isThrownBy { grunnlag.valider() }
             .withMessage("skatteklasse2 kan ikke være null")
     }
 
-    //SBInntekt
+    // SBInntekt
     @Test
     @DisplayName("Skal kaste IllegalArgumentException når soknadsbarnId er null")
     fun skalKasteIllegalArgumentExceptionNaarSoknadsbarnErNull() {
         val grunnlag = SBInntekt(
-            LocalDate.parse("2021-08-18"), LocalDate.parse("2022-08-18"), Rolle.SOKNADSBARN, "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
-            BigDecimal.valueOf(400000), null
+            LocalDate.parse("2021-08-18"),
+            LocalDate.parse("2022-08-18"),
+            Rolle.SOKNADSBARN,
+            "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
+            BigDecimal.valueOf(400000),
+            null
         )
         Assertions.assertThatExceptionOfType(UgyldigInputException::class.java).isThrownBy { grunnlag.valider() }
             .withMessage("soknadsbarnId kan ikke være null")
     }
 
-    //BarnIHusstand
+    // BarnIHusstand
     @Test
     @DisplayName("Skal kaste IllegalArgumentException når antall er null")
     fun skalKasteIllegalArgumentExceptionNaarAntallErNull() {
@@ -137,7 +151,7 @@ internal class DtoTest {
             .withMessage("antall kan ikke være null")
     }
 
-    //Bostatus
+    // Bostatus
     @Test
     @DisplayName("Skal kaste IllegalArgumentException når bostatusKode er null")
     fun skalKasteIllegalArgumentExceptionNaarBostatusKodeErNull() {
@@ -146,7 +160,7 @@ internal class DtoTest {
             .withMessage("bostatusKode kan ikke være null")
     }
 
-    //Saerfradrag
+    // Saerfradrag
     @Test
     @DisplayName("Skal kaste IllegalArgumentException når saerfradragKode er null")
     fun skalKasteIllegalArgumentExceptionNaarSaerfradragKodeErNull() {
@@ -155,7 +169,7 @@ internal class DtoTest {
             .withMessage("saerfradragKode kan ikke være null")
     }
 
-    //Skatteklasse
+    // Skatteklasse
     @Test
     @DisplayName("Skal kaste IllegalArgumentException når skatteklasseId er null")
     fun skalKasteIllegalArgumentExceptionNaarSkatteklasseIdErNull() {
@@ -164,7 +178,7 @@ internal class DtoTest {
             .withMessage("skatteklasseId kan ikke være null")
     }
 
-    //NettoSaertilskudd
+    // NettoSaertilskudd
     @Test
     @DisplayName("Skal kaste IllegalArgumentException når nettoSaertilskuddBelop er null")
     fun skalKasteIllegalArgumentExceptionNaarNettoSaertilskuddBelopErNull() {
@@ -173,7 +187,7 @@ internal class DtoTest {
             .withMessage("nettoSaertilskuddBelop kan ikke være null")
     }
 
-    //Samvaersklasse
+    // Samvaersklasse
     @Test
     @DisplayName("Skal kaste IllegalArgumentException når soknadsbarnId er null")
     fun skalKasteIllegalArgumentExceptionNaarSamvaersklasseSoknadsbarnIdErNull() {
@@ -198,13 +212,18 @@ internal class DtoTest {
             .withMessage("samvaersklasseId kan ikke være null")
     }
 
-    //LopendeBidrag
+    // LopendeBidrag
     @Test
     @DisplayName("Skal kaste IllegalArgumentException når soknadsbarnId er null")
     fun skalKasteIllegalArgumentExceptionNaarLopendeBidragSoknadsbarnIdErNull() {
         val grunnlag = LopendeBidrag(
-            LocalDate.parse("2021-08-18"), LocalDate.parse("2022-08-18"), null, BigDecimal.valueOf(2000),
-            BigDecimal.valueOf(1500), BigDecimal.valueOf(2000), BigDecimal.valueOf(1500)
+            LocalDate.parse("2021-08-18"),
+            LocalDate.parse("2022-08-18"),
+            null,
+            BigDecimal.valueOf(2000),
+            BigDecimal.valueOf(1500),
+            BigDecimal.valueOf(2000),
+            BigDecimal.valueOf(1500)
         )
         Assertions.assertThatExceptionOfType(UgyldigInputException::class.java).isThrownBy { grunnlag.valider() }
             .withMessage("soknadsbarnId kan ikke være null")
@@ -214,8 +233,13 @@ internal class DtoTest {
     @DisplayName("Skal kaste IllegalArgumentException når belop er null")
     fun skalKasteIllegalArgumentExceptionNaarLopendeBidragBelopErNull() {
         val grunnlag = LopendeBidrag(
-            LocalDate.parse("2021-08-18"), LocalDate.parse("2022-08-18"), 1, null, BigDecimal.valueOf(1500),
-            BigDecimal.valueOf(2000), BigDecimal.valueOf(1500)
+            LocalDate.parse("2021-08-18"),
+            LocalDate.parse("2022-08-18"),
+            1,
+            null,
+            BigDecimal.valueOf(1500),
+            BigDecimal.valueOf(2000),
+            BigDecimal.valueOf(1500)
         )
         Assertions.assertThatExceptionOfType(UgyldigInputException::class.java).isThrownBy { grunnlag.valider() }
             .withMessage("belop kan ikke være null")
@@ -225,8 +249,13 @@ internal class DtoTest {
     @DisplayName("Skal kaste IllegalArgumentException når opprinneligBPAndelUnderholdskostnadBelop er null")
     fun skalKasteIllegalArgumentExceptionNaarLopendeBidragOpprinneligBPAndelUnderholdskostnadBelopErNull() {
         val grunnlag = LopendeBidrag(
-            LocalDate.parse("2021-08-18"), LocalDate.parse("2022-08-18"), 1, BigDecimal.valueOf(2000), null,
-            BigDecimal.valueOf(2000), BigDecimal.valueOf(1500)
+            LocalDate.parse("2021-08-18"),
+            LocalDate.parse("2022-08-18"),
+            1,
+            BigDecimal.valueOf(2000),
+            null,
+            BigDecimal.valueOf(2000),
+            BigDecimal.valueOf(1500)
         )
         Assertions.assertThatExceptionOfType(UgyldigInputException::class.java).isThrownBy { grunnlag.valider() }
             .withMessage("opprinneligBPAndelUnderholdskostnadBelop kan ikke være null")
@@ -236,8 +265,13 @@ internal class DtoTest {
     @DisplayName("Skal kaste IllegalArgumentException når opprinneligBidragBelop er null")
     fun skalKasteIllegalArgumentExceptionNaarLopendeBidragOpprinneligBidragBelopErNull() {
         val grunnlag = LopendeBidrag(
-            LocalDate.parse("2021-08-18"), LocalDate.parse("2022-08-18"), 1, BigDecimal.valueOf(2000),
-            BigDecimal.valueOf(1500), null, BigDecimal.valueOf(1500)
+            LocalDate.parse("2021-08-18"),
+            LocalDate.parse("2022-08-18"),
+            1,
+            BigDecimal.valueOf(2000),
+            BigDecimal.valueOf(1500),
+            null,
+            BigDecimal.valueOf(1500)
         )
         Assertions.assertThatExceptionOfType(UgyldigInputException::class.java).isThrownBy { grunnlag.valider() }
             .withMessage("opprinneligBidragBelop kan ikke være null")
@@ -247,8 +281,13 @@ internal class DtoTest {
     @DisplayName("Skal kaste IllegalArgumentException når opprinneligSamvaersfradragBelop er null")
     fun skalKasteIllegalArgumentExceptionNaarLopendeBidragOpprinneligSamvaersfradragBelopErNull() {
         val grunnlag = LopendeBidrag(
-            LocalDate.parse("2021-08-18"), LocalDate.parse("2022-08-18"), 1, BigDecimal.valueOf(2000),
-            BigDecimal.valueOf(1500), BigDecimal.valueOf(2000), null
+            LocalDate.parse("2021-08-18"),
+            LocalDate.parse("2022-08-18"),
+            1,
+            BigDecimal.valueOf(2000),
+            BigDecimal.valueOf(1500),
+            BigDecimal.valueOf(2000),
+            null
         )
         Assertions.assertThatExceptionOfType(UgyldigInputException::class.java).isThrownBy { grunnlag.valider() }
             .withMessage("opprinneligSamvaersfradragBelop kan ikke være null")

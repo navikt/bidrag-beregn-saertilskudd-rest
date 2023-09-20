@@ -11,10 +11,6 @@ import no.nav.bidrag.beregn.bidragsevne.BidragsevneCore
 import no.nav.bidrag.beregn.bpsandelsaertilskudd.BPsAndelSaertilskuddCore
 import no.nav.bidrag.beregn.saertilskudd.SaertilskuddCore
 import no.nav.bidrag.beregn.saertilskudd.rest.consumer.SjablonConsumer
-import no.nav.bidrag.beregn.saertilskudd.rest.mapper.BPAndelSaertilskuddCoreMapper
-import no.nav.bidrag.beregn.saertilskudd.rest.mapper.BidragsevneCoreMapper
-import no.nav.bidrag.beregn.saertilskudd.rest.mapper.SaertilskuddCoreMapper
-import no.nav.bidrag.beregn.saertilskudd.rest.mapper.SamvaersfradragCoreMapper
 import no.nav.bidrag.beregn.samvaersfradrag.SamvaersfradragCore
 import no.nav.bidrag.commons.CorrelationId
 import no.nav.bidrag.commons.ExceptionLogger

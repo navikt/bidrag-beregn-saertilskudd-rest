@@ -23,8 +23,11 @@ import java.time.format.DateTimeFormatter
 object SaertilskuddCoreMapper : CoreMapper() {
     fun mapSaertilskuddGrunnlagTilCore(
         beregnGrunnlag: BeregnGrunnlag,
-        beregnBidragsevneResultatCore: BeregnBidragsevneResultatCore, beregnBPsAndelSaertilskuddResultatCore: BeregnBPsAndelSaertilskuddResultatCore,
-        beregnSamvaersfradragResultatCore: BeregnSamvaersfradragResultatCore, soknadsBarnId: Int?, sjablonListe: SjablonListe
+        beregnBidragsevneResultatCore: BeregnBidragsevneResultatCore,
+        beregnBPsAndelSaertilskuddResultatCore: BeregnBPsAndelSaertilskuddResultatCore,
+        beregnSamvaersfradragResultatCore: BeregnSamvaersfradragResultatCore,
+        soknadsBarnId: Int?,
+        sjablonListe: SjablonListe
     ): BeregnSaertilskuddGrunnlagCore {
         // Løp gjennom output fra beregning av bidragsevne og bygg opp ny input-liste til core
         val bidragsevnePeriodeCoreListe = beregnBidragsevneResultatCore.resultatPeriodeListe
@@ -45,7 +48,8 @@ object SaertilskuddCoreMapper : CoreMapper() {
                 BPsAndelSaertilskuddPeriodeCore(
                     byggReferanseForDelberegning("Delberegning_BP_AndelSaertilskudd", periode.datoFom),
                     PeriodeCore(periode.datoFom, periode.datoTil),
-                    resultatBeregning.resultatAndelProsent, resultatBeregning.resultatAndelBelop,
+                    resultatBeregning.resultatAndelProsent,
+                    resultatBeregning.resultatAndelBelop,
                     resultatBeregning.barnetErSelvforsorget
                 )
             }
@@ -81,8 +85,10 @@ object SaertilskuddCoreMapper : CoreMapper() {
         // Henter aktuelle sjabloner
         val sjablonPeriodeCoreListe = ArrayList(
             mapSjablonSjablontall(
-                sjablonListe.sjablonSjablontallResponse, SAERTILSKUDD,
-                beregnGrunnlag, mapSjablontall()
+                sjablonListe.sjablonSjablontallResponse,
+                SAERTILSKUDD,
+                beregnGrunnlag,
+                mapSjablontall()
             )
         )
         return BeregnSaertilskuddGrunnlagCore(
