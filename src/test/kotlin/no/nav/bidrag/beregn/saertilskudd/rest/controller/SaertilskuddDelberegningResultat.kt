@@ -1,13 +1,13 @@
 package no.nav.bidrag.beregn.saertilskudd.rest.controller
 
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BPsAndelSaertilskuddResultatPeriode
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BeregnetTotalSaertilskuddResultat
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BidragsevneResultatPeriode
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.Grunnlag
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.GrunnlagType
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.SamvaersfradragResultatPeriode
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.SjablonResultatPeriode
 import no.nav.bidrag.beregn.saertilskudd.rest.mapper.CoreMapper.Companion.grunnlagTilObjekt
+import no.nav.bidrag.domain.enums.GrunnlagType
+import no.nav.bidrag.transport.beregning.felles.Grunnlag
+import no.nav.bidrag.transport.beregning.saertilskudd.BPsAndelSaertilskuddResultatPeriode
+import no.nav.bidrag.transport.beregning.saertilskudd.BeregnetTotalSaertilskuddResultat
+import no.nav.bidrag.transport.beregning.saertilskudd.BidragsevneResultatPeriode
+import no.nav.bidrag.transport.beregning.saertilskudd.SamvaersfradragResultatPeriode
+import no.nav.bidrag.transport.beregning.saertilskudd.SjablonResultatPeriode
 
 class SaertilskuddDelberegningResultat(beregnetTotalSaertilskuddResultat: BeregnetTotalSaertilskuddResultat) {
     var bidragsevneListe: MutableList<BidragsevneResultatPeriode> = ArrayList()
@@ -25,7 +25,7 @@ class SaertilskuddDelberegningResultat(beregnetTotalSaertilskuddResultat: Beregn
                 if (resultatGrunnlag != null) {
                     when (resultatGrunnlag.type) {
                         GrunnlagType.BIDRAGSEVNE -> bidragsevneListe.add(grunnlagTilObjekt(resultatGrunnlag, BidragsevneResultatPeriode::class.java))
-                        GrunnlagType.BP_ANDEL_SAERTILSKUDD -> bpsAndelSaertilskuddListe.add(
+                        GrunnlagType.BPS_ANDEL_SAERTILSKUDD -> bpsAndelSaertilskuddListe.add(
                             grunnlagTilObjekt(
                                 resultatGrunnlag,
                                 BPsAndelSaertilskuddResultatPeriode::class.java

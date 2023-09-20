@@ -15,7 +15,7 @@ private const val SJABLONTRINNVISSKATTESATS_URL = "/bidrag-sjablon/trinnvisskatt
 
 class SjablonConsumer(private val restTemplate: RestTemplate) {
 
-    fun hentSjablonSjablontall(): HttpResponse<List<Sjablontall>?> {
+    fun hentSjablonSjablontall(): HttpResponse<List<Sjablontall>> {
         return try {
             val sjablonResponse = restTemplate.exchange(
                 SJABLONSJABLONTALL_URL,

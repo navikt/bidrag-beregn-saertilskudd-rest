@@ -10,26 +10,27 @@ import no.nav.bidrag.beregn.felles.dto.PeriodeCore
 import no.nav.bidrag.beregn.felles.dto.SjablonInnholdCore
 import no.nav.bidrag.beregn.felles.dto.SjablonNokkelCore
 import no.nav.bidrag.beregn.felles.dto.SjablonPeriodeCore
-import no.nav.bidrag.beregn.felles.enums.SjablonInnholdNavn
-import no.nav.bidrag.beregn.felles.enums.SjablonNavn
-import no.nav.bidrag.beregn.felles.enums.SjablonNokkelNavn
-import no.nav.bidrag.beregn.felles.enums.SjablonTallNavn
 import no.nav.bidrag.beregn.saertilskudd.rest.consumer.Bidragsevne
 import no.nav.bidrag.beregn.saertilskudd.rest.consumer.SjablonListe
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BPInntekt
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BarnIHusstand
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BeregnTotalSaertilskuddGrunnlag
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.Bostatus
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.GrunnlagType
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.InntektRolle
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.Rolle
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.Saerfradrag
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.Skatteklasse
+import no.nav.bidrag.beregn.saertilskudd.rest.extensions.tilCore
+import no.nav.bidrag.domain.enums.GrunnlagType
+import no.nav.bidrag.domain.enums.Rolle
+import no.nav.bidrag.domain.enums.sjablon.SjablonInnholdNavn
+import no.nav.bidrag.domain.enums.sjablon.SjablonNavn
+import no.nav.bidrag.domain.enums.sjablon.SjablonNokkelNavn
+import no.nav.bidrag.domain.enums.sjablon.SjablonTallNavn
+import no.nav.bidrag.transport.beregning.felles.BeregnGrunnlag
+import no.nav.bidrag.transport.beregning.saertilskudd.BPInntekt
+import no.nav.bidrag.transport.beregning.saertilskudd.BarnIHusstand
+import no.nav.bidrag.transport.beregning.saertilskudd.Bostatus
+import no.nav.bidrag.transport.beregning.saertilskudd.InntektRolle
+import no.nav.bidrag.transport.beregning.saertilskudd.Saerfradrag
+import no.nav.bidrag.transport.beregning.saertilskudd.Skatteklasse
 import java.util.*
 
 object BidragsevneCoreMapper : CoreMapper() {
     fun mapBidragsevneGrunnlagTilCore(
-        beregnTotalSaertilskuddGrunnlag: BeregnTotalSaertilskuddGrunnlag,
+        beregnGrunnlag: BeregnGrunnlag,
         sjablontallMap: Map<String, SjablonTallNavn>, sjablonListe: SjablonListe
     ): BeregnBidragsevneGrunnlagCore {
         val inntektBPPeriodeCoreListe = ArrayList<InntektPeriodeCore>()
@@ -40,11 +41,11 @@ object BidragsevneCoreMapper : CoreMapper() {
         val sjablonPeriodeCoreListe = ArrayList<SjablonPeriodeCore>()
 
         // Løper gjennom alle grunnlagene og identifiserer de som skal mappes til bidragsevne core
-        for (grunnlag in beregnTotalSaertilskuddGrunnlag.grunnlagListe!!) {
+        for (grunnlag in beregnGrunnlag.grunnlagListe!!) {
             when (grunnlag.type) {
                 GrunnlagType.INNTEKT -> {
                     val (rolle) = grunnlagTilObjekt(grunnlag, InntektRolle::class.java)
-                    if (rolle == Rolle.BP) {
+                    if (rolle == Rolle.BIDRAGSPLIKTIG) {
                         val bpInntekt = grunnlagTilObjekt(grunnlag, BPInntekt::class.java)
                         inntektBPPeriodeCoreListe.add(bpInntekt.tilCore(grunnlag.referanse!!))
                     }
@@ -75,13 +76,13 @@ object BidragsevneCoreMapper : CoreMapper() {
         }
         // Hent aktuelle sjabloner
         sjablonPeriodeCoreListe.addAll(
-            mapSjablonSjablontall(sjablonListe.sjablonSjablontallResponse, BIDRAGSEVNE, beregnTotalSaertilskuddGrunnlag, sjablontallMap)
+            mapSjablonSjablontall(sjablonListe.sjablonSjablontallResponse, BIDRAGSEVNE, beregnGrunnlag, sjablontallMap)
         )
-        sjablonPeriodeCoreListe.addAll(mapSjablonBidragsevne(sjablonListe.sjablonBidragsevneResponse, beregnTotalSaertilskuddGrunnlag))
+        sjablonPeriodeCoreListe.addAll(mapSjablonBidragsevne(sjablonListe.sjablonBidragsevneResponse, beregnGrunnlag))
         sjablonPeriodeCoreListe
-            .addAll(mapSjablonTrinnvisSkattesats(sjablonListe.sjablonTrinnvisSkattesatsResponse, beregnTotalSaertilskuddGrunnlag))
+            .addAll(mapSjablonTrinnvisSkattesats(sjablonListe.sjablonTrinnvisSkattesatsResponse, beregnGrunnlag))
         return BeregnBidragsevneGrunnlagCore(
-            beregnTotalSaertilskuddGrunnlag.beregnDatoFra!!, beregnTotalSaertilskuddGrunnlag.beregnDatoTil!!,
+            beregnGrunnlag.beregnDatoFra!!, beregnGrunnlag.beregnDatoTil!!,
             inntektBPPeriodeCoreListe, skatteklassePeriodeCoreListe, bostatusPeriodeCoreListe, antallBarnIEgetHusholdPeriodeCoreListe,
             saerfradragPeriodeCoreListe, sjablonPeriodeCoreListe
         )
@@ -89,10 +90,10 @@ object BidragsevneCoreMapper : CoreMapper() {
 
     private fun mapSjablonBidragsevne(
         sjablonBidragsevneListe: List<Bidragsevne>,
-        beregnTotalSaertilskuddGrunnlag: BeregnTotalSaertilskuddGrunnlag
+        beregnGrunnlag: BeregnGrunnlag
     ): List<SjablonPeriodeCore> {
-        val beregnDatoFra = beregnTotalSaertilskuddGrunnlag.beregnDatoFra
-        val beregnDatoTil = beregnTotalSaertilskuddGrunnlag.beregnDatoTil
+        val beregnDatoFra = beregnGrunnlag.beregnDatoFra
+        val beregnDatoTil = beregnGrunnlag.beregnDatoTil
         return sjablonBidragsevneListe
             .stream()
             .filter { (_, datoFom, datoTom): Bidragsevne -> datoFom!!.isBefore(beregnDatoTil) && !datoTom!!.isBefore(beregnDatoFra) }
@@ -110,3 +111,189 @@ object BidragsevneCoreMapper : CoreMapper() {
             .toList()
     }
 }
+
+//fun BPInntekt.tilCore(referanse: String): InntektPeriodeCore = tilInntektPeriodeCore(referanse)
+
+/*fun BasePeriode.valider() {
+        if (datoFom == null) throw UgyldigInputException("datoFom kan ikke være null")
+        if (datoTil == null) throw UgyldigInputException("datoTil kan ikke være null")
+    }
+
+fun BasePeriode.tilPeriodeCore(): PeriodeCore {
+        valider()
+        return PeriodeCore(datoFom!!, datoTil!!)
+    }
+
+
+fun InntektBase.validerInntekt() {
+        if (inntektType == null) throw UgyldigInputException("inntektType kan ikke være null")
+        if (belop == null) throw UgyldigInputException("belop kan ikke være null")
+    }*/
+
+/*fun InntektBase.tilInntektPeriodeCore(referanse: String): InntektPeriodeCore {
+        validerInntekt()
+        return InntektPeriodeCore(
+            referanse,
+            tilPeriodeCore(),
+            inntektType!!,
+            belop!!,
+        )
+    }*/
+
+/*
+fun InntektBase.tilInntektPeriodeCoreBPsAndelSaertilskudd(referanse: String): no.nav.bidrag.beregn.bpsandelsaertilskudd.dto.InntektPeriodeCore {
+        validerInntekt()
+        return no.nav.bidrag.beregn.bpsandelsaertilskudd.dto.InntektPeriodeCore(
+            referanse,
+            tilPeriodeCore(),
+            inntektType!!,
+            belop!!,
+            deltFordel = false,
+            skatteklasse2 = false
+        )
+    }
+*/
+
+//fun BPInntekt.tilCore(referanse: String): InntektPeriodeCore = tilInntektPeriodeCore(referanse)
+
+//fun BPInntekt.tilBPsAndelSaertilskuddCore(referanse: String) = tilInntektPeriodeCoreBPsAndelSaertilskudd(referanse)
+
+
+/*fun BMInntekt.valider() {
+        validerInntekt()
+        if (deltFordel == null) throw UgyldigInputException("deltFordel kan ikke være null")
+        if (skatteklasse2 == null) throw UgyldigInputException("skatteklasse2 kan ikke være null")
+    }*/
+
+/*fun BMInntekt.tilCore(referanse: String): no.nav.bidrag.beregn.bpsandelsaertilskudd.dto.InntektPeriodeCore {
+        valider()
+        return no.nav.bidrag.beregn.bpsandelsaertilskudd.dto.InntektPeriodeCore(
+            referanse,
+            tilPeriodeCore(),
+            inntektType!!,
+            belop!!,
+            deltFordel!!,
+            skatteklasse2!!
+        )
+    }*/
+
+
+/*fun SBInntekt.valider() {
+        validerInntekt()
+        if (soknadsbarnId == null) throw UgyldigInputException("soknadsbarnId kan ikke være null")
+    }*/
+
+/*fun SBInntekt.tilCore(referanse: String): no.nav.bidrag.beregn.bpsandelsaertilskudd.dto.InntektPeriodeCore {
+        valider()
+        return tilInntektPeriodeCoreBPsAndelSaertilskudd(referanse)
+    }*/
+
+
+/*fun BarnIHusstand.valider() {
+        if (antall == null) throw UgyldigInputException("antall kan ikke være null")
+    }*/
+
+/*fun BarnIHusstand.tilCore(referanse: String): AntallBarnIEgetHusholdPeriodeCore {
+        valider()
+        return AntallBarnIEgetHusholdPeriodeCore(
+            referanse,
+            tilPeriodeCore(),
+            antall!!
+        )
+    }*/
+
+/*
+fun Bostatus.valider() {
+        if (bostatusKode == null) throw UgyldigInputException("bostatusKode kan ikke være null")
+    }*/
+
+/*fun Bostatus.tilCore(referanse: String): BostatusPeriodeCore {
+        valider()
+        return BostatusPeriodeCore(
+            referanse,
+            tilPeriodeCore(),
+            bostatusKode!!
+        )
+    }*/
+
+
+/*fun Saerfradrag.valider() {
+        if (saerfradragKode == null) throw UgyldigInputException("saerfradragKode kan ikke være null")
+    }
+
+fun Saerfradrag.tilCore(referanse: String): SaerfradragPeriodeCore {
+        valider()
+        return SaerfradragPeriodeCore(
+            referanse,
+            tilPeriodeCore(),
+            saerfradragKode!!
+        )
+    }*/
+
+/*
+fun Skatteklasse.valider() {
+        if (skatteklasseId == null) throw UgyldigInputException("skatteklasseId kan ikke være null")
+    }
+
+fun Skatteklasse.tilCore(referanse: String): SkatteklassePeriodeCore {
+        valider()
+        return SkatteklassePeriodeCore(
+            referanse,
+            tilPeriodeCore(),
+            skatteklasseId!!
+        )
+    }*/
+
+/*
+fun NettoSaertilskudd.valider() {
+        if (nettoSaertilskuddBelop == null) throw UgyldigInputException("nettoSaertilskuddBelop kan ikke være null")
+    }*/
+
+/*fun NettoSaertilskudd.tilCore(referanse: String): NettoSaertilskuddPeriodeCore {
+        valider()
+        return NettoSaertilskuddPeriodeCore(
+            referanse,
+            tilPeriodeCore(),
+            nettoSaertilskuddBelop!!
+        )
+    }*/
+
+
+/*fun Samvaersklasse.valider() {
+        if (soknadsbarnId == null) throw UgyldigInputException("soknadsbarnId kan ikke være null")
+        if (soknadsbarnFodselsdato == null) throw UgyldigInputException("soknadsbarnFodselsdato kan ikke være null")
+        if (samvaersklasseId == null) throw UgyldigInputException("samvaersklasseId kan ikke være null")
+    }
+
+fun Samvaersklasse.tilCore(referanse: String): SamvaersklassePeriodeCore {
+        valider()
+        return SamvaersklassePeriodeCore(
+            referanse,
+            tilPeriodeCore(),
+            soknadsbarnId!!,
+            soknadsbarnFodselsdato!!,
+            samvaersklasseId!!
+        )
+}*/
+
+/*fun LopendeBidrag.valider() {
+        if (soknadsbarnId == null) throw UgyldigInputException("soknadsbarnId kan ikke være null")
+        if (belop == null) throw UgyldigInputException("belop kan ikke være null")
+        if (opprinneligBPAndelUnderholdskostnadBelop == null) throw UgyldigInputException("opprinneligBPAndelUnderholdskostnadBelop kan ikke være null")
+        if (opprinneligBidragBelop == null) throw UgyldigInputException("opprinneligBidragBelop kan ikke være null")
+        if (opprinneligSamvaersfradragBelop == null) throw UgyldigInputException("opprinneligSamvaersfradragBelop kan ikke være null")
+    }*/
+
+/*fun LopendeBidrag.tilCore(referanse: String): LopendeBidragPeriodeCore {
+        valider()
+        return LopendeBidragPeriodeCore(
+            referanse,
+            tilPeriodeCore(),
+            soknadsbarnId!!,
+            belop!!,
+            opprinneligBPAndelUnderholdskostnadBelop!!,
+            opprinneligBidragBelop!!,
+            opprinneligSamvaersfradragBelop!!
+        )
+    }*/
+

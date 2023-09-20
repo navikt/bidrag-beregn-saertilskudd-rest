@@ -31,6 +31,7 @@ internal class SjablonConsumerTest {
 
     @Mock
     private val restTemplateMock: RestTemplate? = null
+
     @Test
     @DisplayName("Skal hente liste av Sjablontall når respons fra tjenesten er OK")
     fun skalHenteListeAvSjablontallNaarResponsFraTjenestenErOk() {
@@ -44,6 +45,7 @@ internal class SjablonConsumerTest {
             )
         )
             .thenReturn(ResponseEntity(TestUtil.dummySjablonSjablontallListe(), HttpStatus.OK))
+
         val sjablonResponse = sjablonConsumer?.hentSjablonSjablontall()
             assertAll(
             Executable { assertThat(sjablonResponse).isNotNull() },

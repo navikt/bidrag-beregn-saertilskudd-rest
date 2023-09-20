@@ -4,11 +4,11 @@ import no.nav.bidrag.beregn.saertilskudd.rest.BidragBeregnSaertilskuddTest
 import no.nav.bidrag.beregn.saertilskudd.rest.BidragBeregnSaertilskuddTest.Companion.TEST_PROFILE
 import no.nav.bidrag.beregn.saertilskudd.rest.TestUtil
 import no.nav.bidrag.beregn.saertilskudd.rest.consumer.wiremock_stub.SjablonApiStub
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BeregnetTotalSaertilskuddResultat
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.Grunnlag
 import no.nav.bidrag.commons.web.test.HttpHeaderTestRestTemplate
+import no.nav.bidrag.domain.enums.resultatkoder.ResultatKodeSaertilskudd
+import no.nav.bidrag.transport.beregning.felles.Grunnlag
+import no.nav.bidrag.transport.beregning.saertilskudd.BeregnetTotalSaertilskuddResultat
 import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
-import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.BeforeEach
@@ -53,6 +53,7 @@ internal class BeregnSaertilskuddControllerIntegrationTest {
     private var forventetSamvaersfradragBelopBarn2: BigDecimal? = null
     private var forventetSaertilskuddBelopBarn: BigDecimal? = null
     private var forventetSaertilskuddResultatkodeBarn: String? = null
+
     @BeforeEach
     fun init() {
         // Sett opp wiremock mot sjablon-tjenestene
@@ -72,7 +73,7 @@ internal class BeregnSaertilskuddControllerIntegrationTest {
         forventetBPAndelSaertilskuddBelopBarn = BigDecimal.valueOf(4242)
         forventetSamvaersfradragBelopBarn1 = BigDecimal.valueOf(457)
         forventetSaertilskuddBelopBarn = BigDecimal.valueOf(4242)
-        forventetSaertilskuddResultatkodeBarn = "SAERTILSKUDD_INNVILGET"
+        forventetSaertilskuddResultatkodeBarn = ResultatKodeSaertilskudd.SAERTILSKUDD_INNVILGET.toString()
         utfoerBeregningerOgEvaluerResultat_EttSoknadsbarn()
     }
 
@@ -87,7 +88,7 @@ internal class BeregnSaertilskuddControllerIntegrationTest {
         forventetSamvaersfradragBelopBarn1 = BigDecimal.valueOf(1513)
         forventetSamvaersfradragBelopBarn2 = BigDecimal.valueOf(1513)
         forventetSaertilskuddBelopBarn = BigDecimal.valueOf(2982)
-        forventetSaertilskuddResultatkodeBarn = "SAERTILSKUDD_INNVILGET"
+        forventetSaertilskuddResultatkodeBarn = ResultatKodeSaertilskudd.SAERTILSKUDD_INNVILGET.toString()
         utfoerBeregningerOgEvaluerResultat_ToSoknadsbarn()
     }
 
@@ -102,7 +103,7 @@ internal class BeregnSaertilskuddControllerIntegrationTest {
         forventetSamvaersfradragBelopBarn1 = BigDecimal.valueOf(1513)
         forventetSamvaersfradragBelopBarn2 = BigDecimal.valueOf(1513)
         forventetSaertilskuddBelopBarn = BigDecimal.valueOf(6684)
-        forventetSaertilskuddResultatkodeBarn = "SAERTILSKUDD_INNVILGET"
+        forventetSaertilskuddResultatkodeBarn = ResultatKodeSaertilskudd.SAERTILSKUDD_INNVILGET.toString()
         utfoerBeregningerOgEvaluerResultat_ToSoknadsbarn()
     }
 
@@ -117,7 +118,7 @@ internal class BeregnSaertilskuddControllerIntegrationTest {
         forventetSamvaersfradragBelopBarn1 = BigDecimal.valueOf(1513)
         forventetSamvaersfradragBelopBarn2 = BigDecimal.valueOf(1513)
         forventetSaertilskuddBelopBarn = BigDecimal.ZERO
-        forventetSaertilskuddResultatkodeBarn = "SAERTILSKUDD_IKKE_FULL_BIDRAGSEVNE"
+        forventetSaertilskuddResultatkodeBarn = ResultatKodeSaertilskudd.SAERTILSKUDD_IKKE_FULL_BIDRAGSEVNE.toString()
         utfoerBeregningerOgEvaluerResultat_ToSoknadsbarn()
     }
 
@@ -132,7 +133,7 @@ internal class BeregnSaertilskuddControllerIntegrationTest {
         forventetSamvaersfradragBelopBarn1 = BigDecimal.valueOf(1513)
         forventetSamvaersfradragBelopBarn2 = BigDecimal.valueOf(1513)
         forventetSaertilskuddBelopBarn = BigDecimal.ZERO
-        forventetSaertilskuddResultatkodeBarn = "SAERTILSKUDD_IKKE_FULL_BIDRAGSEVNE"
+        forventetSaertilskuddResultatkodeBarn = ResultatKodeSaertilskudd.SAERTILSKUDD_IKKE_FULL_BIDRAGSEVNE.toString()
         utfoerBeregningerOgEvaluerResultat_ToSoknadsbarn()
     }
 
@@ -147,7 +148,7 @@ internal class BeregnSaertilskuddControllerIntegrationTest {
         forventetSamvaersfradragBelopBarn1 = BigDecimal.valueOf(1513)
         forventetSamvaersfradragBelopBarn2 = BigDecimal.valueOf(1513)
         forventetSaertilskuddBelopBarn = BigDecimal.valueOf(6612)
-        forventetSaertilskuddResultatkodeBarn = "SAERTILSKUDD_INNVILGET"
+        forventetSaertilskuddResultatkodeBarn = ResultatKodeSaertilskudd.SAERTILSKUDD_INNVILGET.toString()
         utfoerBeregningerOgEvaluerResultat_ToSoknadsbarn()
     }
 
@@ -162,7 +163,7 @@ internal class BeregnSaertilskuddControllerIntegrationTest {
         forventetSamvaersfradragBelopBarn1 = BigDecimal.valueOf(1513)
         forventetSamvaersfradragBelopBarn2 = BigDecimal.valueOf(1513)
         forventetSaertilskuddBelopBarn = BigDecimal.ZERO
-        forventetSaertilskuddResultatkodeBarn = "SAERTILSKUDD_IKKE_FULL_BIDRAGSEVNE"
+        forventetSaertilskuddResultatkodeBarn = ResultatKodeSaertilskudd.SAERTILSKUDD_IKKE_FULL_BIDRAGSEVNE.toString()
         utfoerBeregningerOgEvaluerResultat_ToSoknadsbarn()
     }
 
@@ -177,7 +178,7 @@ internal class BeregnSaertilskuddControllerIntegrationTest {
         forventetSamvaersfradragBelopBarn1 = BigDecimal.valueOf(1513)
         forventetSamvaersfradragBelopBarn2 = BigDecimal.valueOf(1513)
         forventetSaertilskuddBelopBarn = BigDecimal.ZERO
-        forventetSaertilskuddResultatkodeBarn = "SAERTILSKUDD_IKKE_FULL_BIDRAGSEVNE"
+        forventetSaertilskuddResultatkodeBarn = ResultatKodeSaertilskudd.SAERTILSKUDD_IKKE_FULL_BIDRAGSEVNE.toString()
         utfoerBeregningerOgEvaluerResultat_ToSoknadsbarn()
     }
 
@@ -201,7 +202,7 @@ internal class BeregnSaertilskuddControllerIntegrationTest {
                 )
             },
             Executable {
-                assertThat(totalSaertilskuddResultat.beregnetSaertilskuddPeriodeListe[0].resultat.kode).isEqualTo(
+                assertThat(totalSaertilskuddResultat.beregnetSaertilskuddPeriodeListe[0].resultat.kode.toString()).isEqualTo(
                     forventetSaertilskuddResultatkodeBarn
                 )
             },
@@ -260,14 +261,14 @@ internal class BeregnSaertilskuddControllerIntegrationTest {
             Executable {
                 assertThat(saertilskuddDelberegningResultat!!.samvaersfradragListe[1].belop).isEqualTo(forventetSamvaersfradragBelopBarn2)
             },
-            Executable { assertThat(totalSaertilskuddResultat!!.beregnetSaertilskuddPeriodeListe).hasSize(1) },
+            Executable { assertThat(totalSaertilskuddResultat.beregnetSaertilskuddPeriodeListe).hasSize(1) },
             Executable {
-                assertThat(totalSaertilskuddResultat!!.beregnetSaertilskuddPeriodeListe[0].resultat.belop).isEqualTo(
+                assertThat(totalSaertilskuddResultat.beregnetSaertilskuddPeriodeListe[0].resultat.belop).isEqualTo(
                     forventetSaertilskuddBelopBarn
                 )
             },
             Executable {
-                assertThat(totalSaertilskuddResultat!!.beregnetSaertilskuddPeriodeListe[0].resultat.kode).isEqualTo(
+                assertThat(totalSaertilskuddResultat.beregnetSaertilskuddPeriodeListe[0].resultat.kode.toString()).isEqualTo(
                     forventetSaertilskuddResultatkodeBarn
                 )
             },

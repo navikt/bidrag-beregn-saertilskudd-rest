@@ -1,10 +1,12 @@
 package no.nav.bidrag.beregn.saertilskudd.rest.consumer.wiremock_stub
 
-import com.github.tomakehurst.wiremock.client.WireMock
+import com.github.tomakehurst.wiremock.client.WireMock.aResponse
+import com.github.tomakehurst.wiremock.client.WireMock.get
+import com.github.tomakehurst.wiremock.client.WireMock.stubFor
+import com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo
 import org.springframework.cloud.contract.spec.internal.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
-import java.lang.String
 
 @Component
 class SjablonApiStub {
@@ -128,10 +130,10 @@ class SjablonApiStub {
                 + "\"brukerid\": \"A100364 \","
                 + "\"tidspktEndret\": \"2020-05-17T14:15:49.233\"}]"
         )
-        WireMock.stubFor(
-            WireMock.get(WireMock.urlEqualTo(url))
+        stubFor(
+            get(urlEqualTo(url))
                 .willReturn(
-                    WireMock.aResponse()
+                    aResponse()
                         .withHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
                         .withStatus(HttpStatus.OK)
                         .withBody(
@@ -335,10 +337,10 @@ class SjablonApiStub {
                 + "\"brukerid\": \"A100364 \","
                 + "\"tidspktEndret\": \"2020-05-17T14:15:49.233\"}]"
         )
-        WireMock.stubFor(
-            WireMock.get(WireMock.urlEqualTo(url))
+        stubFor(
+            get(urlEqualTo(url))
                 .willReturn(
-                    WireMock.aResponse()
+                    aResponse()
                         .withHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
                         .withStatus(HttpStatus.OK)
                         .withBody(
@@ -367,10 +369,10 @@ class SjablonApiStub {
                 + "\"brukerid\": \"A100364 \","
                 + "\"tidspktEndret\": \"2020-05-17T14:15:49.233\"}]"
         )
-        WireMock.stubFor(
-            WireMock.get(WireMock.urlEqualTo(url))
+        stubFor(
+            get(urlEqualTo(url))
                 .willReturn(
-                    WireMock.aResponse()
+                    aResponse()
                         .withHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
                         .withStatus(HttpStatus.OK)
                         .withBody(
@@ -409,10 +411,10 @@ class SjablonApiStub {
                 + "\"brukerid\": \"A100364 \","
                 + "\"tidspktEndret\": \"2020-05-17T14:15:49.233\"}]"
         )
-        WireMock.stubFor(
-            WireMock.get(WireMock.urlEqualTo(url))
+        stubFor(
+            get(urlEqualTo(url))
                 .willReturn(
-                    WireMock.aResponse()
+                    aResponse()
                         .withHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
                         .withStatus(HttpStatus.OK)
                         .withBody(

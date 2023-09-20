@@ -10,17 +10,19 @@ import no.nav.bidrag.beregn.saertilskudd.dto.BidragsevnePeriodeCore
 import no.nav.bidrag.beregn.saertilskudd.dto.LopendeBidragPeriodeCore
 import no.nav.bidrag.beregn.saertilskudd.dto.SamvaersfradragPeriodeCore
 import no.nav.bidrag.beregn.saertilskudd.rest.consumer.SjablonListe
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BeregnTotalSaertilskuddGrunnlag
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.GrunnlagType
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.LopendeBidrag
+import no.nav.bidrag.beregn.saertilskudd.rest.extensions.tilPeriodeCore
+import no.nav.bidrag.beregn.saertilskudd.rest.extensions.valider
 import no.nav.bidrag.beregn.samvaersfradrag.dto.BeregnSamvaersfradragResultatCore
 import no.nav.bidrag.beregn.samvaersfradrag.dto.ResultatBeregningCore
+import no.nav.bidrag.domain.enums.GrunnlagType
+import no.nav.bidrag.transport.beregning.felles.BeregnGrunnlag
+import no.nav.bidrag.transport.beregning.saertilskudd.LopendeBidrag
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 object SaertilskuddCoreMapper : CoreMapper() {
     fun mapSaertilskuddGrunnlagTilCore(
-        beregnTotalSaertilskuddGrunnlag: BeregnTotalSaertilskuddGrunnlag,
+        beregnGrunnlag: BeregnGrunnlag,
         beregnBidragsevneResultatCore: BeregnBidragsevneResultatCore, beregnBPsAndelSaertilskuddResultatCore: BeregnBPsAndelSaertilskuddResultatCore,
         beregnSamvaersfradragResultatCore: BeregnSamvaersfradragResultatCore, soknadsBarnId: Int?, sjablonListe: SjablonListe
     ): BeregnSaertilskuddGrunnlagCore {
@@ -31,7 +33,7 @@ object SaertilskuddCoreMapper : CoreMapper() {
                 BidragsevnePeriodeCore(
                     byggReferanseForDelberegning("Delberegning_BP_Bidragsevne", periode.datoFom),
                     PeriodeCore(periode.datoFom, periode.datoTil),
-                    resultatBeregning.resultatEvneBelop
+                    resultatBeregning.belop
                 )
             }
             .toList()
@@ -69,7 +71,7 @@ object SaertilskuddCoreMapper : CoreMapper() {
             }
             .toList()
         val andreLopendeBidragListe = ArrayList<LopendeBidragPeriodeCore>()
-        for (grunnlag in beregnTotalSaertilskuddGrunnlag.grunnlagListe!!) {
+        for (grunnlag in beregnGrunnlag.grunnlagListe!!) {
             if (GrunnlagType.LOPENDE_BIDRAG == grunnlag.type) {
                 val lopendeBidrag = grunnlagTilObjekt(grunnlag, LopendeBidrag::class.java)
                 andreLopendeBidragListe.add(lopendeBidrag.tilCore(grunnlag.referanse!!))
@@ -80,12 +82,12 @@ object SaertilskuddCoreMapper : CoreMapper() {
         val sjablonPeriodeCoreListe = ArrayList(
             mapSjablonSjablontall(
                 sjablonListe.sjablonSjablontallResponse, SAERTILSKUDD,
-                beregnTotalSaertilskuddGrunnlag, mapSjablontall()
+                beregnGrunnlag, mapSjablontall()
             )
         )
         return BeregnSaertilskuddGrunnlagCore(
-            beregnTotalSaertilskuddGrunnlag.beregnDatoFra!!,
-            beregnTotalSaertilskuddGrunnlag.beregnDatoTil!!,
+            beregnGrunnlag.beregnDatoFra!!,
+            beregnGrunnlag.beregnDatoTil!!,
             soknadsBarnId!!,
             bidragsevnePeriodeCoreListe,
             bpAndelSaertilskuddPeriodeCoreListe,
@@ -99,4 +101,17 @@ object SaertilskuddCoreMapper : CoreMapper() {
     private fun byggReferanseForDelberegning(delberegning: String, dato: LocalDate): String {
         return delberegning + "_" + dato.format(DateTimeFormatter.ofPattern("yyyyMMdd"))
     }
+}
+
+fun LopendeBidrag.tilCore(referanse: String): LopendeBidragPeriodeCore {
+    valider()
+    return LopendeBidragPeriodeCore(
+        referanse,
+        tilPeriodeCore(),
+        soknadsbarnId!!,
+        belop!!,
+        opprinneligBPAndelUnderholdskostnadBelop!!,
+        opprinneligBidragBelop!!,
+        opprinneligSamvaersfradragBelop!!
+    )
 }

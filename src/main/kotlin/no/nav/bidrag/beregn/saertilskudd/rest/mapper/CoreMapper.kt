@@ -9,17 +9,16 @@ import no.nav.bidrag.beregn.felles.dto.PeriodeCore
 import no.nav.bidrag.beregn.felles.dto.SjablonInnholdCore
 import no.nav.bidrag.beregn.felles.dto.SjablonNokkelCore
 import no.nav.bidrag.beregn.felles.dto.SjablonPeriodeCore
-import no.nav.bidrag.beregn.felles.enums.SjablonInnholdNavn
-import no.nav.bidrag.beregn.felles.enums.SjablonNavn
-import no.nav.bidrag.beregn.felles.enums.SjablonNokkelNavn
-import no.nav.bidrag.beregn.felles.enums.SjablonTallNavn
-import no.nav.bidrag.beregn.felles.enums.SjablonTallNavn.values
 import no.nav.bidrag.beregn.saertilskudd.rest.consumer.Samvaersfradrag
 import no.nav.bidrag.beregn.saertilskudd.rest.consumer.Sjablontall
 import no.nav.bidrag.beregn.saertilskudd.rest.consumer.TrinnvisSkattesats
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BeregnTotalSaertilskuddGrunnlag
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.Grunnlag
 import no.nav.bidrag.beregn.saertilskudd.rest.exception.UgyldigInputException
+import no.nav.bidrag.domain.enums.sjablon.SjablonInnholdNavn
+import no.nav.bidrag.domain.enums.sjablon.SjablonNavn
+import no.nav.bidrag.domain.enums.sjablon.SjablonNokkelNavn
+import no.nav.bidrag.domain.enums.sjablon.SjablonTallNavn
+import no.nav.bidrag.transport.beregning.felles.BeregnGrunnlag
+import no.nav.bidrag.transport.beregning.felles.Grunnlag
 import java.math.BigDecimal
 import java.util.*
 
@@ -28,10 +27,10 @@ abstract class CoreMapper {
     // Filtrerer bort de sjablonene som ikke brukes i den aktuelle delberegningen og de som ikke er innenfor intervallet beregnDatoFra-beregnDatoTil
     fun mapSjablonSjablontall(
         sjablonSjablontallListe: List<Sjablontall>, delberegning: String,
-        beregnTotalSaertilskuddGrunnlag: BeregnTotalSaertilskuddGrunnlag, sjablontallMap: Map<String, SjablonTallNavn>
+        beregnGrunnlag: BeregnGrunnlag, sjablontallMap: Map<String, SjablonTallNavn>
     ): List<SjablonPeriodeCore> {
-        val beregnDatoFra = beregnTotalSaertilskuddGrunnlag.beregnDatoFra
-        val beregnDatoTil = beregnTotalSaertilskuddGrunnlag.beregnDatoTil
+        val beregnDatoFra = beregnGrunnlag.beregnDatoFra
+        val beregnDatoTil = beregnGrunnlag.beregnDatoTil
         return sjablonSjablontallListe
             .stream()
             .filter { (_, datoFom, datoTom): Sjablontall -> datoFom!!.isBefore(beregnDatoTil) && !datoTom!!.isBefore(beregnDatoFra) }
@@ -51,10 +50,10 @@ abstract class CoreMapper {
     // Filtrerer bort de sjablonene som ikke er innenfor intervallet beregnDatoFra-beregnDatoTil
     fun mapSjablonTrinnvisSkattesats(
         sjablonTrinnvisSkattesatsListe: List<TrinnvisSkattesats>,
-        beregnTotalSaertilskuddGrunnlag: BeregnTotalSaertilskuddGrunnlag
+        beregnGrunnlag: BeregnGrunnlag
     ): List<SjablonPeriodeCore> {
-        val beregnDatoFra = beregnTotalSaertilskuddGrunnlag.beregnDatoFra
-        val beregnDatoTil = beregnTotalSaertilskuddGrunnlag.beregnDatoTil
+        val beregnDatoFra = beregnGrunnlag.beregnDatoFra
+        val beregnDatoTil = beregnGrunnlag.beregnDatoTil
         return sjablonTrinnvisSkattesatsListe
             .stream()
             .filter { (datoFom, datoTom): TrinnvisSkattesats -> datoFom!!.isBefore(beregnDatoTil) && !datoTom!!.isBefore(beregnDatoFra) }
@@ -76,10 +75,10 @@ abstract class CoreMapper {
     // Filtrerer bort de sjablonene som ikke er innenfor intervallet beregnDatoFra-beregnDatoTil
     protected fun mapSjablonSamvaersfradrag(
         sjablonSamvaersfradragListe: List<Samvaersfradrag>,
-        beregnTotalSaertilskuddGrunnlag: BeregnTotalSaertilskuddGrunnlag
+        beregnGrunnlag: BeregnGrunnlag
     ): List<SjablonPeriodeCore> {
-        val beregnDatoFra = beregnTotalSaertilskuddGrunnlag.beregnDatoFra
-        val beregnDatoTil = beregnTotalSaertilskuddGrunnlag.beregnDatoTil
+        val beregnDatoFra = beregnGrunnlag.beregnDatoFra
+        val beregnDatoTil = beregnGrunnlag.beregnDatoTil
         return sjablonSamvaersfradragListe
             .stream()
             .filter { (_, _, datoFom, datoTom): Samvaersfradrag -> datoFom!!.isBefore(beregnDatoTil) && !datoTom!!.isBefore(beregnDatoFra) }
@@ -107,7 +106,7 @@ abstract class CoreMapper {
 
     protected fun mapSjablontall(): Map<String, SjablonTallNavn> {
         val sjablontallMap = HashMap<String, SjablonTallNavn>()
-        for (sjablonTallNavn in values()) {
+        for (sjablonTallNavn in SjablonTallNavn.entries) {
             sjablontallMap[sjablonTallNavn.id] = sjablonTallNavn
         }
         return sjablontallMap

@@ -12,31 +12,17 @@ import no.nav.bidrag.beregn.bpsandelsaertilskudd.dto.ResultatPeriodeCore
 import no.nav.bidrag.beregn.felles.dto.AvvikCore
 import no.nav.bidrag.beregn.felles.dto.IResultatPeriode
 import no.nav.bidrag.beregn.felles.dto.SjablonResultatGrunnlagCore
-import no.nav.bidrag.beregn.felles.enums.SjablonTallNavn
-import no.nav.bidrag.beregn.saertilskudd.rest.SECURE_LOGGER
 import no.nav.bidrag.beregn.saertilskudd.SaertilskuddCore
 import no.nav.bidrag.beregn.saertilskudd.dto.BPsAndelSaertilskuddPeriodeCore
 import no.nav.bidrag.beregn.saertilskudd.dto.BeregnSaertilskuddGrunnlagCore
 import no.nav.bidrag.beregn.saertilskudd.dto.BeregnSaertilskuddResultatCore
 import no.nav.bidrag.beregn.saertilskudd.dto.BidragsevnePeriodeCore
 import no.nav.bidrag.beregn.saertilskudd.dto.SamvaersfradragPeriodeCore
+import no.nav.bidrag.beregn.saertilskudd.rest.SECURE_LOGGER
 import no.nav.bidrag.beregn.saertilskudd.rest.consumer.SjablonConsumer
 import no.nav.bidrag.beregn.saertilskudd.rest.consumer.SjablonListe
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BMInntekt
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BPInntekt
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BPsAndelSaertilskuddResultatPeriode
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BeregnTotalSaertilskuddGrunnlag
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BeregnetTotalSaertilskuddResultat
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BidragsevneResultatPeriode
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.Grunnlag
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.GrunnlagType
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.Rolle
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.SBInntekt
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.SamvaersfradragResultatPeriode
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.Samvaersklasse
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.SjablonResultatPeriode
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.SoknadsBarnInfo
 import no.nav.bidrag.beregn.saertilskudd.rest.exception.UgyldigInputException
+import no.nav.bidrag.beregn.saertilskudd.rest.extensions.valider
 import no.nav.bidrag.beregn.saertilskudd.rest.mapper.BPAndelSaertilskuddCoreMapper
 import no.nav.bidrag.beregn.saertilskudd.rest.mapper.BidragsevneCoreMapper
 import no.nav.bidrag.beregn.saertilskudd.rest.mapper.CoreMapper.Companion.grunnlagTilObjekt
@@ -48,6 +34,25 @@ import no.nav.bidrag.beregn.samvaersfradrag.dto.BeregnSamvaersfradragGrunnlagCor
 import no.nav.bidrag.beregn.samvaersfradrag.dto.BeregnSamvaersfradragResultatCore
 import no.nav.bidrag.commons.web.HttpResponse
 import no.nav.bidrag.commons.web.HttpResponse.Companion.from
+import no.nav.bidrag.domain.enums.GrunnlagType
+import no.nav.bidrag.domain.enums.Rolle
+import no.nav.bidrag.domain.enums.resultatkoder.ResultatKodeSaertilskudd
+import no.nav.bidrag.domain.enums.sjablon.SjablonTallNavn
+import no.nav.bidrag.transport.beregning.felles.BeregnGrunnlag
+import no.nav.bidrag.transport.beregning.felles.Grunnlag
+import no.nav.bidrag.transport.beregning.felles.Periode
+import no.nav.bidrag.transport.beregning.saertilskudd.BMInntekt
+import no.nav.bidrag.transport.beregning.saertilskudd.BPInntekt
+import no.nav.bidrag.transport.beregning.saertilskudd.BPsAndelSaertilskuddResultatPeriode
+import no.nav.bidrag.transport.beregning.saertilskudd.BeregnetTotalSaertilskuddResultat
+import no.nav.bidrag.transport.beregning.saertilskudd.BidragsevneResultatPeriode
+import no.nav.bidrag.transport.beregning.saertilskudd.ResultatBeregning
+import no.nav.bidrag.transport.beregning.saertilskudd.ResultatPeriode
+import no.nav.bidrag.transport.beregning.saertilskudd.SBInntekt
+import no.nav.bidrag.transport.beregning.saertilskudd.SamvaersfradragResultatPeriode
+import no.nav.bidrag.transport.beregning.saertilskudd.Samvaersklasse
+import no.nav.bidrag.transport.beregning.saertilskudd.SjablonResultatPeriode
+import no.nav.bidrag.transport.beregning.saertilskudd.SoknadsBarnInfo
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
@@ -63,13 +68,13 @@ class BeregnSaertilskuddService(
     private val samvaersfradragCore: SamvaersfradragCore,
     private val saertilskuddCore: SaertilskuddCore,
 ) {
-    fun beregn(beregnTotalSaertilskuddGrunnlag: BeregnTotalSaertilskuddGrunnlag): HttpResponse<BeregnetTotalSaertilskuddResultat> {
+    fun beregn(beregnGrunnlag: BeregnGrunnlag): HttpResponse<BeregnetTotalSaertilskuddResultat> {
 
         // Kontroll av felles inputdata
-        beregnTotalSaertilskuddGrunnlag.valider()
+        beregnGrunnlag.valider()
 
         // Validerer og henter ut soknadsbarn
-        val soknadsBarnInfo = validerSoknadsbarn(beregnTotalSaertilskuddGrunnlag)
+        val soknadsBarnInfo = validerSoknadsbarn(beregnGrunnlag)
 
         // Lager en map for sjablontall (id og navn)
         val sjablontallMap = HashMap<String, SjablonTallNavn>()
@@ -81,18 +86,18 @@ class BeregnSaertilskuddService(
         val sjablonListe = hentSjabloner()
 
         // Bygger grunnlag til core og utfører delberegninger
-        return utfoerDelberegninger(beregnTotalSaertilskuddGrunnlag, sjablontallMap, sjablonListe, soknadsBarnInfo.id)
+        return utfoerDelberegninger(beregnGrunnlag, sjablontallMap, sjablonListe, soknadsBarnInfo.id)
     }
 
     //  Validerer at det kun er oppgitt ett SoknadsbarnInfo-grunnlag og at mapping til SoknadsBarnInfo objekt ikke feiler
-    private fun validerSoknadsbarn(beregnTotalSaertilskuddGrunnlag: BeregnTotalSaertilskuddGrunnlag): SoknadsBarnInfo {
-        val soknadsbarnInfoGrunnlagListe = beregnTotalSaertilskuddGrunnlag.grunnlagListe!!.stream()
-            .filter { grunnlag -> grunnlag.type == GrunnlagType.SOKNADSBARN_INFO }.toList()
-        if (soknadsbarnInfoGrunnlagListe.size != 1) {
+    private fun validerSoknadsbarn(beregnGrunnlag: BeregnGrunnlag): SoknadsBarnInfo {
+        val soknadsbarnInfoGrunnlagListe = beregnGrunnlag.grunnlagListe
+            ?.filter { grunnlag -> grunnlag.type == GrunnlagType.SOKNADSBARN_INFO }?.toList()
+        if (soknadsbarnInfoGrunnlagListe?.size != 1) {
             throw UgyldigInputException("Det må være nøyaktig ett søknadsbarn i beregningsgrunnlaget")
         }
         val soknadsBarnInfo = grunnlagTilObjekt(soknadsbarnInfoGrunnlagListe[0], SoknadsBarnInfo::class.java)
-        beregnTotalSaertilskuddGrunnlag.grunnlagListe
+        beregnGrunnlag.grunnlagListe!!
             .filter { grunnlag -> grunnlag.type == GrunnlagType.SAMVAERSKLASSE }
             .map { grunnlag: Grunnlag? ->
                 grunnlagTilObjekt(
@@ -110,34 +115,33 @@ class BeregnSaertilskuddService(
 
     //==================================================================================================================================================
     // Bygger grunnlag til core og kaller delberegninger
-    private fun utfoerDelberegninger(
-        beregnTotalSaertilskuddGrunnlag: BeregnTotalSaertilskuddGrunnlag,
+    private fun utfoerDelberegninger(beregnGrunnlag: BeregnGrunnlag,
         sjablontallMap: Map<String, SjablonTallNavn>, sjablonListe: SjablonListe, soknadsBarnId: Int
     ): HttpResponse<BeregnetTotalSaertilskuddResultat> {
         val grunnlagReferanseListe = ArrayList<Grunnlag>()
 
         // ++ Bidragsevne
         val bidragsevneGrunnlagTilCore = BidragsevneCoreMapper.mapBidragsevneGrunnlagTilCore(
-            beregnTotalSaertilskuddGrunnlag, sjablontallMap,
+            beregnGrunnlag, sjablontallMap,
             sjablonListe
         )
         val bidragsevneResultatFraCore = beregnBidragsevne(bidragsevneGrunnlagTilCore)
         grunnlagReferanseListe.addAll(
             lagGrunnlagListeForDelberegning(
-                beregnTotalSaertilskuddGrunnlag, bidragsevneResultatFraCore.resultatPeriodeListe,
+                beregnGrunnlag, bidragsevneResultatFraCore.resultatPeriodeListe,
                 bidragsevneResultatFraCore.sjablonListe
             )
         )
 
         // ++ BPs andel av særtilskudd
         val bpAndelSaertilskuddGrunnlagTilCore = BPAndelSaertilskuddCoreMapper.mapBPsAndelSaertilskuddGrunnlagTilCore(
-            beregnTotalSaertilskuddGrunnlag,
+            beregnGrunnlag,
             sjablontallMap, sjablonListe
         )
         val bpAndelSaertilskuddResultatFraCore = beregnBPAndelSaertilskudd(bpAndelSaertilskuddGrunnlagTilCore)
         grunnlagReferanseListe.addAll(
             lagGrunnlagListeForDelberegning(
-                beregnTotalSaertilskuddGrunnlag, bpAndelSaertilskuddResultatFraCore.resultatPeriodeListe,
+                beregnGrunnlag, bpAndelSaertilskuddResultatFraCore.resultatPeriodeListe,
                 bpAndelSaertilskuddResultatFraCore.sjablonListe
             )
         )
@@ -147,35 +151,47 @@ class BeregnSaertilskuddService(
 
         // ++ Samværsfradrag
         val samvaersfradragGrunnlagTilCore =
-            SamvaersfradragCoreMapper.mapSamvaersfradragGrunnlagTilCore(beregnTotalSaertilskuddGrunnlag, sjablonListe)
+            SamvaersfradragCoreMapper.mapSamvaersfradragGrunnlagTilCore(beregnGrunnlag, sjablonListe)
         val samvaersfradragResultatFraCore = beregnSamvaersfradrag(samvaersfradragGrunnlagTilCore)
         grunnlagReferanseListe.addAll(
             lagGrunnlagListeForDelberegning(
-                beregnTotalSaertilskuddGrunnlag, samvaersfradragResultatFraCore.resultatPeriodeListe,
+                beregnGrunnlag, samvaersfradragResultatFraCore.resultatPeriodeListe,
                 samvaersfradragResultatFraCore.sjablonListe
             )
         )
 
         // ++ Særtilskudd (totalberegning)
         val saertilskuddGrunnlagTilCore = SaertilskuddCoreMapper.mapSaertilskuddGrunnlagTilCore(
-            beregnTotalSaertilskuddGrunnlag,
+            beregnGrunnlag,
             bidragsevneResultatFraCore, bpAndelSaertilskuddResultatFraCore, samvaersfradragResultatFraCore, soknadsBarnId, sjablonListe
         )
         val saertilskuddResultatFraCore = beregnSaertilskudd(saertilskuddGrunnlagTilCore)
         grunnlagReferanseListe.addAll(
             lagGrunnlagReferanseListeSaertilskudd(
-                beregnTotalSaertilskuddGrunnlag, saertilskuddResultatFraCore,
+                beregnGrunnlag, saertilskuddResultatFraCore,
                 saertilskuddGrunnlagTilCore, bidragsevneResultatFraCore, bpAndelSaertilskuddResultatFraCore, samvaersfradragResultatFraCore
             )
         )
         val unikeReferanserListe = grunnlagReferanseListe.sortedBy { it.referanse } .distinct().toList()
 
         // Bygger responsobjekt
-        return from(HttpStatus.OK, BeregnetTotalSaertilskuddResultat(saertilskuddResultatFraCore, unikeReferanserListe))
+        return from(HttpStatus.OK, BeregnetTotalSaertilskuddResultat(
+            mapFraResultatPeriodeCore(saertilskuddResultatFraCore.resultatPeriodeListe), unikeReferanserListe))
     }
 
+    private fun mapFraResultatPeriodeCore (resultatPeriodeCoreListe: List<no.nav.bidrag.beregn.saertilskudd.dto.ResultatPeriodeCore>): List<ResultatPeriode> {
+        return resultatPeriodeCoreListe.map {
+            ResultatPeriode(
+                barn = it.soknadsbarnPersonId,
+                periode = Periode(it.periode.datoFom, it.periode.datoTil),
+                resultat = ResultatBeregning(it.resultatBeregning.belop, ResultatKodeSaertilskudd.valueOf(it.resultatBeregning.kode)),
+                grunnlagReferanseListe = it.grunnlagReferanseListe
+                ) }.toList()
+    }
+
+
     private fun lagGrunnlagListeForDelberegning(
-        beregnTotalSaertilskuddGrunnlag: BeregnTotalSaertilskuddGrunnlag,
+        beregnGrunnlag: BeregnGrunnlag,
         resultatPeriodeListe: List<IResultatPeriode?>, sjablonListe: List<SjablonResultatGrunnlagCore>
     ): List<Grunnlag> {
         val resultatGrunnlagListe = ArrayList<Grunnlag>()
@@ -188,7 +204,7 @@ class BeregnSaertilskuddService(
             .distinct()
 
         // Matcher mottatte grunnlag med grunnlag som er brukt i beregningen
-        beregnTotalSaertilskuddGrunnlag.grunnlagListe
+        beregnGrunnlag.grunnlagListe
             ?.filter { grunnlag -> grunnlagReferanseListe.contains(grunnlag.referanse) }
             ?.map { grunnlag -> Grunnlag(grunnlag.referanse, grunnlag.type, grunnlag.innhold) }?.let {
                 resultatGrunnlagListe.addAll(it)
@@ -206,7 +222,7 @@ class BeregnSaertilskuddService(
                 Grunnlag(
                     referanse, GrunnlagType.INNTEKT, tilJsonNode(
                         BPInntekt(
-                            periode.datoFom, periode.datoTil!!, Rolle.BP,
+                            periode.datoFom, periode.datoTil!!, Rolle.BIDRAGSPLIKTIG,
                             inntektType.toString(), inntektBelop
                         )
                     )
@@ -218,7 +234,7 @@ class BeregnSaertilskuddService(
                         referanse, GrunnlagType.INNTEKT, tilJsonNode(
                             BMInntekt(
                                 periode.datoFom, periode.datoTil!!,
-                                inntektType.toString(), inntektBelop, Rolle.BM, deltFordel,
+                                inntektType.toString(), inntektBelop, Rolle.BIDRAGSMOTTAKER, deltFordel,
                                 skatteklasse2
                             )
                         )
@@ -229,7 +245,7 @@ class BeregnSaertilskuddService(
                 Grunnlag(
                     referanse, GrunnlagType.INNTEKT, tilJsonNode(
                         SBInntekt(
-                            periode.datoFom, periode.datoTil!!, Rolle.SB,
+                            periode.datoFom, periode.datoTil!!, Rolle.SOKNADSBARN,
                             inntektType.toString(), inntektBelop, null
                         )
                     )
@@ -241,7 +257,7 @@ class BeregnSaertilskuddService(
 
     // Barnebidrag
     private fun lagGrunnlagReferanseListeSaertilskudd(
-        beregnTotalSaertilskuddGrunnlag: BeregnTotalSaertilskuddGrunnlag,
+        beregnGrunnlag: BeregnGrunnlag,
         beregnSaertilskuddResultatCore: BeregnSaertilskuddResultatCore, beregnSaertilskuddGrunnlagCore: BeregnSaertilskuddGrunnlagCore,
         bidragsevneResultatFraCore: BeregnBidragsevneResultatCore, beregnBPsAndelSaertilskuddResultatCore: BeregnBPsAndelSaertilskuddResultatCore,
         samvaersfradragResultatFraCore: BeregnSamvaersfradragResultatCore
@@ -257,7 +273,7 @@ class BeregnSaertilskuddService(
 
         // Matcher mottatte grunnlag med grunnlag som er brukt i beregningen
         resultatGrunnlagListe.addAll(
-            beregnTotalSaertilskuddGrunnlag.grunnlagListe!!
+            beregnGrunnlag.grunnlagListe!!
                 .filter { (referanse): Grunnlag -> grunnlagReferanseListe.contains(referanse) }
                 .map { (referanse, type, innhold): Grunnlag -> Grunnlag(referanse, type, innhold) }
                 .toList())
@@ -276,7 +292,7 @@ class BeregnSaertilskuddService(
             .filter { (referanse): BPsAndelSaertilskuddPeriodeCore -> grunnlagReferanseListe.contains(referanse) }
             .map { grunnlag: BPsAndelSaertilskuddPeriodeCore ->
                 Grunnlag(
-                    grunnlag.referanse, GrunnlagType.BP_ANDEL_SAERTILSKUDD,
+                    grunnlag.referanse, GrunnlagType.BPS_ANDEL_SAERTILSKUDD,
                     lagInnholdBPsAndelSaertilskudd(grunnlag, beregnBPsAndelSaertilskuddResultatCore)
                 )
             }
@@ -590,3 +606,22 @@ class BeregnSaertilskuddService(
         }
     }
 }
+
+/*
+fun BeregnGrunnlag.valider() {
+    if (beregnDatoFra == null) throw UgyldigInputException("beregnDatoFra kan ikke være null")
+    if (beregnDatoTil == null) throw UgyldigInputException("beregnDatoTil kan ikke være null")
+    grunnlagListe?.map { it.valider() } ?: throw UgyldigInputException("grunnlagListe kan ikke være null")
+}
+
+fun Grunnlag.valider() {
+    if (referanse == null) throw UgyldigInputException("referanse kan ikke være null")
+    if (type == null) throw UgyldigInputException("type kan ikke være null")
+    if (innhold == null) throw UgyldigInputException("innhold kan ikke være null")
+}
+
+fun Samvaersklasse.valider() {
+    if (soknadsbarnId == null) throw UgyldigInputException("soknadsbarnId kan ikke være null")
+    if (soknadsbarnFodselsdato == null) throw UgyldigInputException("soknadsbarnFodselsdato kan ikke være null")
+    if (samvaersklasseId == null) throw UgyldigInputException("samvaersklasseId kan ikke være null")
+}*/

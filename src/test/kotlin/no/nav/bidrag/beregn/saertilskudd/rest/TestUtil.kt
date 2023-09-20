@@ -14,26 +14,26 @@ import no.nav.bidrag.beregn.saertilskudd.rest.consumer.Bidragsevne
 import no.nav.bidrag.beregn.saertilskudd.rest.consumer.Samvaersfradrag
 import no.nav.bidrag.beregn.saertilskudd.rest.consumer.Sjablontall
 import no.nav.bidrag.beregn.saertilskudd.rest.consumer.TrinnvisSkattesats
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BMInntekt
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BPInntekt
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BPsAndelSaertilskuddResultatPeriode
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BarnIHusstand
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BeregnTotalSaertilskuddGrunnlag
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BeregnetTotalSaertilskuddResultat
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BidragsevneResultatPeriode
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.Bostatus
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.Grunnlag
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.GrunnlagType
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.LopendeBidrag
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.NettoSaertilskudd
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.Rolle
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.SBInntekt
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.Saerfradrag
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.SamvaersfradragResultatPeriode
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.Samvaersklasse
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.Skatteklasse
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.SoknadsBarnInfo
 import no.nav.bidrag.beregn.samvaersfradrag.dto.BeregnSamvaersfradragResultatCore
+import no.nav.bidrag.domain.enums.GrunnlagType
+import no.nav.bidrag.domain.enums.Rolle
+import no.nav.bidrag.transport.beregning.felles.BeregnGrunnlag
+import no.nav.bidrag.transport.beregning.felles.Grunnlag
+import no.nav.bidrag.transport.beregning.saertilskudd.BMInntekt
+import no.nav.bidrag.transport.beregning.saertilskudd.BPInntekt
+import no.nav.bidrag.transport.beregning.saertilskudd.BPsAndelSaertilskuddResultatPeriode
+import no.nav.bidrag.transport.beregning.saertilskudd.BarnIHusstand
+import no.nav.bidrag.transport.beregning.saertilskudd.BeregnetTotalSaertilskuddResultat
+import no.nav.bidrag.transport.beregning.saertilskudd.BidragsevneResultatPeriode
+import no.nav.bidrag.transport.beregning.saertilskudd.Bostatus
+import no.nav.bidrag.transport.beregning.saertilskudd.LopendeBidrag
+import no.nav.bidrag.transport.beregning.saertilskudd.NettoSaertilskudd
+import no.nav.bidrag.transport.beregning.saertilskudd.SBInntekt
+import no.nav.bidrag.transport.beregning.saertilskudd.Saerfradrag
+import no.nav.bidrag.transport.beregning.saertilskudd.SamvaersfradragResultatPeriode
+import no.nav.bidrag.transport.beregning.saertilskudd.Samvaersklasse
+import no.nav.bidrag.transport.beregning.saertilskudd.Skatteklasse
+import no.nav.bidrag.transport.beregning.saertilskudd.SoknadsBarnInfo
 import java.math.BigDecimal
 import java.time.LocalDate
 
@@ -46,7 +46,7 @@ object TestUtil {
     const val BOSTATUS_REFERANSE = "BOSTATUS_REFERANSE"
     const val BARN_I_HUSSTAND_REFERANSE = "BARN_I_HUSSTAND_REFERANSE"
     const val SAMVAERSKLASSE_REFERANSE = "SAMVAERSKLASSE_REFERANSE"
-    fun byggTotalSaertilskuddGrunnlag(): BeregnTotalSaertilskuddGrunnlag {
+    fun byggTotalSaertilskuddGrunnlag(): BeregnGrunnlag {
         val grunnlagListe = ArrayList<Grunnlag>()
         grunnlagListe.add(
             Grunnlag(
@@ -60,7 +60,7 @@ object TestUtil {
                 tilJsonNodeInnhold(
                     SBInntekt(
                         LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01"),
-                        Rolle.SB, "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER", BigDecimal.valueOf(0), 1
+                        Rolle.SOKNADSBARN, "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER", BigDecimal.valueOf(0), 1
                     )
                 )
             )
@@ -70,7 +70,7 @@ object TestUtil {
                 "Mottatt_Inntekt_AG_20200801_BM", GrunnlagType.INNTEKT, tilJsonNodeInnhold(
                     BMInntekt(
                         LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01"), "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER", BigDecimal.valueOf(300000),
-                        Rolle.BM, false, false
+                        Rolle.BIDRAGSMOTTAKER, false, false
                     )
                 )
             )
@@ -80,7 +80,7 @@ object TestUtil {
                 "Mottatt_Inntekt_AG_20200801_BM", GrunnlagType.INNTEKT, tilJsonNodeInnhold(
                     BMInntekt(
                         LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01"), "UTVIDET_BARNETRYGD", BigDecimal.valueOf(12688),
-                        Rolle.BM, false, false
+                        Rolle.BIDRAGSMOTTAKER, false, false
                     )
                 )
             )
@@ -90,7 +90,7 @@ object TestUtil {
                 "Mottatt_Inntekt_AG_20200801_BP", GrunnlagType.INNTEKT,
                 tilJsonNodeInnhold(
                     BPInntekt(
-                        LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01"), Rolle.BP, "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
+                        LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01"), Rolle.BIDRAGSPLIKTIG, "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
                         BigDecimal.valueOf(500000)
                     )
                 )
@@ -143,7 +143,7 @@ object TestUtil {
                 )
             )
         )
-        return BeregnTotalSaertilskuddGrunnlag(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01"), grunnlagListe)
+        return BeregnGrunnlag(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01"), grunnlagListe)
     }
 
     fun tilJsonNodeInnhold(`object`: Any?): JsonNode {
@@ -229,7 +229,7 @@ object TestUtil {
             )
         )
 
-        return Grunnlag(BPS_ANDEL_SAERTILSKUDD_REFERANSE, GrunnlagType.BP_ANDEL_SAERTILSKUDD, objectMapper.valueToTree(bpsAndelSaertilskudd))
+        return Grunnlag(BPS_ANDEL_SAERTILSKUDD_REFERANSE, GrunnlagType.BPS_ANDEL_SAERTILSKUDD, objectMapper.valueToTree(bpsAndelSaertilskudd))
     }
 
     // Bygger opp BeregnBPsAndelSaertilskuddResultatCore

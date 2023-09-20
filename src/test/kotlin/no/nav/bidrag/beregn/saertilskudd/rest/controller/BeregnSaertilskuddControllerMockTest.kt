@@ -3,7 +3,6 @@ package no.nav.bidrag.beregn.saertilskudd.rest.controller
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
 import no.nav.bidrag.beregn.felles.dto.PeriodeCore
-import no.nav.bidrag.beregn.saertilskudd.dto.BeregnSaertilskuddResultatCore
 import no.nav.bidrag.beregn.saertilskudd.dto.ResultatBeregningCore
 import no.nav.bidrag.beregn.saertilskudd.dto.ResultatPeriodeCore
 import no.nav.bidrag.beregn.saertilskudd.rest.BidragBeregnSaertilskuddTest
@@ -12,22 +11,22 @@ import no.nav.bidrag.beregn.saertilskudd.rest.TestUtil
 import no.nav.bidrag.beregn.saertilskudd.rest.TestUtil.BIDRAGSEVNE_REFERANSE
 import no.nav.bidrag.beregn.saertilskudd.rest.TestUtil.BPS_ANDEL_SAERTILSKUDD_REFERANSE
 import no.nav.bidrag.beregn.saertilskudd.rest.TestUtil.SAMVAERSFRADRAG_REFERANSE
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BeregnTotalSaertilskuddGrunnlag
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BeregnetTotalSaertilskuddResultat
 import no.nav.bidrag.beregn.saertilskudd.rest.service.BeregnSaertilskuddService
 import no.nav.bidrag.commons.web.HttpResponse
 import no.nav.bidrag.commons.web.test.HttpHeaderTestRestTemplate
+import no.nav.bidrag.domain.enums.resultatkoder.ResultatKodeSaertilskudd
+import no.nav.bidrag.transport.beregning.felles.BeregnGrunnlag
+import no.nav.bidrag.transport.beregning.felles.Periode
+import no.nav.bidrag.transport.beregning.saertilskudd.BeregnetTotalSaertilskuddResultat
+import no.nav.bidrag.transport.beregning.saertilskudd.ResultatBeregning
+import no.nav.bidrag.transport.beregning.saertilskudd.ResultatPeriode
 import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
-import org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR
-import org.springframework.http.HttpStatus.BAD_REQUEST
-import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.api.function.Executable
-import org.mockito.junit.jupiter.MockitoExtension
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment
@@ -37,6 +36,8 @@ import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
+import org.springframework.http.HttpStatus.BAD_REQUEST
+import org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.math.BigDecimal
@@ -64,7 +65,7 @@ internal class BeregnSaertilskuddControllerMockTest {
         every { beregnSaertilskuddServiceMock.beregn(any()) } returns HttpResponse.Companion.from(
             HttpStatus.OK,
             BeregnetTotalSaertilskuddResultat(
-                BeregnSaertilskuddResultatCore(
+                mapFraResultatPeriodeCore(
                     arrayListOf(
                         ResultatPeriodeCore(
                             PeriodeCore(
@@ -74,7 +75,7 @@ internal class BeregnSaertilskuddControllerMockTest {
                             1,
                             ResultatBeregningCore(
                                 BigDecimal.valueOf(100),
-                                "RESULTATKODE"
+                                "SAERTILSKUDD_INNVILGET"
                             ),
                             arrayListOf(
                                 BIDRAGSEVNE_REFERANSE,
@@ -82,8 +83,7 @@ internal class BeregnSaertilskuddControllerMockTest {
                                 SAMVAERSFRADRAG_REFERANSE
                             )
                         )
-                    ),
-                    emptyList()
+                    )
                 ),
                 arrayListOf(
                     TestUtil.dummyBidragsevneResultat(),
@@ -155,9 +155,20 @@ internal class BeregnSaertilskuddControllerMockTest {
                 )
             },
             Executable {
-                assertThat(totalSaertilskuddResultat!!.beregnetSaertilskuddPeriodeListe[0].resultat.kode).isEqualTo("RESULTATKODE")
+                assertThat(totalSaertilskuddResultat!!.beregnetSaertilskuddPeriodeListe[0].resultat.kode).isEqualTo(ResultatKodeSaertilskudd.SAERTILSKUDD_INNVILGET)
             }
         )
+    }
+
+    private fun mapFraResultatPeriodeCore(resultatPeriodeCoreListe: List<ResultatPeriodeCore>): List<ResultatPeriode> {
+        return resultatPeriodeCoreListe.map {
+            ResultatPeriode(
+                barn = it.soknadsbarnPersonId,
+                periode = Periode(it.periode.datoFom, it.periode.datoTil),
+                resultat = ResultatBeregning(it.resultatBeregning.belop, ResultatKodeSaertilskudd.valueOf(it.resultatBeregning.kode)),
+                grunnlagReferanseListe = it.grunnlagReferanseListe
+            )
+        }.toList()
     }
 
     @Test
@@ -169,7 +180,7 @@ internal class BeregnSaertilskuddControllerMockTest {
         )
 
         val url = "http://localhost:$port/beregn/saertilskudd"
-        val request = initHttpEntity(BeregnTotalSaertilskuddGrunnlag(LocalDate.parse("2021-08-18"), LocalDate.parse("2021-08-18"), emptyList()))
+        val request = initHttpEntity(BeregnGrunnlag(LocalDate.parse("2021-08-18"), LocalDate.parse("2021-08-18"), emptyList()))
         val responseEntity = httpHeaderTestRestTemplate?.exchange(url, HttpMethod.POST, request, BeregnetTotalSaertilskuddResultat::class.java)
         val totalSaertilskuddResultat = responseEntity?.body
         assertAll(
@@ -187,7 +198,7 @@ internal class BeregnSaertilskuddControllerMockTest {
         )
 
         val url = "http://localhost:$port/beregn/saertilskudd"
-        val request = initHttpEntity(BeregnTotalSaertilskuddGrunnlag(LocalDate.parse("2021-08-18"), LocalDate.parse("2021-08-18"), emptyList()))
+        val request = initHttpEntity(BeregnGrunnlag(LocalDate.parse("2021-08-18"), LocalDate.parse("2021-08-18"), emptyList()))
         val responseEntity = httpHeaderTestRestTemplate?.exchange(url, HttpMethod.POST, request, BeregnetTotalSaertilskuddResultat::class.java)
         val totalSaertilskuddResultat = responseEntity?.body
         assertAll(

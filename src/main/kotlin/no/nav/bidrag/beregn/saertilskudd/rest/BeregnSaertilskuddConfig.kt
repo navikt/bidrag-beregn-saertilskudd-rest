@@ -75,26 +75,6 @@ class BeregnSaertilskuddConfig {
         return SamvaersfradragCore.getInstance()
     }
 
-/*    @Bean
-    fun bidragsevneCoreMapper(): BidragsevneCoreMapper {
-        return BidragsevneCoreMapper()
-    }
-
-    @Bean
-    fun bpAndelSaertilskuddCoreMapper(): BPAndelSaertilskuddCoreMapper {
-        return BPAndelSaertilskuddCoreMapper()
-    }
-
-    @Bean
-    fun samvaersfradragCoreMapper(): SamvaersfradragCoreMapper {
-        return SamvaersfradragCoreMapper()
-    }
-
-    @Bean
-    fun saertilskuddCoreMapper(): SaertilskuddCoreMapper {
-        return SaertilskuddCoreMapper()
-    }*/
-
     @Bean
     fun sjablonConsumer(
         @Value("\${BIDRAGSJABLON_URL}") sjablonBaseUrl: String,

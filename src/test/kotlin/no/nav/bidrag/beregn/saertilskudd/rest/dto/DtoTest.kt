@@ -1,21 +1,23 @@
 package no.nav.bidrag.beregn.saertilskudd.rest.dto
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BMInntekt
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BarnIHusstand
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.BeregnTotalSaertilskuddGrunnlag
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.Bostatus
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.Grunnlag
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.GrunnlagType
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.InntektBase
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.LopendeBidrag
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.NettoSaertilskudd
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.Rolle
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.SBInntekt
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.Saerfradrag
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.Samvaersklasse
-import no.nav.bidrag.beregn.saertilskudd.rest.dto.http.Skatteklasse
 import no.nav.bidrag.beregn.saertilskudd.rest.exception.UgyldigInputException
+import no.nav.bidrag.beregn.saertilskudd.rest.extensions.valider
+import no.nav.bidrag.beregn.saertilskudd.rest.extensions.validerInntekt
+import no.nav.bidrag.domain.enums.GrunnlagType
+import no.nav.bidrag.domain.enums.Rolle
+import no.nav.bidrag.transport.beregning.felles.BeregnGrunnlag
+import no.nav.bidrag.transport.beregning.felles.Grunnlag
+import no.nav.bidrag.transport.beregning.saertilskudd.BMInntekt
+import no.nav.bidrag.transport.beregning.saertilskudd.BarnIHusstand
+import no.nav.bidrag.transport.beregning.saertilskudd.Bostatus
+import no.nav.bidrag.transport.beregning.saertilskudd.InntektBase
+import no.nav.bidrag.transport.beregning.saertilskudd.LopendeBidrag
+import no.nav.bidrag.transport.beregning.saertilskudd.NettoSaertilskudd
+import no.nav.bidrag.transport.beregning.saertilskudd.SBInntekt
+import no.nav.bidrag.transport.beregning.saertilskudd.Saerfradrag
+import no.nav.bidrag.transport.beregning.saertilskudd.Samvaersklasse
+import no.nav.bidrag.transport.beregning.saertilskudd.Skatteklasse
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -24,11 +26,11 @@ import java.time.LocalDate
 
 @DisplayName("DtoTest")
 internal class DtoTest {
-    // BeregnTotalSaertilskuddGrunnlag
+    // beregnGrunnlag
     @Test
     @DisplayName("Skal kaste IllegalArgumentException når beregnDatoFra er null")
     fun skalKasteIllegalArgumentExceptionNaarBeregnDatoFraErNull() {
-        val grunnlag = BeregnTotalSaertilskuddGrunnlag(null, LocalDate.parse("2021-08-18"), emptyList())
+        val grunnlag = BeregnGrunnlag(null, LocalDate.parse("2021-08-18"), emptyList())
         Assertions.assertThatExceptionOfType(UgyldigInputException::class.java).isThrownBy { grunnlag.valider() }
             .withMessage("beregnDatoFra kan ikke være null")
     }
@@ -36,7 +38,7 @@ internal class DtoTest {
     @Test
     @DisplayName("Skal kaste IllegalArgumentException når beregnDatoTil er null")
     fun skalKasteIllegalArgumentExceptionNaarBeregnDatoTilErNull() {
-        val grunnlag = BeregnTotalSaertilskuddGrunnlag(LocalDate.parse("2021-08-18"), null, emptyList())
+        val grunnlag = BeregnGrunnlag(LocalDate.parse("2021-08-18"), null, emptyList())
         Assertions.assertThatExceptionOfType(UgyldigInputException::class.java).isThrownBy { grunnlag.valider() }
             .withMessage("beregnDatoTil kan ikke være null")
     }
@@ -44,7 +46,7 @@ internal class DtoTest {
     @Test
     @DisplayName("Skal kaste IllegalArgumentException når grunnlagListe er null")
     fun skalKasteIllegalArgumentExceptionNaarGrunnlagListeErNull() {
-        val grunnlag = BeregnTotalSaertilskuddGrunnlag(LocalDate.parse("2021-08-18"), LocalDate.parse("2022-08-18"), null)
+        val grunnlag = BeregnGrunnlag(LocalDate.parse("2021-08-18"), LocalDate.parse("2022-08-18"), null)
         Assertions.assertThatExceptionOfType(UgyldigInputException::class.java).isThrownBy { grunnlag.valider() }
             .withMessage("grunnlagListe kan ikke være null")
     }
@@ -78,7 +80,7 @@ internal class DtoTest {
     @Test
     @DisplayName("Skal kaste IllegalArgumentException når inntektType er null")
     fun skalKasteIllegalArgumentExceptionNaarInntektTypeErNull() {
-        val grunnlag = InntektBase(LocalDate.parse("2021-08-18"), LocalDate.parse("2022-08-18"), Rolle.BP, null, BigDecimal.valueOf(400000))
+        val grunnlag = InntektBase(LocalDate.parse("2021-08-18"), LocalDate.parse("2022-08-18"), Rolle.BIDRAGSPLIKTIG, null, BigDecimal.valueOf(400000))
         Assertions.assertThatExceptionOfType(UgyldigInputException::class.java).isThrownBy { grunnlag.validerInntekt() }
             .withMessage("inntektType kan ikke være null")
     }
@@ -86,7 +88,7 @@ internal class DtoTest {
     @Test
     @DisplayName("Skal kaste IllegalArgumentException når belop er null")
     fun skalKasteIllegalArgumentExceptionNaarBelopErNull() {
-        val grunnlag = InntektBase(LocalDate.parse("2021-08-18"), LocalDate.parse("2022-08-18"), Rolle.BP, "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER", null)
+        val grunnlag = InntektBase(LocalDate.parse("2021-08-18"), LocalDate.parse("2022-08-18"), Rolle.BIDRAGSPLIKTIG, "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER", null)
         Assertions.assertThatExceptionOfType(UgyldigInputException::class.java).isThrownBy { grunnlag.validerInntekt() }
             .withMessage("belop kan ikke være null")
     }
@@ -97,7 +99,7 @@ internal class DtoTest {
     fun skalKasteIllegalArgumentExceptionNaarDeltFordelErNull() {
         val grunnlag = BMInntekt(
             LocalDate.parse("2021-08-18"), LocalDate.parse("2022-08-18"), "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
-            BigDecimal.valueOf(400000), Rolle.BM, null, false
+            BigDecimal.valueOf(400000), Rolle.BIDRAGSMOTTAKER, null, false
         )
         Assertions.assertThatExceptionOfType(UgyldigInputException::class.java).isThrownBy { grunnlag.valider() }
             .withMessage("deltFordel kan ikke være null")
@@ -108,7 +110,7 @@ internal class DtoTest {
     fun skalKasteIllegalArgumentExceptionNaarSkatteklasse2ErNull() {
         val grunnlag = BMInntekt(
             LocalDate.parse("2021-08-18"), LocalDate.parse("2022-08-18"), "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
-            BigDecimal.valueOf(400000), Rolle.BM, false, null
+            BigDecimal.valueOf(400000), Rolle.BIDRAGSMOTTAKER, false, null
         )
         Assertions.assertThatExceptionOfType(UgyldigInputException::class.java).isThrownBy { grunnlag.valider() }
             .withMessage("skatteklasse2 kan ikke være null")
@@ -119,7 +121,7 @@ internal class DtoTest {
     @DisplayName("Skal kaste IllegalArgumentException når soknadsbarnId er null")
     fun skalKasteIllegalArgumentExceptionNaarSoknadsbarnErNull() {
         val grunnlag = SBInntekt(
-            LocalDate.parse("2021-08-18"), LocalDate.parse("2022-08-18"), Rolle.SB, "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
+            LocalDate.parse("2021-08-18"), LocalDate.parse("2022-08-18"), Rolle.SOKNADSBARN, "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
             BigDecimal.valueOf(400000), null
         )
         Assertions.assertThatExceptionOfType(UgyldigInputException::class.java).isThrownBy { grunnlag.valider() }
