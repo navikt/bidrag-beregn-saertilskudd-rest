@@ -31,7 +31,8 @@ import java.util.*
 object BidragsevneCoreMapper : CoreMapper() {
     fun mapBidragsevneGrunnlagTilCore(
         beregnGrunnlag: BeregnGrunnlag,
-        sjablontallMap: Map<String, SjablonTallNavn>, sjablonListe: SjablonListe
+        sjablontallMap: Map<String, SjablonTallNavn>,
+        sjablonListe: SjablonListe
     ): BeregnBidragsevneGrunnlagCore {
         val inntektBPPeriodeCoreListe = ArrayList<InntektPeriodeCore>()
         val skatteklassePeriodeCoreListe = ArrayList<SkatteklassePeriodeCore>()
@@ -82,9 +83,14 @@ object BidragsevneCoreMapper : CoreMapper() {
         sjablonPeriodeCoreListe
             .addAll(mapSjablonTrinnvisSkattesats(sjablonListe.sjablonTrinnvisSkattesatsResponse, beregnGrunnlag))
         return BeregnBidragsevneGrunnlagCore(
-            beregnGrunnlag.beregnDatoFra!!, beregnGrunnlag.beregnDatoTil!!,
-            inntektBPPeriodeCoreListe, skatteklassePeriodeCoreListe, bostatusPeriodeCoreListe, antallBarnIEgetHusholdPeriodeCoreListe,
-            saerfradragPeriodeCoreListe, sjablonPeriodeCoreListe
+            beregnGrunnlag.beregnDatoFra!!,
+            beregnGrunnlag.beregnDatoTil!!,
+            inntektBPPeriodeCoreListe,
+            skatteklassePeriodeCoreListe,
+            bostatusPeriodeCoreListe,
+            antallBarnIEgetHusholdPeriodeCoreListe,
+            saerfradragPeriodeCoreListe,
+            sjablonPeriodeCoreListe
         )
     }
 
@@ -112,7 +118,7 @@ object BidragsevneCoreMapper : CoreMapper() {
     }
 }
 
-//fun BPInntekt.tilCore(referanse: String): InntektPeriodeCore = tilInntektPeriodeCore(referanse)
+// fun BPInntekt.tilCore(referanse: String): InntektPeriodeCore = tilInntektPeriodeCore(referanse)
 
 /*fun BasePeriode.valider() {
         if (datoFom == null) throw UgyldigInputException("datoFom kan ikke være null")
@@ -154,10 +160,9 @@ fun InntektBase.tilInntektPeriodeCoreBPsAndelSaertilskudd(referanse: String): no
     }
 */
 
-//fun BPInntekt.tilCore(referanse: String): InntektPeriodeCore = tilInntektPeriodeCore(referanse)
+// fun BPInntekt.tilCore(referanse: String): InntektPeriodeCore = tilInntektPeriodeCore(referanse)
 
-//fun BPInntekt.tilBPsAndelSaertilskuddCore(referanse: String) = tilInntektPeriodeCoreBPsAndelSaertilskudd(referanse)
-
+// fun BPInntekt.tilBPsAndelSaertilskuddCore(referanse: String) = tilInntektPeriodeCoreBPsAndelSaertilskudd(referanse)
 
 /*fun BMInntekt.valider() {
         validerInntekt()
@@ -177,7 +182,6 @@ fun InntektBase.tilInntektPeriodeCoreBPsAndelSaertilskudd(referanse: String): no
         )
     }*/
 
-
 /*fun SBInntekt.valider() {
         validerInntekt()
         if (soknadsbarnId == null) throw UgyldigInputException("soknadsbarnId kan ikke være null")
@@ -187,7 +191,6 @@ fun InntektBase.tilInntektPeriodeCoreBPsAndelSaertilskudd(referanse: String): no
         valider()
         return tilInntektPeriodeCoreBPsAndelSaertilskudd(referanse)
     }*/
-
 
 /*fun BarnIHusstand.valider() {
         if (antall == null) throw UgyldigInputException("antall kan ikke være null")
@@ -215,7 +218,6 @@ fun Bostatus.valider() {
             bostatusKode!!
         )
     }*/
-
 
 /*fun Saerfradrag.valider() {
         if (saerfradragKode == null) throw UgyldigInputException("saerfradragKode kan ikke være null")
@@ -258,7 +260,6 @@ fun NettoSaertilskudd.valider() {
         )
     }*/
 
-
 /*fun Samvaersklasse.valider() {
         if (soknadsbarnId == null) throw UgyldigInputException("soknadsbarnId kan ikke være null")
         if (soknadsbarnFodselsdato == null) throw UgyldigInputException("soknadsbarnFodselsdato kan ikke være null")
@@ -296,4 +297,3 @@ fun Samvaersklasse.tilCore(referanse: String): SamvaersklassePeriodeCore {
             opprinneligSamvaersfradragBelop!!
         )
     }*/
-

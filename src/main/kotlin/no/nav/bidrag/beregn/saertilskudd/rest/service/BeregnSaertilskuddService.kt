@@ -66,10 +66,9 @@ class BeregnSaertilskuddService(
     private val bidragsevneCore: BidragsevneCore,
     private val bpAndelSaertilskuddCore: BPsAndelSaertilskuddCore,
     private val samvaersfradragCore: SamvaersfradragCore,
-    private val saertilskuddCore: SaertilskuddCore,
+    private val saertilskuddCore: SaertilskuddCore
 ) {
     fun beregn(beregnGrunnlag: BeregnGrunnlag): HttpResponse<BeregnetTotalSaertilskuddResultat> {
-
         // Kontroll av felles inputdata
         beregnGrunnlag.valider()
 
@@ -101,7 +100,8 @@ class BeregnSaertilskuddService(
             .filter { grunnlag -> grunnlag.type == GrunnlagType.SAMVAERSKLASSE }
             .map { grunnlag: Grunnlag? ->
                 grunnlagTilObjekt(
-                    grunnlag!!, Samvaersklasse::class.java
+                    grunnlag!!,
+                    Samvaersklasse::class.java
                 )
             }
             .forEach { samvaersklasse: Samvaersklasse ->
@@ -113,22 +113,27 @@ class BeregnSaertilskuddService(
         return soknadsBarnInfo
     }
 
-    //==================================================================================================================================================
+    // ==================================================================================================================================================
     // Bygger grunnlag til core og kaller delberegninger
-    private fun utfoerDelberegninger(beregnGrunnlag: BeregnGrunnlag,
-        sjablontallMap: Map<String, SjablonTallNavn>, sjablonListe: SjablonListe, soknadsBarnId: Int
+    private fun utfoerDelberegninger(
+        beregnGrunnlag: BeregnGrunnlag,
+        sjablontallMap: Map<String, SjablonTallNavn>,
+        sjablonListe: SjablonListe,
+        soknadsBarnId: Int
     ): HttpResponse<BeregnetTotalSaertilskuddResultat> {
         val grunnlagReferanseListe = ArrayList<Grunnlag>()
 
         // ++ Bidragsevne
         val bidragsevneGrunnlagTilCore = BidragsevneCoreMapper.mapBidragsevneGrunnlagTilCore(
-            beregnGrunnlag, sjablontallMap,
+            beregnGrunnlag,
+            sjablontallMap,
             sjablonListe
         )
         val bidragsevneResultatFraCore = beregnBidragsevne(bidragsevneGrunnlagTilCore)
         grunnlagReferanseListe.addAll(
             lagGrunnlagListeForDelberegning(
-                beregnGrunnlag, bidragsevneResultatFraCore.resultatPeriodeListe,
+                beregnGrunnlag,
+                bidragsevneResultatFraCore.resultatPeriodeListe,
                 bidragsevneResultatFraCore.sjablonListe
             )
         )
@@ -136,12 +141,14 @@ class BeregnSaertilskuddService(
         // ++ BPs andel av særtilskudd
         val bpAndelSaertilskuddGrunnlagTilCore = BPAndelSaertilskuddCoreMapper.mapBPsAndelSaertilskuddGrunnlagTilCore(
             beregnGrunnlag,
-            sjablontallMap, sjablonListe
+            sjablontallMap,
+            sjablonListe
         )
         val bpAndelSaertilskuddResultatFraCore = beregnBPAndelSaertilskudd(bpAndelSaertilskuddGrunnlagTilCore)
         grunnlagReferanseListe.addAll(
             lagGrunnlagListeForDelberegning(
-                beregnGrunnlag, bpAndelSaertilskuddResultatFraCore.resultatPeriodeListe,
+                beregnGrunnlag,
+                bpAndelSaertilskuddResultatFraCore.resultatPeriodeListe,
                 bpAndelSaertilskuddResultatFraCore.sjablonListe
             )
         )
@@ -155,7 +162,8 @@ class BeregnSaertilskuddService(
         val samvaersfradragResultatFraCore = beregnSamvaersfradrag(samvaersfradragGrunnlagTilCore)
         grunnlagReferanseListe.addAll(
             lagGrunnlagListeForDelberegning(
-                beregnGrunnlag, samvaersfradragResultatFraCore.resultatPeriodeListe,
+                beregnGrunnlag,
+                samvaersfradragResultatFraCore.resultatPeriodeListe,
                 samvaersfradragResultatFraCore.sjablonListe
             )
         )
@@ -163,36 +171,50 @@ class BeregnSaertilskuddService(
         // ++ Særtilskudd (totalberegning)
         val saertilskuddGrunnlagTilCore = SaertilskuddCoreMapper.mapSaertilskuddGrunnlagTilCore(
             beregnGrunnlag,
-            bidragsevneResultatFraCore, bpAndelSaertilskuddResultatFraCore, samvaersfradragResultatFraCore, soknadsBarnId, sjablonListe
+            bidragsevneResultatFraCore,
+            bpAndelSaertilskuddResultatFraCore,
+            samvaersfradragResultatFraCore,
+            soknadsBarnId,
+            sjablonListe
         )
         val saertilskuddResultatFraCore = beregnSaertilskudd(saertilskuddGrunnlagTilCore)
         grunnlagReferanseListe.addAll(
             lagGrunnlagReferanseListeSaertilskudd(
-                beregnGrunnlag, saertilskuddResultatFraCore,
-                saertilskuddGrunnlagTilCore, bidragsevneResultatFraCore, bpAndelSaertilskuddResultatFraCore, samvaersfradragResultatFraCore
+                beregnGrunnlag,
+                saertilskuddResultatFraCore,
+                saertilskuddGrunnlagTilCore,
+                bidragsevneResultatFraCore,
+                bpAndelSaertilskuddResultatFraCore,
+                samvaersfradragResultatFraCore
             )
         )
-        val unikeReferanserListe = grunnlagReferanseListe.sortedBy { it.referanse } .distinct().toList()
+        val unikeReferanserListe = grunnlagReferanseListe.sortedBy { it.referanse }.distinct().toList()
 
         // Bygger responsobjekt
-        return from(HttpStatus.OK, BeregnetTotalSaertilskuddResultat(
-            mapFraResultatPeriodeCore(saertilskuddResultatFraCore.resultatPeriodeListe), unikeReferanserListe))
+        return from(
+            HttpStatus.OK,
+            BeregnetTotalSaertilskuddResultat(
+                mapFraResultatPeriodeCore(saertilskuddResultatFraCore.resultatPeriodeListe),
+                unikeReferanserListe
+            )
+        )
     }
 
-    private fun mapFraResultatPeriodeCore (resultatPeriodeCoreListe: List<no.nav.bidrag.beregn.saertilskudd.dto.ResultatPeriodeCore>): List<ResultatPeriode> {
+    private fun mapFraResultatPeriodeCore(resultatPeriodeCoreListe: List<no.nav.bidrag.beregn.saertilskudd.dto.ResultatPeriodeCore>): List<ResultatPeriode> {
         return resultatPeriodeCoreListe.map {
             ResultatPeriode(
                 barn = it.soknadsbarnPersonId,
                 periode = Periode(it.periode.datoFom, it.periode.datoTil),
                 resultat = ResultatBeregning(it.resultatBeregning.belop, ResultatKodeSaertilskudd.valueOf(it.resultatBeregning.kode)),
                 grunnlagReferanseListe = it.grunnlagReferanseListe
-                ) }.toList()
+            )
+        }.toList()
     }
-
 
     private fun lagGrunnlagListeForDelberegning(
         beregnGrunnlag: BeregnGrunnlag,
-        resultatPeriodeListe: List<IResultatPeriode?>, sjablonListe: List<SjablonResultatGrunnlagCore>
+        resultatPeriodeListe: List<IResultatPeriode?>,
+        sjablonListe: List<SjablonResultatGrunnlagCore>
     ): List<Grunnlag> {
         val resultatGrunnlagListe = ArrayList<Grunnlag>()
 
@@ -218,39 +240,60 @@ class BeregnSaertilskuddService(
     private fun lagGrunnlagListeForBeregnedeGrunnlagBPsAndelSaertilskudd(resultatPeriodeCoreListe: List<ResultatPeriodeCore>): List<Grunnlag> {
         val beregnedeGrunnlagListe: MutableList<Grunnlag> = ArrayList()
         for ((periode, _, beregnedeGrunnlag) in resultatPeriodeCoreListe) {
-            beregnedeGrunnlagListe.addAll(beregnedeGrunnlag.inntektBPListe.stream().map { (referanse, inntektType, inntektBelop): Inntekt ->
-                Grunnlag(
-                    referanse, GrunnlagType.INNTEKT, tilJsonNode(
-                        BPInntekt(
-                            periode.datoFom, periode.datoTil!!, Rolle.BIDRAGSPLIKTIG,
-                            inntektType.toString(), inntektBelop
+            beregnedeGrunnlagListe.addAll(
+                beregnedeGrunnlag.inntektBPListe.stream().map { (referanse, inntektType, inntektBelop): Inntekt ->
+                    Grunnlag(
+                        referanse,
+                        GrunnlagType.INNTEKT,
+                        tilJsonNode(
+                            BPInntekt(
+                                periode.datoFom,
+                                periode.datoTil!!,
+                                Rolle.BIDRAGSPLIKTIG,
+                                inntektType.toString(),
+                                inntektBelop
+                            )
                         )
                     )
-                )
-            }.toList())
+                }.toList()
+            )
             beregnedeGrunnlagListe.addAll(
                 beregnedeGrunnlag.inntektBMListe.stream().map { (referanse, inntektType, inntektBelop, deltFordel, skatteklasse2): Inntekt ->
                     Grunnlag(
-                        referanse, GrunnlagType.INNTEKT, tilJsonNode(
+                        referanse,
+                        GrunnlagType.INNTEKT,
+                        tilJsonNode(
                             BMInntekt(
-                                periode.datoFom, periode.datoTil!!,
-                                inntektType.toString(), inntektBelop, Rolle.BIDRAGSMOTTAKER, deltFordel,
+                                periode.datoFom,
+                                periode.datoTil!!,
+                                inntektType.toString(),
+                                inntektBelop,
+                                Rolle.BIDRAGSMOTTAKER,
+                                deltFordel,
                                 skatteklasse2
                             )
                         )
                     )
                 }.toList()
             )
-            beregnedeGrunnlagListe.addAll(beregnedeGrunnlag.inntektBBListe.stream().map { (referanse, inntektType, inntektBelop): Inntekt ->
-                Grunnlag(
-                    referanse, GrunnlagType.INNTEKT, tilJsonNode(
-                        SBInntekt(
-                            periode.datoFom, periode.datoTil!!, Rolle.SOKNADSBARN,
-                            inntektType.toString(), inntektBelop, null
+            beregnedeGrunnlagListe.addAll(
+                beregnedeGrunnlag.inntektBBListe.stream().map { (referanse, inntektType, inntektBelop): Inntekt ->
+                    Grunnlag(
+                        referanse,
+                        GrunnlagType.INNTEKT,
+                        tilJsonNode(
+                            SBInntekt(
+                                periode.datoFom,
+                                periode.datoTil!!,
+                                Rolle.SOKNADSBARN,
+                                inntektType.toString(),
+                                inntektBelop,
+                                null
+                            )
                         )
                     )
-                )
-            }.toList())
+                }.toList()
+            )
         }
         return beregnedeGrunnlagListe
     }
@@ -258,8 +301,10 @@ class BeregnSaertilskuddService(
     // Barnebidrag
     private fun lagGrunnlagReferanseListeSaertilskudd(
         beregnGrunnlag: BeregnGrunnlag,
-        beregnSaertilskuddResultatCore: BeregnSaertilskuddResultatCore, beregnSaertilskuddGrunnlagCore: BeregnSaertilskuddGrunnlagCore,
-        bidragsevneResultatFraCore: BeregnBidragsevneResultatCore, beregnBPsAndelSaertilskuddResultatCore: BeregnBPsAndelSaertilskuddResultatCore,
+        beregnSaertilskuddResultatCore: BeregnSaertilskuddResultatCore,
+        beregnSaertilskuddGrunnlagCore: BeregnSaertilskuddGrunnlagCore,
+        bidragsevneResultatFraCore: BeregnBidragsevneResultatCore,
+        beregnBPsAndelSaertilskuddResultatCore: BeregnBPsAndelSaertilskuddResultatCore,
         samvaersfradragResultatFraCore: BeregnSamvaersfradragResultatCore
     ): List<Grunnlag> {
         val resultatGrunnlagListe = ArrayList<Grunnlag>()
@@ -276,36 +321,46 @@ class BeregnSaertilskuddService(
             beregnGrunnlag.grunnlagListe!!
                 .filter { (referanse): Grunnlag -> grunnlagReferanseListe.contains(referanse) }
                 .map { (referanse, type, innhold): Grunnlag -> Grunnlag(referanse, type, innhold) }
-                .toList())
+                .toList()
+        )
 
         // Mapper ut delberegninger som er brukt som grunnlag
-        resultatGrunnlagListe.addAll(beregnSaertilskuddGrunnlagCore.bidragsevnePeriodeListe
-            .filter { (referanse): BidragsevnePeriodeCore -> grunnlagReferanseListe.contains(referanse) }
-            .map { grunnlag: BidragsevnePeriodeCore ->
-                Grunnlag(
-                    grunnlag.referanse,
-                    GrunnlagType.BIDRAGSEVNE, lagInnholdBidragsevne(grunnlag, bidragsevneResultatFraCore)
-                )
-            }
-            .toList())
-        resultatGrunnlagListe.addAll(beregnSaertilskuddGrunnlagCore.bPsAndelSaertilskuddPeriodeListe
-            .filter { (referanse): BPsAndelSaertilskuddPeriodeCore -> grunnlagReferanseListe.contains(referanse) }
-            .map { grunnlag: BPsAndelSaertilskuddPeriodeCore ->
-                Grunnlag(
-                    grunnlag.referanse, GrunnlagType.BPS_ANDEL_SAERTILSKUDD,
-                    lagInnholdBPsAndelSaertilskudd(grunnlag, beregnBPsAndelSaertilskuddResultatCore)
-                )
-            }
-            .toList())
-        resultatGrunnlagListe.addAll(beregnSaertilskuddGrunnlagCore.samvaersfradragPeriodeListe
-            .filter { (referanse): SamvaersfradragPeriodeCore -> grunnlagReferanseListe.contains(referanse) }
-            .map { grunnlag: SamvaersfradragPeriodeCore ->
-                Grunnlag(
-                    grunnlag.referanse, GrunnlagType.SAMVAERSFRADRAG,
-                    lagInnholdSamvaersfradrag(grunnlag, samvaersfradragResultatFraCore)
-                )
-            }
-            .toList())
+        resultatGrunnlagListe.addAll(
+            beregnSaertilskuddGrunnlagCore.bidragsevnePeriodeListe
+                .filter { (referanse): BidragsevnePeriodeCore -> grunnlagReferanseListe.contains(referanse) }
+                .map { grunnlag: BidragsevnePeriodeCore ->
+                    Grunnlag(
+                        grunnlag.referanse,
+                        GrunnlagType.BIDRAGSEVNE,
+                        lagInnholdBidragsevne(grunnlag, bidragsevneResultatFraCore)
+                    )
+                }
+                .toList()
+        )
+        resultatGrunnlagListe.addAll(
+            beregnSaertilskuddGrunnlagCore.bPsAndelSaertilskuddPeriodeListe
+                .filter { (referanse): BPsAndelSaertilskuddPeriodeCore -> grunnlagReferanseListe.contains(referanse) }
+                .map { grunnlag: BPsAndelSaertilskuddPeriodeCore ->
+                    Grunnlag(
+                        grunnlag.referanse,
+                        GrunnlagType.BPS_ANDEL_SAERTILSKUDD,
+                        lagInnholdBPsAndelSaertilskudd(grunnlag, beregnBPsAndelSaertilskuddResultatCore)
+                    )
+                }
+                .toList()
+        )
+        resultatGrunnlagListe.addAll(
+            beregnSaertilskuddGrunnlagCore.samvaersfradragPeriodeListe
+                .filter { (referanse): SamvaersfradragPeriodeCore -> grunnlagReferanseListe.contains(referanse) }
+                .map { grunnlag: SamvaersfradragPeriodeCore ->
+                    Grunnlag(
+                        grunnlag.referanse,
+                        GrunnlagType.SAMVAERSFRADRAG,
+                        lagInnholdSamvaersfradrag(grunnlag, samvaersfradragResultatFraCore)
+                    )
+                }
+                .toList()
+        )
         return resultatGrunnlagListe
     }
 
@@ -320,7 +375,9 @@ class BeregnSaertilskuddService(
         )
         val bidragsevne = BidragsevneResultatPeriode(
             bidragsevnePeriodeCore.periodeDatoFraTil.datoFom,
-            bidragsevnePeriodeCore.periodeDatoFraTil.datoTil!!, bidragsevnePeriodeCore.bidragsevneBelop, grunnlagReferanseListe
+            bidragsevnePeriodeCore.periodeDatoFraTil.datoTil!!,
+            bidragsevnePeriodeCore.bidragsevneBelop,
+            grunnlagReferanseListe
         )
         return tilJsonNode(bidragsevne)
     }
@@ -336,8 +393,10 @@ class BeregnSaertilskuddService(
         )
         val bPsAndelSaertilskudd = BPsAndelSaertilskuddResultatPeriode(
             mapDato(bPsAndelSaertilskuddPeriodeCore.periodeDatoFraTil.datoFom),
-            mapDato(bPsAndelSaertilskuddPeriodeCore.periodeDatoFraTil.datoTil), bPsAndelSaertilskuddPeriodeCore.bPsAndelSaertilskuddBelop,
-            bPsAndelSaertilskuddPeriodeCore.bPsAndelSaertilskuddProsent, bPsAndelSaertilskuddPeriodeCore.barnetErSelvforsorget,
+            mapDato(bPsAndelSaertilskuddPeriodeCore.periodeDatoFraTil.datoTil),
+            bPsAndelSaertilskuddPeriodeCore.bPsAndelSaertilskuddBelop,
+            bPsAndelSaertilskuddPeriodeCore.bPsAndelSaertilskuddProsent,
+            bPsAndelSaertilskuddPeriodeCore.barnetErSelvforsorget,
             grunnlagReferanseListe
         )
         return tilJsonNode(bPsAndelSaertilskudd)
@@ -354,8 +413,10 @@ class BeregnSaertilskuddService(
         )
         val samvaersfradrag = SamvaersfradragResultatPeriode(
             mapDato(samvaersfradragPeriodeCore.periodeDatoFraTil.datoFom),
-            mapDato(samvaersfradragPeriodeCore.periodeDatoFraTil.datoTil), samvaersfradragPeriodeCore.samvaersfradragBelop,
-            samvaersfradragPeriodeCore.barnPersonId, grunnlagReferanseListe
+            mapDato(samvaersfradragPeriodeCore.periodeDatoFraTil.datoTil),
+            samvaersfradragPeriodeCore.samvaersfradragBelop,
+            samvaersfradragPeriodeCore.barnPersonId,
+            grunnlagReferanseListe
         )
         return tilJsonNode(samvaersfradrag)
     }
@@ -366,8 +427,10 @@ class BeregnSaertilskuddService(
                 val sjablonPeriode = SjablonResultatPeriode(
                     mapDato(
                         periode.datoFom
-                    ), mapDato(periode.datoTil),
-                    navn, verdi.toInt()
+                    ),
+                    mapDato(periode.datoTil),
+                    navn,
+                    verdi.toInt()
                 )
                 Grunnlag(referanse, GrunnlagType.SJABLON, tilJsonNode(sjablonPeriode))
             }
@@ -382,7 +445,7 @@ class BeregnSaertilskuddService(
             .orElse(emptyList())
     }
 
-    //==================================================================================================================================================
+    // ==================================================================================================================================================
     // Kaller core for beregning av bidragsevne
     private fun beregnBidragsevne(bidragsevneGrunnlagTilCore: BeregnBidragsevneGrunnlagCore): BeregnBidragsevneResultatCore {
         val bidragsevneResultatFraCore: BeregnBidragsevneResultatCore
@@ -398,27 +461,27 @@ class BeregnSaertilskuddService(
         }
         if (!bidragsevneResultatFraCore.avvikListe.isEmpty()) {
             LOGGER.error(
-                "Ugyldig input ved beregning av bidragsevne. Følgende avvik ble funnet: " + System.lineSeparator()
-                    + bidragsevneResultatFraCore.avvikListe.stream().map(AvvikCore::avvikTekst).collect(
-                    Collectors.joining(
-                        System.lineSeparator()
+                "Ugyldig input ved beregning av bidragsevne. Følgende avvik ble funnet: " + System.lineSeparator() +
+                    bidragsevneResultatFraCore.avvikListe.stream().map(AvvikCore::avvikTekst).collect(
+                        Collectors.joining(
+                            System.lineSeparator()
+                        )
                     )
-                )
             )
             LOGGER.info(
-                "Bidragsevne - grunnlag for beregning:" + System.lineSeparator()
-                    + "beregnDatoFra= " + bidragsevneGrunnlagTilCore.beregnDatoFra + System.lineSeparator()
-                    + "beregnDatoTil= " + bidragsevneGrunnlagTilCore.beregnDatoTil + System.lineSeparator()
-                    + "antallBarnIEgetHusholdPeriodeListe= " + bidragsevneGrunnlagTilCore.antallBarnIEgetHusholdPeriodeListe + System.lineSeparator()
-                    + "bostatusPeriodeListe= " + bidragsevneGrunnlagTilCore.bostatusPeriodeListe + System.lineSeparator()
-                    + "inntektPeriodeListe= " + bidragsevneGrunnlagTilCore.inntektPeriodeListe + System.lineSeparator()
-                    + "særfradragPeriodeListe= " + bidragsevneGrunnlagTilCore.saerfradragPeriodeListe + System.lineSeparator()
-                    + "skatteklassePeriodeListe= " + bidragsevneGrunnlagTilCore.skatteklassePeriodeListe
+                "Bidragsevne - grunnlag for beregning:" + System.lineSeparator() +
+                    "beregnDatoFra= " + bidragsevneGrunnlagTilCore.beregnDatoFra + System.lineSeparator() +
+                    "beregnDatoTil= " + bidragsevneGrunnlagTilCore.beregnDatoTil + System.lineSeparator() +
+                    "antallBarnIEgetHusholdPeriodeListe= " + bidragsevneGrunnlagTilCore.antallBarnIEgetHusholdPeriodeListe + System.lineSeparator() +
+                    "bostatusPeriodeListe= " + bidragsevneGrunnlagTilCore.bostatusPeriodeListe + System.lineSeparator() +
+                    "inntektPeriodeListe= " + bidragsevneGrunnlagTilCore.inntektPeriodeListe + System.lineSeparator() +
+                    "særfradragPeriodeListe= " + bidragsevneGrunnlagTilCore.saerfradragPeriodeListe + System.lineSeparator() +
+                    "skatteklassePeriodeListe= " + bidragsevneGrunnlagTilCore.skatteklassePeriodeListe
             )
             throw UgyldigInputException(
-                "Ugyldig input ved beregning av bidragsevne. Følgende avvik ble funnet: "
-                    + bidragsevneResultatFraCore.avvikListe.stream().map(AvvikCore::avvikTekst)
-                    .collect(Collectors.joining("; "))
+                "Ugyldig input ved beregning av bidragsevne. Følgende avvik ble funnet: " +
+                    bidragsevneResultatFraCore.avvikListe.stream().map(AvvikCore::avvikTekst)
+                        .collect(Collectors.joining("; "))
             )
         }
         if (LOGGER.isDebugEnabled) {
@@ -444,28 +507,28 @@ class BeregnSaertilskuddService(
         }
         if (!bpAndelSaertilskuddResultatFraCore.avvikListe.isEmpty()) {
             LOGGER.error(
-                "Ugyldig input ved beregning av BPs andel av særtilskudd. Følgende avvik ble funnet: " + System.lineSeparator()
-                    + bpAndelSaertilskuddResultatFraCore.avvikListe.stream().map(AvvikCore::avvikTekst)
-                    .collect(Collectors.joining(System.lineSeparator()))
+                "Ugyldig input ved beregning av BPs andel av særtilskudd. Følgende avvik ble funnet: " + System.lineSeparator() +
+                    bpAndelSaertilskuddResultatFraCore.avvikListe.stream().map(AvvikCore::avvikTekst)
+                        .collect(Collectors.joining(System.lineSeparator()))
             )
             SECURE_LOGGER.error(
-                "Ugyldig input ved beregning av BPs andel av særtilskudd. Følgende avvik ble funnet: " + System.lineSeparator()
-                    + bpAndelSaertilskuddResultatFraCore.avvikListe.stream().map(AvvikCore::avvikTekst)
-                    .collect(Collectors.joining(System.lineSeparator()))
+                "Ugyldig input ved beregning av BPs andel av særtilskudd. Følgende avvik ble funnet: " + System.lineSeparator() +
+                    bpAndelSaertilskuddResultatFraCore.avvikListe.stream().map(AvvikCore::avvikTekst)
+                        .collect(Collectors.joining(System.lineSeparator()))
             )
             SECURE_LOGGER.info(
-                "BPs andel av særtilskudd - grunnlag for beregning:" + System.lineSeparator()
-                    + "beregnDatoFra= " + bpAndelSaertilskuddGrunnlagTilCore.beregnDatoFra + System.lineSeparator()
-                    + "beregnDatoTil= " + bpAndelSaertilskuddGrunnlagTilCore.beregnDatoTil + System.lineSeparator()
-                    + "nettoSaertilskuddPeriodeListe= " + bpAndelSaertilskuddGrunnlagTilCore.nettoSaertilskuddPeriodeListe + System.lineSeparator()
-                    + "inntektBPPeriodeListe= " + bpAndelSaertilskuddGrunnlagTilCore.inntektBPPeriodeListe + System.lineSeparator()
-                    + "inntektBMPeriodeListe= " + bpAndelSaertilskuddGrunnlagTilCore.inntektBMPeriodeListe + System.lineSeparator()
-                    + "inntektBBPeriodeListe= " + bpAndelSaertilskuddGrunnlagTilCore.inntektBBPeriodeListe + System.lineSeparator()
+                "BPs andel av særtilskudd - grunnlag for beregning:" + System.lineSeparator() +
+                    "beregnDatoFra= " + bpAndelSaertilskuddGrunnlagTilCore.beregnDatoFra + System.lineSeparator() +
+                    "beregnDatoTil= " + bpAndelSaertilskuddGrunnlagTilCore.beregnDatoTil + System.lineSeparator() +
+                    "nettoSaertilskuddPeriodeListe= " + bpAndelSaertilskuddGrunnlagTilCore.nettoSaertilskuddPeriodeListe + System.lineSeparator() +
+                    "inntektBPPeriodeListe= " + bpAndelSaertilskuddGrunnlagTilCore.inntektBPPeriodeListe + System.lineSeparator() +
+                    "inntektBMPeriodeListe= " + bpAndelSaertilskuddGrunnlagTilCore.inntektBMPeriodeListe + System.lineSeparator() +
+                    "inntektBBPeriodeListe= " + bpAndelSaertilskuddGrunnlagTilCore.inntektBBPeriodeListe + System.lineSeparator()
             )
             throw UgyldigInputException(
-                "Ugyldig input ved beregning av BPs andel av særtilskudd. Følgende avvik ble funnet: "
-                    + bpAndelSaertilskuddResultatFraCore.avvikListe.stream().map(AvvikCore::avvikTekst)
-                    .collect(Collectors.joining("; "))
+                "Ugyldig input ved beregning av BPs andel av særtilskudd. Følgende avvik ble funnet: " +
+                    bpAndelSaertilskuddResultatFraCore.avvikListe.stream().map(AvvikCore::avvikTekst)
+                        .collect(Collectors.joining("; "))
             )
         }
         if (SECURE_LOGGER.isDebugEnabled) {
@@ -492,25 +555,25 @@ class BeregnSaertilskuddService(
         }
         if (!samvaersfradragResultatFraCore.avvikListe.isEmpty()) {
             LOGGER.error(
-                "Ugyldig input ved beregning av samværsfradrag. Følgende avvik ble funnet: " + System.lineSeparator()
-                    + samvaersfradragResultatFraCore.avvikListe.stream().map(AvvikCore::avvikTekst)
-                    .collect(Collectors.joining(System.lineSeparator()))
+                "Ugyldig input ved beregning av samværsfradrag. Følgende avvik ble funnet: " + System.lineSeparator() +
+                    samvaersfradragResultatFraCore.avvikListe.stream().map(AvvikCore::avvikTekst)
+                        .collect(Collectors.joining(System.lineSeparator()))
             )
             SECURE_LOGGER.error(
-                "Ugyldig input ved beregning av samværsfradrag. Følgende avvik ble funnet: " + System.lineSeparator()
-                    + samvaersfradragResultatFraCore.avvikListe.stream().map(AvvikCore::avvikTekst)
-                    .collect(Collectors.joining(System.lineSeparator()))
+                "Ugyldig input ved beregning av samværsfradrag. Følgende avvik ble funnet: " + System.lineSeparator() +
+                    samvaersfradragResultatFraCore.avvikListe.stream().map(AvvikCore::avvikTekst)
+                        .collect(Collectors.joining(System.lineSeparator()))
             )
             SECURE_LOGGER.info(
-                "Samværsfradrag - grunnlag for beregning: " + System.lineSeparator()
-                    + "beregnDatoFra= " + samvaersfradragGrunnlagTilCore.beregnDatoFra + System.lineSeparator()
-                    + "beregnDatoTil= " + samvaersfradragGrunnlagTilCore.beregnDatoTil + System.lineSeparator()
-                    + "samvaersklassePeriodeListe= " + samvaersfradragGrunnlagTilCore.samvaersklassePeriodeListe + System.lineSeparator()
+                "Samværsfradrag - grunnlag for beregning: " + System.lineSeparator() +
+                    "beregnDatoFra= " + samvaersfradragGrunnlagTilCore.beregnDatoFra + System.lineSeparator() +
+                    "beregnDatoTil= " + samvaersfradragGrunnlagTilCore.beregnDatoTil + System.lineSeparator() +
+                    "samvaersklassePeriodeListe= " + samvaersfradragGrunnlagTilCore.samvaersklassePeriodeListe + System.lineSeparator()
             )
             throw UgyldigInputException(
-                "Ugyldig input ved beregning av samværsfradrag. Følgende avvik ble funnet: "
-                    + samvaersfradragResultatFraCore.avvikListe.stream().map(AvvikCore::avvikTekst)
-                    .collect(Collectors.joining("; "))
+                "Ugyldig input ved beregning av samværsfradrag. Følgende avvik ble funnet: " +
+                    samvaersfradragResultatFraCore.avvikListe.stream().map(AvvikCore::avvikTekst)
+                        .collect(Collectors.joining("; "))
             )
         }
         if (SECURE_LOGGER.isDebugEnabled) {
@@ -537,29 +600,29 @@ class BeregnSaertilskuddService(
         }
         if (!saertilskuddResultatFraCore.avvikListe.isEmpty()) {
             LOGGER.error(
-                "Ugyldig input ved beregning av særtilskudd. Følgende avvik ble funnet: " + System.lineSeparator()
-                    + saertilskuddResultatFraCore.avvikListe.stream().map(AvvikCore::avvikTekst)
-                    .collect(Collectors.joining(System.lineSeparator()))
+                "Ugyldig input ved beregning av særtilskudd. Følgende avvik ble funnet: " + System.lineSeparator() +
+                    saertilskuddResultatFraCore.avvikListe.stream().map(AvvikCore::avvikTekst)
+                        .collect(Collectors.joining(System.lineSeparator()))
             )
             SECURE_LOGGER.error(
-                "Ugyldig input ved beregning av særtilskudd. Følgende avvik ble funnet: " + System.lineSeparator()
-                    + saertilskuddResultatFraCore.avvikListe.stream().map(AvvikCore::avvikTekst)
-                    .collect(Collectors.joining(System.lineSeparator()))
+                "Ugyldig input ved beregning av særtilskudd. Følgende avvik ble funnet: " + System.lineSeparator() +
+                    saertilskuddResultatFraCore.avvikListe.stream().map(AvvikCore::avvikTekst)
+                        .collect(Collectors.joining(System.lineSeparator()))
             )
             SECURE_LOGGER.info(
-                "Særtilskudd - grunnlag for beregning: " + System.lineSeparator()
-                    + "beregnDatoFra= " + saertilskuddGrunnlagTilCore.beregnDatoFra + System.lineSeparator()
-                    + "beregnDatoTil= " + saertilskuddGrunnlagTilCore.beregnDatoTil + System.lineSeparator()
-                    + "soknadsbarnPersonId= " + saertilskuddGrunnlagTilCore.soknadsbarnPersonId + System.lineSeparator()
-                    + "bidragsevnePeriodeListe= " + saertilskuddGrunnlagTilCore.bidragsevnePeriodeListe + System.lineSeparator()
-                    + "bPsAndelSaertilskuddPeriodeListe= " + saertilskuddGrunnlagTilCore.bPsAndelSaertilskuddPeriodeListe + System.lineSeparator()
-                    + "samvaersfradragPeriodeListe= " + saertilskuddGrunnlagTilCore.samvaersfradragPeriodeListe + System.lineSeparator()
-                    + "lopendeBidragPeriodeListe= " + saertilskuddGrunnlagTilCore.lopendeBidragPeriodeListe + System.lineSeparator()
+                "Særtilskudd - grunnlag for beregning: " + System.lineSeparator() +
+                    "beregnDatoFra= " + saertilskuddGrunnlagTilCore.beregnDatoFra + System.lineSeparator() +
+                    "beregnDatoTil= " + saertilskuddGrunnlagTilCore.beregnDatoTil + System.lineSeparator() +
+                    "soknadsbarnPersonId= " + saertilskuddGrunnlagTilCore.soknadsbarnPersonId + System.lineSeparator() +
+                    "bidragsevnePeriodeListe= " + saertilskuddGrunnlagTilCore.bidragsevnePeriodeListe + System.lineSeparator() +
+                    "bPsAndelSaertilskuddPeriodeListe= " + saertilskuddGrunnlagTilCore.bPsAndelSaertilskuddPeriodeListe + System.lineSeparator() +
+                    "samvaersfradragPeriodeListe= " + saertilskuddGrunnlagTilCore.samvaersfradragPeriodeListe + System.lineSeparator() +
+                    "lopendeBidragPeriodeListe= " + saertilskuddGrunnlagTilCore.lopendeBidragPeriodeListe + System.lineSeparator()
             )
             throw UgyldigInputException(
-                "Ugyldig input ved beregning av særtilskudd. Følgende avvik ble funnet: "
-                    + saertilskuddResultatFraCore.avvikListe.stream().map(AvvikCore::avvikTekst)
-                    .collect(Collectors.joining("; "))
+                "Ugyldig input ved beregning av særtilskudd. Følgende avvik ble funnet: " +
+                    saertilskuddResultatFraCore.avvikListe.stream().map(AvvikCore::avvikTekst)
+                        .collect(Collectors.joining("; "))
             )
         }
         if (SECURE_LOGGER.isDebugEnabled) {
@@ -568,10 +631,9 @@ class BeregnSaertilskuddService(
         return saertilskuddResultatFraCore
     }
 
-    //==================================================================================================================================================
+    // ==================================================================================================================================================
     // Henter sjabloner
     private fun hentSjabloner(): SjablonListe {
-
         // Henter sjabloner for sjablontall
         val sjablonSjablontallListe = sjablonConsumer.hentSjablonSjablontall().responseEntity.body ?: emptyList()
         if (LOGGER.isDebugEnabled) {

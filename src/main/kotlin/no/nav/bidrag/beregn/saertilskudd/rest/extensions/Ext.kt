@@ -36,7 +36,6 @@ fun Grunnlag.valider() {
     if (innhold == null) throw UgyldigInputException("innhold kan ikke være null")
 }
 
-
 fun InntektBase.validerInntekt() {
     if (inntektType == null) throw UgyldigInputException("inntektType kan ikke være null")
     if (belop == null) throw UgyldigInputException("belop kan ikke være null")
@@ -48,7 +47,7 @@ fun InntektBase.tilInntektPeriodeCore(referanse: String): InntektPeriodeCore {
         referanse,
         tilPeriodeCore(),
         inntektType!!,
-        belop!!,
+        belop!!
     )
 }
 
@@ -64,21 +63,18 @@ fun InntektBase.tilInntektPeriodeCoreBPsAndelSaertilskudd(referanse: String): no
     )
 }
 
-
 fun BasePeriode.valider() {
-        if (datoFom == null) throw UgyldigInputException("datoFom kan ikke være null")
-        if (datoTil == null) throw UgyldigInputException("datoTil kan ikke være null")
-    }
+    if (datoFom == null) throw UgyldigInputException("datoFom kan ikke være null")
+    if (datoTil == null) throw UgyldigInputException("datoTil kan ikke være null")
+}
 
 fun BasePeriode.tilPeriodeCore(): PeriodeCore {
-        valider()
-        return PeriodeCore(datoFom!!, datoTil!!)
-    }
-
+    valider()
+    return PeriodeCore(datoFom!!, datoTil!!)
+}
 
 fun BPInntekt.tilCore(referanse: String): InntektPeriodeCore = tilInntektPeriodeCore(referanse)
 fun BPInntekt.tilBPsAndelSaertilskuddCore(referanse: String) = tilInntektPeriodeCoreBPsAndelSaertilskudd(referanse)
-
 
 fun BMInntekt.valider() {
     validerInntekt()
@@ -98,7 +94,6 @@ fun BMInntekt.tilCore(referanse: String): no.nav.bidrag.beregn.bpsandelsaertilsk
     )
 }
 
-
 fun SBInntekt.valider() {
     validerInntekt()
     if (soknadsbarnId == null) throw UgyldigInputException("soknadsbarnId kan ikke være null")
@@ -114,7 +109,6 @@ fun SBInntekt.tilCore(referanse: String): no.nav.bidrag.beregn.bpsandelsaertilsk
         return tilInntektPeriodeCoreBPsAndelSaertilskudd(referanse)
     }*/
 
-
 fun BarnIHusstand.valider() {
     if (antall == null) throw UgyldigInputException("antall kan ikke være null")
 }
@@ -127,7 +121,6 @@ fun BarnIHusstand.tilCore(referanse: String): AntallBarnIEgetHusholdPeriodeCore 
         antall!!
     )
 }
-
 
 fun Bostatus.valider() {
     if (bostatusKode == null) throw UgyldigInputException("bostatusKode kan ikke være null")
@@ -142,7 +135,6 @@ fun Bostatus.tilCore(referanse: String): BostatusPeriodeCore {
     )
 }
 
-
 fun Saerfradrag.valider() {
     if (saerfradragKode == null) throw UgyldigInputException("saerfradragKode kan ikke være null")
 }
@@ -155,7 +147,6 @@ fun Saerfradrag.tilCore(referanse: String): SaerfradragPeriodeCore {
         saerfradragKode!!
     )
 }
-
 
 fun Skatteklasse.valider() {
     if (skatteklasseId == null) throw UgyldigInputException("skatteklasseId kan ikke være null")
@@ -170,36 +161,34 @@ fun Skatteklasse.tilCore(referanse: String): SkatteklassePeriodeCore {
     )
 }
 
-
 fun NettoSaertilskudd.valider() {
     if (nettoSaertilskuddBelop == null) throw UgyldigInputException("nettoSaertilskuddBelop kan ikke være null")
 }
 
 fun NettoSaertilskudd.tilCore(referanse: String): NettoSaertilskuddPeriodeCore {
-        valider()
-        return NettoSaertilskuddPeriodeCore(
-            referanse,
-            tilPeriodeCore(),
-            nettoSaertilskuddBelop!!
-        )
-    }
-
+    valider()
+    return NettoSaertilskuddPeriodeCore(
+        referanse,
+        tilPeriodeCore(),
+        nettoSaertilskuddBelop!!
+    )
+}
 
 fun Samvaersklasse.valider() {
-        if (soknadsbarnId == null) throw UgyldigInputException("soknadsbarnId kan ikke være null")
-        if (soknadsbarnFodselsdato == null) throw UgyldigInputException("soknadsbarnFodselsdato kan ikke være null")
-        if (samvaersklasseId == null) throw UgyldigInputException("samvaersklasseId kan ikke være null")
-    }
+    if (soknadsbarnId == null) throw UgyldigInputException("soknadsbarnId kan ikke være null")
+    if (soknadsbarnFodselsdato == null) throw UgyldigInputException("soknadsbarnFodselsdato kan ikke være null")
+    if (samvaersklasseId == null) throw UgyldigInputException("samvaersklasseId kan ikke være null")
+}
 
 fun Samvaersklasse.tilCore(referanse: String): SamvaersklassePeriodeCore {
-        valider()
-        return SamvaersklassePeriodeCore(
-            referanse,
-            tilPeriodeCore(),
-            soknadsbarnId!!,
-            soknadsbarnFodselsdato!!,
-            samvaersklasseId!!
-        )
+    valider()
+    return SamvaersklassePeriodeCore(
+        referanse,
+        tilPeriodeCore(),
+        soknadsbarnId!!,
+        soknadsbarnFodselsdato!!,
+        samvaersklasseId!!
+    )
 }
 
 fun LopendeBidrag.valider() {
@@ -209,4 +198,3 @@ fun LopendeBidrag.valider() {
     if (opprinneligBidragBelop == null) throw UgyldigInputException("opprinneligBidragBelop kan ikke være null")
     if (opprinneligSamvaersfradragBelop == null) throw UgyldigInputException("opprinneligSamvaersfradragBelop kan ikke være null")
 }
-

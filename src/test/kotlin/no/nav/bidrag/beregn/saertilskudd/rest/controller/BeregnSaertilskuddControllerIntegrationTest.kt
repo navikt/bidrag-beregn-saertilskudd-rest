@@ -3,7 +3,7 @@ package no.nav.bidrag.beregn.saertilskudd.rest.controller
 import no.nav.bidrag.beregn.saertilskudd.rest.BidragBeregnSaertilskuddTest
 import no.nav.bidrag.beregn.saertilskudd.rest.BidragBeregnSaertilskuddTest.Companion.TEST_PROFILE
 import no.nav.bidrag.beregn.saertilskudd.rest.TestUtil
-import no.nav.bidrag.beregn.saertilskudd.rest.consumer.wiremock_stub.SjablonApiStub
+import no.nav.bidrag.beregn.saertilskudd.rest.consumer.wiremockstub.SjablonApiStub
 import no.nav.bidrag.commons.web.test.HttpHeaderTestRestTemplate
 import no.nav.bidrag.domain.enums.resultatkoder.ResultatKodeSaertilskudd
 import no.nav.bidrag.transport.beregning.felles.Grunnlag
@@ -34,8 +34,8 @@ import java.nio.file.Paths
 @AutoConfigureWireMock(port = 8096)
 @EnableMockOAuth2Server
 @ActiveProfiles(TEST_PROFILE)
-
 internal class BeregnSaertilskuddControllerIntegrationTest {
+
     @Autowired
     private val httpHeaderTestRestTemplate: HttpHeaderTestRestTemplate? = null
 
@@ -207,7 +207,7 @@ internal class BeregnSaertilskuddControllerIntegrationTest {
                 )
             },
             Executable { assertThat(saertilskuddDelberegningResultat!!.bidragsevneListe).size().isEqualTo(1) },
-            Executable { assertThat(saertilskuddDelberegningResultat!!.bidragsevneListe[0].belop ).isEqualTo(forventetBidragsevneBelop) },
+            Executable { assertThat(saertilskuddDelberegningResultat!!.bidragsevneListe[0].belop).isEqualTo(forventetBidragsevneBelop) },
             Executable { assertThat(saertilskuddDelberegningResultat!!.bpsAndelSaertilskuddListe).size().isEqualTo(1) },
             Executable {
                 assertThat(saertilskuddDelberegningResultat!!.bpsAndelSaertilskuddListe[0].belop).isEqualTo(
@@ -238,11 +238,11 @@ internal class BeregnSaertilskuddControllerIntegrationTest {
         val referanserIGrunnlagListe = totalSaertilskuddResultat!!.grunnlagListe.stream().map(Grunnlag::referanse).toList()
         assertAll(
             Executable { assertThat(responseEntity.statusCode).isEqualTo(HttpStatus.OK) },
-            Executable { assertThat(totalSaertilskuddResultat).isNotNull() },  // Sjekk BeregnBPBidragsevneResultat
+            Executable { assertThat(totalSaertilskuddResultat).isNotNull() }, // Sjekk BeregnBPBidragsevneResultat
             Executable { assertThat(saertilskuddDelberegningResultat!!.bidragsevneListe).hasSize(1) },
             Executable {
                 assertThat(saertilskuddDelberegningResultat!!.bidragsevneListe[0].belop).isEqualTo(forventetBidragsevneBelop)
-            },  // Sjekk BeregnBPAndelSaertilskuddResultat
+            }, // Sjekk BeregnBPAndelSaertilskuddResultat
             Executable { assertThat(saertilskuddDelberegningResultat!!.bpsAndelSaertilskuddListe).hasSize(1) },
             Executable {
                 assertThat(saertilskuddDelberegningResultat!!.bpsAndelSaertilskuddListe[0].belop).isEqualTo(
@@ -253,7 +253,7 @@ internal class BeregnSaertilskuddControllerIntegrationTest {
                 assertThat(saertilskuddDelberegningResultat!!.bpsAndelSaertilskuddListe[0].prosent).isEqualTo(
                     forventetBPAndelSaertilskuddProsentBarn
                 )
-            },  // Sjekk BeregnBPSamvaersfradragResultat
+            }, // Sjekk BeregnBPSamvaersfradragResultat
             Executable { assertThat(saertilskuddDelberegningResultat!!.samvaersfradragListe).hasSize(2) },
             Executable {
                 assertThat(saertilskuddDelberegningResultat!!.samvaersfradragListe[0].belop).isEqualTo(forventetSamvaersfradragBelopBarn1)

@@ -47,7 +47,7 @@ internal class SjablonConsumerTest {
             .thenReturn(ResponseEntity(TestUtil.dummySjablonSjablontallListe(), HttpStatus.OK))
 
         val sjablonResponse = sjablonConsumer?.hentSjablonSjablontall()
-            assertAll(
+        assertAll(
             Executable { assertThat(sjablonResponse).isNotNull() },
             Executable { assertThat(sjablonResponse?.responseEntity?.statusCode).isNotNull() },
             Executable { assertThat(sjablonResponse?.responseEntity?.statusCode).isEqualTo(HttpStatus.OK) },
@@ -72,7 +72,7 @@ internal class SjablonConsumerTest {
             )
         )
             .thenThrow(HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR))
-            assertThatExceptionOfType(SjablonConsumerException::class.java).isThrownBy { sjablonConsumer?.hentSjablonSjablontall() }
+        assertThatExceptionOfType(SjablonConsumerException::class.java).isThrownBy { sjablonConsumer?.hentSjablonSjablontall() }
     }
 
     @Test

@@ -33,7 +33,9 @@ object SamvaersfradragCoreMapper : CoreMapper() {
         )
         return BeregnSamvaersfradragGrunnlagCore(
             beregnGrunnlag.beregnDatoFra!!,
-            beregnGrunnlag.beregnDatoTil!!, samvaersklassePeriodeCoreListe, sjablonPeriodeCoreListe
+            beregnGrunnlag.beregnDatoTil!!,
+            samvaersklassePeriodeCoreListe,
+            sjablonPeriodeCoreListe
         )
     }
 }

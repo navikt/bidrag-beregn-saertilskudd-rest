@@ -34,13 +34,10 @@ import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
 import org.mockito.InjectMocks
 import org.mockito.Mock
-import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 import org.mockito.junit.jupiter.MockitoExtension
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment
-import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.HttpStatus
 import java.math.BigDecimal
 import java.time.LocalDate
@@ -67,6 +64,7 @@ internal class BeregnSaertilskuddServiceTest {
 
     @Mock
     private val saertilskuddCoreMock: SaertilskuddCore? = null
+
     @BeforeEach
     fun settOppSjablonMocks() {
         `when`(sjablonConsumerMock?.hentSjablonSjablontall())
@@ -127,42 +125,49 @@ internal class BeregnSaertilskuddServiceTest {
             Executable { assertThat(sjablonPeriodeListe2).hasSize(forventetAntallSjablonElementerSamvaersfradrag) },
             Executable {
                 assertThat(sjablonPeriodeListe3).hasSize(forventetAntallSjablonElementerSaertilskudd)
-            },  // Sjekk at det mappes ut riktig antall for en gitt sjablon av type Sjablontall
+            }, // Sjekk at det mappes ut riktig antall for en gitt sjablon av type Sjablontall
             Executable {
-                assertThat(sjablonPeriodeListe.stream()
-                    .filter { (_, navn): SjablonPeriodeCore -> navn == SjablonTallNavn.TRYGDEAVGIFT_PROSENT.navn }.count()
+                assertThat(
+                    sjablonPeriodeListe.stream()
+                        .filter { (_, navn): SjablonPeriodeCore -> navn == SjablonTallNavn.TRYGDEAVGIFT_PROSENT.navn }.count()
                 )
-                    .isEqualTo(TestUtil.dummySjablonSjablontallListe()
-                        .filter { (typeSjablon): Sjablontall -> typeSjablon == "0017" }.count { (_, datoFom, datoTom): Sjablontall ->
-                            !datoFom!!.isAfter(LocalDate.parse("2020-09-01")) && !datoTom
-                                ?.isBefore(LocalDate.parse("2020-08-01"))!!
+                    .isEqualTo(
+                        TestUtil.dummySjablonSjablontallListe()
+                            .filter { (typeSjablon): Sjablontall -> typeSjablon == "0017" }.count { (_, datoFom, datoTom): Sjablontall ->
+                                !datoFom!!.isAfter(LocalDate.parse("2020-09-01")) && !datoTom
+                                    ?.isBefore(LocalDate.parse("2020-08-01"))!!
+                            }
+                    )
+            }, // Sjekk at det mappes ut riktig antall sjabloner av type Bidragsevne
+            Executable {
+                assertThat(
+                    sjablonPeriodeListe.stream()
+                        .filter { (_, navn): SjablonPeriodeCore -> navn == SjablonNavn.BIDRAGSEVNE.navn }.count()
+                )
+                    .isEqualTo(
+                        TestUtil.dummySjablonBidragsevneListe().stream()
+                            .filter { (_, datoFom, datoTom): Bidragsevne ->
+                                !datoFom!!.isAfter(LocalDate.parse("2020-09-01")) && !datoTom
+                                    ?.isBefore(LocalDate.parse("2020-08-01"))!!
+                            }.count()
+                    )
+            }, // Sjekk at det mappes ut riktig verdi for en gitt sjablon av type Sjablontall
+            Executable {
+                assertThat(
+                    sjablonPeriodeListe.stream()
+                        .filter { (periode, navn): SjablonPeriodeCore ->
+                            navn == SjablonTallNavn.TRYGDEAVGIFT_PROSENT.navn && periode.datoFom == LocalDate.parse(
+                                "2014-01-01"
+                            )
                         }
-                    )
-            },  // Sjekk at det mappes ut riktig antall sjabloner av type Bidragsevne
-            Executable {
-                assertThat(sjablonPeriodeListe.stream()
-                    .filter { (_, navn): SjablonPeriodeCore -> navn == SjablonNavn.BIDRAGSEVNE.navn }.count()
+                        .flatMap { it.innholdListe.stream() }
+                        .findFirst()
+                        .map { it.verdi }
+                        .orElse(BigDecimal.ZERO)
                 )
-                    .isEqualTo(TestUtil.dummySjablonBidragsevneListe().stream()
-                        .filter { (_, datoFom, datoTom): Bidragsevne ->
-                            !datoFom!!.isAfter(LocalDate.parse("2020-09-01")) && !datoTom
-                                ?.isBefore(LocalDate.parse("2020-08-01"))!!
-                        }.count()
-                    )
-            },  // Sjekk at det mappes ut riktig verdi for en gitt sjablon av type Sjablontall
-            Executable {
-                assertThat(sjablonPeriodeListe.stream()
-                    .filter { (periode, navn): SjablonPeriodeCore ->
-                        navn == SjablonTallNavn.TRYGDEAVGIFT_PROSENT.navn && periode.datoFom == LocalDate.parse(
-                            "2014-01-01"
-                        )
-                    }
-                    .flatMap { it.innholdListe.stream() }
-                    .findFirst()
-                    .map{ it.verdi }
-                    .orElse(BigDecimal.ZERO))
                     .isEqualTo(BigDecimal.valueOf(8.2))
-            })
+            }
+        )
     }
 
     @Test

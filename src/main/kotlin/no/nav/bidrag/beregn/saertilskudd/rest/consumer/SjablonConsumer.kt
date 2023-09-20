@@ -21,13 +21,15 @@ class SjablonConsumer(private val restTemplate: RestTemplate) {
                 SJABLONSJABLONTALL_URL,
                 HttpMethod.GET,
                 null,
-                SJABLON_SJABLONTALL_LISTE)
+                SJABLON_SJABLONTALL_LISTE
+            )
 
             LOGGER.info("hentSjablonSjablontall fikk http status {} fra bidrag-sjablon", sjablonResponse.statusCode)
             HttpResponse(sjablonResponse)
         } catch (exception: RestClientResponseException) {
             LOGGER.error(
-                "hentSjablonSjablontall fikk følgende feilkode fra bidrag-sjablon: {}, med melding {}", exception.statusText,
+                "hentSjablonSjablontall fikk følgende feilkode fra bidrag-sjablon: {}, med melding {}",
+                exception.statusText,
                 exception.message
             )
             throw SjablonConsumerException(exception)
@@ -40,13 +42,15 @@ class SjablonConsumer(private val restTemplate: RestTemplate) {
                 SJABLONSAMVAERSFRADRAG_URL,
                 HttpMethod.GET,
                 null,
-                SJABLON_SAMVAERSFRADRAG_LISTE)
+                SJABLON_SAMVAERSFRADRAG_LISTE
+            )
 
             LOGGER.info("hentSjablonSamvaersfradrag fikk http status {} fra bidrag-sjablon", sjablonResponse.statusCode)
             HttpResponse(sjablonResponse)
         } catch (exception: RestClientResponseException) {
             LOGGER.error(
-                "hentSjablonSamvaersfradrag fikk følgende feilkode fra bidrag-sjablon: {}, med melding {}", exception.statusText,
+                "hentSjablonSamvaersfradrag fikk følgende feilkode fra bidrag-sjablon: {}, med melding {}",
+                exception.statusText,
                 exception.message
             )
             throw SjablonConsumerException(exception)
@@ -59,13 +63,15 @@ class SjablonConsumer(private val restTemplate: RestTemplate) {
                 SJABLONBIDRAGSEVNE_URL,
                 HttpMethod.GET,
                 null,
-                SJABLON_BIDRAGSEVNE_LISTE)
+                SJABLON_BIDRAGSEVNE_LISTE
+            )
 
             LOGGER.info("hentSjablonBidragsevne fikk http status {} fra bidrag-sjablon", sjablonResponse.statusCode)
             HttpResponse(sjablonResponse)
         } catch (exception: RestClientResponseException) {
             LOGGER.error(
-                "hentSjablonBidragsevne fikk følgende feilkode fra bidrag-sjablon: {}, med melding {}", exception.statusText,
+                "hentSjablonBidragsevne fikk følgende feilkode fra bidrag-sjablon: {}, med melding {}",
+                exception.statusText,
                 exception.message
             )
             throw SjablonConsumerException(exception)
@@ -78,13 +84,15 @@ class SjablonConsumer(private val restTemplate: RestTemplate) {
                 SJABLONTRINNVISSKATTESATS_URL,
                 HttpMethod.GET,
                 null,
-                SJABLON_TRINNVIS_SKATTESATS_LISTE)
+                SJABLON_TRINNVIS_SKATTESATS_LISTE
+            )
 
             LOGGER.info("hentSjablonTrinnvisSkattesats fikk http status {} fra bidrag-sjablon", sjablonResponse.statusCode)
             HttpResponse(sjablonResponse)
         } catch (exception: RestClientResponseException) {
             LOGGER.error(
-                "hentSjablonTrinnvisSkattesats fikk følgende feilkode fra bidrag-sjablon: {}, med melding {}", exception.statusText,
+                "hentSjablonTrinnvisSkattesats fikk følgende feilkode fra bidrag-sjablon: {}, med melding {}",
+                exception.statusText,
                 exception.message
             )
             throw SjablonConsumerException(exception)

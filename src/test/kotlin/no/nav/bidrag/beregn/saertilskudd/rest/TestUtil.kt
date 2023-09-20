@@ -50,47 +50,71 @@ object TestUtil {
         val grunnlagListe = ArrayList<Grunnlag>()
         grunnlagListe.add(
             Grunnlag(
-                "Mottatt_SoknadsbarnInfo_SB_1", GrunnlagType.SOKNADSBARN_INFO,
+                "Mottatt_SoknadsbarnInfo_SB_1",
+                GrunnlagType.SOKNADSBARN_INFO,
                 tilJsonNodeInnhold(SoknadsBarnInfo(1, LocalDate.parse("2006-08-19")))
             )
         )
         grunnlagListe.add(
             Grunnlag(
-                "Mottatt_Inntekt_AG_20200801_SB_1", GrunnlagType.INNTEKT,
+                "Mottatt_Inntekt_AG_20200801_SB_1",
+                GrunnlagType.INNTEKT,
                 tilJsonNodeInnhold(
                     SBInntekt(
-                        LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01"),
-                        Rolle.SOKNADSBARN, "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER", BigDecimal.valueOf(0), 1
+                        LocalDate.parse("2020-08-01"),
+                        LocalDate.parse("2020-09-01"),
+                        Rolle.SOKNADSBARN,
+                        "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
+                        BigDecimal.valueOf(0),
+                        1
                     )
                 )
             )
         )
         grunnlagListe.add(
             Grunnlag(
-                "Mottatt_Inntekt_AG_20200801_BM", GrunnlagType.INNTEKT, tilJsonNodeInnhold(
+                "Mottatt_Inntekt_AG_20200801_BM",
+                GrunnlagType.INNTEKT,
+                tilJsonNodeInnhold(
                     BMInntekt(
-                        LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01"), "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER", BigDecimal.valueOf(300000),
-                        Rolle.BIDRAGSMOTTAKER, false, false
+                        LocalDate.parse("2020-08-01"),
+                        LocalDate.parse("2020-09-01"),
+                        "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
+                        BigDecimal.valueOf(300000),
+                        Rolle.BIDRAGSMOTTAKER,
+                        false,
+                        false
                     )
                 )
             )
         )
         grunnlagListe.add(
             Grunnlag(
-                "Mottatt_Inntekt_AG_20200801_BM", GrunnlagType.INNTEKT, tilJsonNodeInnhold(
+                "Mottatt_Inntekt_AG_20200801_BM",
+                GrunnlagType.INNTEKT,
+                tilJsonNodeInnhold(
                     BMInntekt(
-                        LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01"), "UTVIDET_BARNETRYGD", BigDecimal.valueOf(12688),
-                        Rolle.BIDRAGSMOTTAKER, false, false
+                        LocalDate.parse("2020-08-01"),
+                        LocalDate.parse("2020-09-01"),
+                        "UTVIDET_BARNETRYGD",
+                        BigDecimal.valueOf(12688),
+                        Rolle.BIDRAGSMOTTAKER,
+                        false,
+                        false
                     )
                 )
             )
         )
         grunnlagListe.add(
             Grunnlag(
-                "Mottatt_Inntekt_AG_20200801_BP", GrunnlagType.INNTEKT,
+                "Mottatt_Inntekt_AG_20200801_BP",
+                GrunnlagType.INNTEKT,
                 tilJsonNodeInnhold(
                     BPInntekt(
-                        LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01"), Rolle.BIDRAGSPLIKTIG, "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
+                        LocalDate.parse("2020-08-01"),
+                        LocalDate.parse("2020-09-01"),
+                        Rolle.BIDRAGSPLIKTIG,
+                        "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
                         BigDecimal.valueOf(500000)
                     )
                 )
@@ -98,47 +122,61 @@ object TestUtil {
         )
         grunnlagListe.add(
             Grunnlag(
-                "Mottatt_BarnIHusstand_20200801", GrunnlagType.BARN_I_HUSSTAND,
+                "Mottatt_BarnIHusstand_20200801",
+                GrunnlagType.BARN_I_HUSSTAND,
                 tilJsonNodeInnhold(BarnIHusstand(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01"), 0.0))
             )
         )
         grunnlagListe.add(
             Grunnlag(
-                "Mottatt_Bostatus_20200801", GrunnlagType.BOSTATUS,
+                "Mottatt_Bostatus_20200801",
+                GrunnlagType.BOSTATUS,
                 tilJsonNodeInnhold(Bostatus(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01"), "ALENE"))
             )
         )
         grunnlagListe.add(
             Grunnlag(
-                "Mottatt_Saerfradrag_20200801", GrunnlagType.SAERFRADRAG,
+                "Mottatt_Saerfradrag_20200801",
+                GrunnlagType.SAERFRADRAG,
                 tilJsonNodeInnhold(Saerfradrag(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01"), "INGEN"))
             )
         )
         grunnlagListe.add(
             Grunnlag(
-                "Mottatt_Skatteklasse_20200801", GrunnlagType.SKATTEKLASSE,
+                "Mottatt_Skatteklasse_20200801",
+                GrunnlagType.SKATTEKLASSE,
                 tilJsonNodeInnhold(Skatteklasse(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01"), 1))
             )
         )
         grunnlagListe.add(
             Grunnlag(
-                "Mottatt_Netto_Saertilskudd_20200801", GrunnlagType.NETTO_SAERTILSKUDD,
+                "Mottatt_Netto_Saertilskudd_20200801",
+                GrunnlagType.NETTO_SAERTILSKUDD,
                 tilJsonNodeInnhold(NettoSaertilskudd(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01"), BigDecimal.valueOf(7000)))
             )
         )
         grunnlagListe.add(
             Grunnlag(
-                "Mottatt_Samvaersklasse_20200801_SB_1", GrunnlagType.SAMVAERSKLASSE, tilJsonNodeInnhold(
+                "Mottatt_Samvaersklasse_20200801_SB_1",
+                GrunnlagType.SAMVAERSKLASSE,
+                tilJsonNodeInnhold(
                     Samvaersklasse(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01"), 1, LocalDate.parse("2006-08-19"), "01")
                 )
             )
         )
         grunnlagListe.add(
             Grunnlag(
-                "Mottatt_LoependeBidrag_20200801_SB_1", GrunnlagType.LOPENDE_BIDRAG, tilJsonNodeInnhold(
+                "Mottatt_LoependeBidrag_20200801_SB_1",
+                GrunnlagType.LOPENDE_BIDRAG,
+                tilJsonNodeInnhold(
                     LopendeBidrag(
-                        LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01"), 1, BigDecimal.valueOf(2500), BigDecimal.valueOf(2957),
-                        BigDecimal.valueOf(2500), BigDecimal.valueOf(457)
+                        LocalDate.parse("2020-08-01"),
+                        LocalDate.parse("2020-09-01"),
+                        1,
+                        BigDecimal.valueOf(2500),
+                        BigDecimal.valueOf(2957),
+                        BigDecimal.valueOf(2500),
+                        BigDecimal.valueOf(457)
                     )
                 )
             )
@@ -174,7 +212,9 @@ object TestUtil {
         val objectMapper = ObjectMapper()
         val bidragsevne = BidragsevneResultatPeriode(
             LocalDate.parse("2020-08-01"),
-            LocalDate.parse("2020-09-01"), BigDecimal.valueOf(100), arrayListOf(
+            LocalDate.parse("2020-09-01"),
+            BigDecimal.valueOf(100),
+            arrayListOf(
                 INNTEKT_REFERANSE,
                 SKATTEKLASSE_REFERANSE,
                 BOSTATUS_REFERANSE,
@@ -221,11 +261,15 @@ object TestUtil {
     fun dummyBPsAndelSaertilskuddResultat(): Grunnlag {
         val objectMapper = ObjectMapper()
         val bpsAndelSaertilskudd = BPsAndelSaertilskuddResultatPeriode(
-            LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01"),
-            BigDecimal.valueOf(100), BigDecimal.valueOf(10), false, arrayListOf(
+            LocalDate.parse("2020-08-01"),
+            LocalDate.parse("2020-09-01"),
+            BigDecimal.valueOf(100),
+            BigDecimal.valueOf(10),
+            false,
+            arrayListOf(
                 INNTEKT_REFERANSE,
                 INNTEKT_REFERANSE,
-                INNTEKT_REFERANSE,
+                INNTEKT_REFERANSE
             )
         )
 
@@ -239,7 +283,10 @@ object TestUtil {
             no.nav.bidrag.beregn.bpsandelsaertilskudd.dto.ResultatPeriodeCore(
                 PeriodeCore(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01")),
                 no.nav.bidrag.beregn.bpsandelsaertilskudd.dto.ResultatBeregningCore(
-                    BigDecimal.valueOf(10), BigDecimal.valueOf(100), false),
+                    BigDecimal.valueOf(10),
+                    BigDecimal.valueOf(100),
+                    false
+                ),
                 BeregnedeGrunnlagCore(emptyList(), emptyList(), emptyList()),
                 arrayListOf(
                     INNTEKT_REFERANSE,
@@ -267,10 +314,15 @@ object TestUtil {
     // Bygger opp BeregnSamvaersfradragResultat
     fun dummySamvaersfradragResultat(): Grunnlag {
         val objectMapper = ObjectMapper()
-        val samvaersfradrag = SamvaersfradragResultatPeriode(LocalDate.parse("2020-08-01"),
-            LocalDate.parse("2020-09-01"), BigDecimal.valueOf(100), 1, arrayListOf(
-                    SAMVAERSFRADRAG_REFERANSE
-            ))
+        val samvaersfradrag = SamvaersfradragResultatPeriode(
+            LocalDate.parse("2020-08-01"),
+            LocalDate.parse("2020-09-01"),
+            BigDecimal.valueOf(100),
+            1,
+            arrayListOf(
+                SAMVAERSFRADRAG_REFERANSE
+            )
+        )
         return Grunnlag(SAMVAERSFRADRAG_REFERANSE, GrunnlagType.SAMVAERSFRADRAG, objectMapper.valueToTree(samvaersfradrag))
     }
 
@@ -284,7 +336,9 @@ object TestUtil {
                 listOf(no.nav.bidrag.beregn.samvaersfradrag.dto.ResultatBeregningCore(1, BigDecimal.valueOf(100))),
                 arrayListOf(
                     SAMVAERSFRADRAG_REFERANSE
-                )))
+                )
+            )
+        )
         return BeregnSamvaersfradragResultatCore(bidragPeriodeResultatListe, emptyList(), emptyList())
     }
 
@@ -308,7 +362,8 @@ object TestUtil {
         beregnetSaertilskuddPeriodeListe.add(
             no.nav.bidrag.beregn.saertilskudd.dto.ResultatPeriodeCore(
                 PeriodeCore(LocalDate.parse("2017-01-01"), LocalDate.parse("2019-01-01")),
-                1, no.nav.bidrag.beregn.saertilskudd.dto.ResultatBeregningCore(BigDecimal.valueOf(100), "RESULTATKODE"),
+                1,
+                no.nav.bidrag.beregn.saertilskudd.dto.ResultatBeregningCore(BigDecimal.valueOf(100), "RESULTATKODE"),
                 java.util.List.of(INNTEKT_REFERANSE, BIDRAGSEVNE_REFERANSE)
             )
         )

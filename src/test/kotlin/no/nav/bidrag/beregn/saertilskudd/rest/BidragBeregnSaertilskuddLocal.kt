@@ -23,7 +23,6 @@ class BidragBeregnSaertilskuddLocal {
         const val LOCAL_PROFILE = "local"
     }
 
-
     fun main(args: Array<String>) {
         val wireMockServer = WireMockServer(
             WireMockConfiguration.wireMockConfig().dynamicPort().dynamicHttpsPort()
