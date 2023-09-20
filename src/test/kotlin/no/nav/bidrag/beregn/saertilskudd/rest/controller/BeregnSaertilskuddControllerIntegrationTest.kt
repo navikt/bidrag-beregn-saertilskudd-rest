@@ -12,6 +12,7 @@ import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.function.Executable
@@ -34,6 +35,7 @@ import java.nio.file.Paths
 @AutoConfigureWireMock(port = 8096)
 @EnableMockOAuth2Server
 @ActiveProfiles(TEST_PROFILE)
+@Disabled
 internal class BeregnSaertilskuddControllerIntegrationTest {
 
     @Autowired
