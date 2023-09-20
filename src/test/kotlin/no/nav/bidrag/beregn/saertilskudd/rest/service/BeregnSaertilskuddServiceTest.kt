@@ -173,9 +173,6 @@ internal class BeregnSaertilskuddServiceTest {
     @Test
     @DisplayName("Skal beregne særtilskudd")
     fun skalBeregneSaertilskudd() {
-        val bidragsevneGrunnlagTilCoreCaptor = ArgumentCaptor.forClass(
-            BeregnBidragsevneGrunnlagCore::class.java
-        )
         `when`(bidragsevneCoreMock!!.beregnBidragsevne(any())).thenReturn(TestUtil.dummyBidragsevneResultatCore())
         `when`(bpAndelSaertilskuddCoreMock!!.beregnBPsAndelSaertilskudd(any())).thenReturn(TestUtil.dummyBPsAndelSaertilskuddResultatCore())
         `when`(samvaersfradragCoreMock!!.beregnSamvaersfradrag(any())).thenReturn(TestUtil.dummySamvaersfradragResultatCore())
