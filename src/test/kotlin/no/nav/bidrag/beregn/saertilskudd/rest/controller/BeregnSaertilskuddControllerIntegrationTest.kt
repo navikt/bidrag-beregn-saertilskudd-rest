@@ -12,7 +12,6 @@ import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.function.Executable
@@ -35,19 +34,19 @@ import java.nio.file.Paths
 @AutoConfigureWireMock(port = 8096)
 @EnableMockOAuth2Server
 @ActiveProfiles(TEST_PROFILE)
-@Disabled
 internal class BeregnSaertilskuddControllerIntegrationTest {
 
     @Autowired
-    private val httpHeaderTestRestTemplate: HttpHeaderTestRestTemplate? = null
+    private lateinit var httpHeaderTestRestTemplate: HttpHeaderTestRestTemplate
 
     @Autowired
-    private val sjablonApiStub: SjablonApiStub? = null
+    private lateinit var sjablonApiStub: SjablonApiStub
 
     @LocalServerPort
     private val port = 0
-    private var url: String? = null
-    private var filnavn: String? = null
+    private lateinit var url: String
+    private lateinit var filnavn: String
+
     private var forventetBidragsevneBelop: BigDecimal? = null
     private var forventetBPAndelSaertilskuddProsentBarn: BigDecimal? = null
     private var forventetBPAndelSaertilskuddBelopBarn: BigDecimal? = null
@@ -59,7 +58,7 @@ internal class BeregnSaertilskuddControllerIntegrationTest {
     @BeforeEach
     fun init() {
         // Sett opp wiremock mot sjablon-tjenestene
-        sjablonApiStub?.settOppSjablonStub()
+        sjablonApiStub.settOppSjablonStub()
 
         // Bygg opp url
         url = "http://localhost:$port/beregn/saertilskudd"

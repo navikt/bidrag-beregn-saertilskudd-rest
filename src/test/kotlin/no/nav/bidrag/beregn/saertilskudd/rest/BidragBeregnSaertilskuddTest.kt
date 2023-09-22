@@ -11,16 +11,23 @@ import org.springframework.test.context.ActiveProfiles
 
 @SpringBootApplication(exclude = [SecurityAutoConfiguration::class, ManagementWebSecurityAutoConfiguration::class])
 @ActiveProfiles(TEST_PROFILE)
-@ComponentScan(excludeFilters = [ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, value = [BidragBeregnSaertilskudd::class, BidragBeregnSaertilskuddLocal::class])])
+@ComponentScan(
+    excludeFilters = [
+        ComponentScan.Filter(
+            type = FilterType.ASSIGNABLE_TYPE,
+            value = [BidragBeregnSaertilskudd::class, BidragBeregnSaertilskuddLocal::class]
+        )
+    ]
+)
 class BidragBeregnSaertilskuddTest {
     companion object {
         const val TEST_PROFILE = "test"
     }
+}
 
-    fun main(args: Array<String>) {
-        val profile = if (args.isEmpty()) TEST_PROFILE else args[0]
-        val app = SpringApplication(BidragBeregnSaertilskuddTest::class.java)
-        app.setAdditionalProfiles(profile)
-        app.run(*args)
-    }
+fun main(args: Array<String>) {
+    val profile = if (args.isEmpty()) TEST_PROFILE else args[0]
+    val app = SpringApplication(BidragBeregnSaertilskuddTest::class.java)
+    app.setAdditionalProfiles(profile)
+    app.run(*args)
 }

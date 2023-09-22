@@ -8,10 +8,10 @@ import org.springframework.http.HttpMethod
 import org.springframework.web.client.RestClientResponseException
 import org.springframework.web.client.RestTemplate
 
-private const val SJABLONSJABLONTALL_URL = "/bidrag-sjablon/sjablontall/all"
-private const val SJABLONSAMVAERSFRADRAG_URL = "/bidrag-sjablon/samvaersfradrag/all"
-private const val SJABLONBIDRAGSEVNE_URL = "/bidrag-sjablon/bidragsevner/all"
-private const val SJABLONTRINNVISSKATTESATS_URL = "/bidrag-sjablon/trinnvisskattesats/all"
+private const val SJABLONSJABLONTALL_URL = "/sjablontall/all"
+private const val SJABLONSAMVAERSFRADRAG_URL = "/samvaersfradrag/all"
+private const val SJABLONBIDRAGSEVNE_URL = "/bidragsevner/all"
+private const val SJABLONTRINNVISSKATTESATS_URL = "/trinnvisskattesats/all"
 
 class SjablonConsumer(private val restTemplate: RestTemplate) {
 

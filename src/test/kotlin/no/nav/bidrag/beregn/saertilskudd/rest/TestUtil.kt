@@ -363,7 +363,7 @@ object TestUtil {
             no.nav.bidrag.beregn.saertilskudd.dto.ResultatPeriodeCore(
                 PeriodeCore(LocalDate.parse("2017-01-01"), LocalDate.parse("2019-01-01")),
                 1,
-                no.nav.bidrag.beregn.saertilskudd.dto.ResultatBeregningCore(BigDecimal.valueOf(100), "RESULTATKODE"),
+                no.nav.bidrag.beregn.saertilskudd.dto.ResultatBeregningCore(BigDecimal.valueOf(100), "SAERTILSKUDD_INNVILGET"),
                 java.util.List.of(INNTEKT_REFERANSE, BIDRAGSEVNE_REFERANSE)
             )
         )

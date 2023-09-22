@@ -27,7 +27,7 @@
     <bidrag-commons-test.version>1.20230217164307_1ec9d3f</bidrag-commons-test.version>
     <bidrag-beregn-felles.version>1.0.0</bidrag-beregn-felles.version>
     <bidrag-beregn-saertilskudd-core.version>1.0.0</bidrag-beregn-saertilskudd-core.version>
-    <bidrag-transport.version>20230919160324_9ce2393</bidrag-transport.version>
+    <bidrag-transport.version>20230921123916_f67a438</bidrag-transport.version>
     <springdoc-openapi-ui.version>2.2.0</springdoc-openapi-ui.version>
     <wiremock-standalone.version>2.35.1</wiremock-standalone.version>
     <springframework-cloud.version>4.0.2</springframework-cloud.version>

@@ -21,7 +21,7 @@ private val LOGGER = LoggerFactory.getLogger(BidragBeregnSaertilskuddTestConfig:
 
 @Configuration
 @OpenAPIDefinition(
-    info = Info(title = "bidrag-vedtak", version = "v1"),
+    info = Info(title = "bidrag-beregn-saertilskudd", version = "v1"),
     security = [SecurityRequirement(name = "bearer-key")]
 )
 @Profile(TEST_PROFILE, LOCAL_PROFILE)
@@ -40,7 +40,18 @@ class BidragBeregnSaertilskuddTestConfig {
     private fun generateTestToken(): String {
         val iss = mockOAuth2Server.issuerUrl(ISSUER)
         val newIssuer = iss.newBuilder().host("localhost").build()
-        val token = mockOAuth2Server.issueToken(ISSUER, "aud-localhost", DefaultOAuth2TokenCallback(ISSUER, "aud-localhost", JOSEObjectType.JWT.type, listOf("aud-localhost"), mapOf("iss" to newIssuer.toString()), 3600))
+        val token = mockOAuth2Server.issueToken(
+            issuerId = ISSUER,
+            clientId = "aud-localhost",
+            tokenCallback = DefaultOAuth2TokenCallback(
+                issuerId = ISSUER,
+                subject = "aud-localhost",
+                typeHeader = JOSEObjectType.JWT.type,
+                audience = listOf("aud-localhost"),
+                claims = mapOf("iss" to newIssuer.toString()),
+                expiry = 3600
+            )
+        )
         return "Bearer " + token.serialize()
     }
 }
