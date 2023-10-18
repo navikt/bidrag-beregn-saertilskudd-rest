@@ -460,7 +460,7 @@ class BeregnSaertilskuddService(
             throw UgyldigInputException("Ugyldig input ved beregning av bidragsevne: " + e.message)
         }
         if (!bidragsevneResultatFraCore.avvikListe.isEmpty()) {
-            LOGGER.error(
+            LOGGER.warn(
                 "Ugyldig input ved beregning av bidragsevne. Følgende avvik ble funnet: " + System.lineSeparator() +
                     bidragsevneResultatFraCore.avvikListe.stream().map(AvvikCore::avvikTekst).collect(
                         Collectors.joining(
@@ -506,12 +506,12 @@ class BeregnSaertilskuddService(
             throw UgyldigInputException("Ugyldig input ved beregning av BPs andel av særtilskudd: " + e.message)
         }
         if (!bpAndelSaertilskuddResultatFraCore.avvikListe.isEmpty()) {
-            LOGGER.error(
+            LOGGER.warn(
                 "Ugyldig input ved beregning av BPs andel av særtilskudd. Følgende avvik ble funnet: " + System.lineSeparator() +
                     bpAndelSaertilskuddResultatFraCore.avvikListe.stream().map(AvvikCore::avvikTekst)
                         .collect(Collectors.joining(System.lineSeparator()))
             )
-            SECURE_LOGGER.error(
+            SECURE_LOGGER.warn(
                 "Ugyldig input ved beregning av BPs andel av særtilskudd. Følgende avvik ble funnet: " + System.lineSeparator() +
                     bpAndelSaertilskuddResultatFraCore.avvikListe.stream().map(AvvikCore::avvikTekst)
                         .collect(Collectors.joining(System.lineSeparator()))
@@ -554,12 +554,12 @@ class BeregnSaertilskuddService(
             throw UgyldigInputException("Ugyldig input ved beregning av samværsfradrag: " + e.message)
         }
         if (!samvaersfradragResultatFraCore.avvikListe.isEmpty()) {
-            LOGGER.error(
+            LOGGER.warn(
                 "Ugyldig input ved beregning av samværsfradrag. Følgende avvik ble funnet: " + System.lineSeparator() +
                     samvaersfradragResultatFraCore.avvikListe.stream().map(AvvikCore::avvikTekst)
                         .collect(Collectors.joining(System.lineSeparator()))
             )
-            SECURE_LOGGER.error(
+            SECURE_LOGGER.warn(
                 "Ugyldig input ved beregning av samværsfradrag. Følgende avvik ble funnet: " + System.lineSeparator() +
                     samvaersfradragResultatFraCore.avvikListe.stream().map(AvvikCore::avvikTekst)
                         .collect(Collectors.joining(System.lineSeparator()))
@@ -599,12 +599,12 @@ class BeregnSaertilskuddService(
             throw UgyldigInputException("Ugyldig input ved beregning av særtilskudd: " + e.message)
         }
         if (!saertilskuddResultatFraCore.avvikListe.isEmpty()) {
-            LOGGER.error(
+            LOGGER.warn(
                 "Ugyldig input ved beregning av særtilskudd. Følgende avvik ble funnet: " + System.lineSeparator() +
                     saertilskuddResultatFraCore.avvikListe.stream().map(AvvikCore::avvikTekst)
                         .collect(Collectors.joining(System.lineSeparator()))
             )
-            SECURE_LOGGER.error(
+            SECURE_LOGGER.warn(
                 "Ugyldig input ved beregning av særtilskudd. Følgende avvik ble funnet: " + System.lineSeparator() +
                     saertilskuddResultatFraCore.avvikListe.stream().map(AvvikCore::avvikTekst)
                         .collect(Collectors.joining(System.lineSeparator()))
