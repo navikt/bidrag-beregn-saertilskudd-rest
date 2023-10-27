@@ -15,7 +15,7 @@ Tjenesten kalles med en POST-request, hvor input-dataene legges i request-bodyen
 
 ### Avhengigheter
 `bidrag-beregn-saertilskudd-rest` kaller maven-modul `bidrag-beregn-saertilskudd-core`, hvor selve beregningen gjøres.
-Sjablonverdier hentes ved å kalle rest-tjenesten `bidrag-sjablon` via proxy tjenesten `bidrag-gcp-proxy`.
+Sjablonverdier hentes ved å kalle rest-tjenesten `bidrag-sjablon`.
 
 ### Sikkerhet
 Tjenesten er sikret med Azure AD JWT tokens. Konsumenter av tjenesten er derfor nødt til å registere seg og benytte gyldig token i `Authorization` header ved REST-kall. Dersom en ny applikasjon skal ha tilgang må dette også registreres i henholdsvis `nais.yaml` og `nais-p.yaml` i denne applikasjonen.
