@@ -1,7 +1,6 @@
 name: bidrag-beregn-saertilskudd-rest
 ingresses:
   - https://bidrag-beregn-saertilskudd-rest.intern.dev.nav.no/
-  - https://bidrag-beregn-saertilskudd-rest-feature.intern.dev.nav.no/
 azure_access_inbound:
   - application: bidrag-ui
     namespace: bidrag
