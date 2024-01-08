@@ -47,7 +47,7 @@ fun InntektBase.tilInntektPeriodeCore(referanse: String): InntektPeriodeCore {
         referanse,
         tilPeriodeCore(),
         inntektType!!,
-        belop!!
+        belop!!,
     )
 }
 
@@ -59,7 +59,7 @@ fun InntektBase.tilInntektPeriodeCoreBPsAndelSaertilskudd(referanse: String): no
         inntektType!!,
         belop!!,
         deltFordel = false,
-        skatteklasse2 = false
+        skatteklasse2 = false,
     )
 }
 
@@ -74,6 +74,7 @@ fun BasePeriode.tilPeriodeCore(): PeriodeCore {
 }
 
 fun BPInntekt.tilCore(referanse: String): InntektPeriodeCore = tilInntektPeriodeCore(referanse)
+
 fun BPInntekt.tilBPsAndelSaertilskuddCore(referanse: String) = tilInntektPeriodeCoreBPsAndelSaertilskudd(referanse)
 
 fun BMInntekt.valider() {
@@ -90,7 +91,7 @@ fun BMInntekt.tilCore(referanse: String): no.nav.bidrag.beregn.bpsandelsaertilsk
         inntektType!!,
         belop!!,
         deltFordel!!,
-        skatteklasse2!!
+        skatteklasse2!!,
     )
 }
 
@@ -118,7 +119,7 @@ fun BarnIHusstand.tilCore(referanse: String): AntallBarnIEgetHusholdPeriodeCore 
     return AntallBarnIEgetHusholdPeriodeCore(
         referanse,
         tilPeriodeCore(),
-        antall!!
+        antall!!,
     )
 }
 
@@ -131,7 +132,7 @@ fun Bostatus.tilCore(referanse: String): BostatusPeriodeCore {
     return BostatusPeriodeCore(
         referanse,
         tilPeriodeCore(),
-        bostatusKode!!
+        bostatusKode!!,
     )
 }
 
@@ -144,7 +145,7 @@ fun Saerfradrag.tilCore(referanse: String): SaerfradragPeriodeCore {
     return SaerfradragPeriodeCore(
         referanse,
         tilPeriodeCore(),
-        saerfradragKode!!
+        saerfradragKode!!,
     )
 }
 
@@ -157,7 +158,7 @@ fun Skatteklasse.tilCore(referanse: String): SkatteklassePeriodeCore {
     return SkatteklassePeriodeCore(
         referanse,
         tilPeriodeCore(),
-        skatteklasseId!!
+        skatteklasseId!!,
     )
 }
 
@@ -170,7 +171,7 @@ fun NettoSaertilskudd.tilCore(referanse: String): NettoSaertilskuddPeriodeCore {
     return NettoSaertilskuddPeriodeCore(
         referanse,
         tilPeriodeCore(),
-        nettoSaertilskuddBelop!!
+        nettoSaertilskuddBelop!!,
     )
 }
 
@@ -187,14 +188,18 @@ fun Samvaersklasse.tilCore(referanse: String): SamvaersklassePeriodeCore {
         tilPeriodeCore(),
         soknadsbarnId!!,
         soknadsbarnFodselsdato!!,
-        samvaersklasseId!!
+        samvaersklasseId!!,
     )
 }
 
 fun LopendeBidrag.valider() {
     if (soknadsbarnId == null) throw UgyldigInputException("soknadsbarnId kan ikke være null")
     if (belop == null) throw UgyldigInputException("belop kan ikke være null")
-    if (opprinneligBPAndelUnderholdskostnadBelop == null) throw UgyldigInputException("opprinneligBPAndelUnderholdskostnadBelop kan ikke være null")
+    if (opprinneligBPAndelUnderholdskostnadBelop == null) {
+        throw UgyldigInputException(
+            "opprinneligBPAndelUnderholdskostnadBelop kan ikke være null",
+        )
+    }
     if (opprinneligBidragBelop == null) throw UgyldigInputException("opprinneligBidragBelop kan ikke være null")
     if (opprinneligSamvaersfradragBelop == null) throw UgyldigInputException("opprinneligSamvaersfradragBelop kan ikke være null")
 }

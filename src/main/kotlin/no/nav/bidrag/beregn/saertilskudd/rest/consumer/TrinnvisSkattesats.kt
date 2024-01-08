@@ -9,5 +9,5 @@ data class TrinnvisSkattesats(
     val datoFom: LocalDate? = null,
     val datoTom: LocalDate? = null,
     val inntektgrense: BigDecimal? = null,
-    val sats: BigDecimal? = null
+    val sats: BigDecimal? = null,
 )

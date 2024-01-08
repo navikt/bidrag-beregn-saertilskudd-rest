@@ -9,5 +9,5 @@ data class Sjablontall(
     val typeSjablon: String? = null,
     val datoFom: LocalDate? = null,
     val datoTom: LocalDate? = null,
-    val verdi: BigDecimal? = null
+    val verdi: BigDecimal? = null,
 )

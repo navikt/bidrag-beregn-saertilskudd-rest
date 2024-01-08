@@ -35,7 +35,6 @@ import java.nio.file.Paths
 @EnableMockOAuth2Server
 @ActiveProfiles(TEST_PROFILE)
 internal class BeregnSaertilskuddControllerIntegrationTest {
-
     @Autowired
     private lateinit var httpHeaderTestRestTemplate: HttpHeaderTestRestTemplate
 
@@ -187,7 +186,13 @@ internal class BeregnSaertilskuddControllerIntegrationTest {
         val request = lesFilOgByggRequest(filnavn!!)
 
         // Kall rest-API for saertilskudd
-        val responseEntity = httpHeaderTestRestTemplate?.exchange(url, HttpMethod.POST, request, BeregnetTotalSaertilskuddResultat::class.java)
+        val responseEntity =
+            httpHeaderTestRestTemplate?.exchange(
+                url,
+                HttpMethod.POST,
+                request,
+                BeregnetTotalSaertilskuddResultat::class.java,
+            )
         val totalSaertilskuddResultat = responseEntity?.body
         val saertilskuddDelberegningResultat = totalSaertilskuddResultat?.let { SaertilskuddDelberegningResultat(it) }
         val alleReferanser = totalSaertilskuddResultat?.let { TestUtil.hentAlleReferanser(it) }
@@ -199,12 +204,12 @@ internal class BeregnSaertilskuddControllerIntegrationTest {
             Executable { assertThat(totalSaertilskuddResultat.beregnetSaertilskuddPeriodeListe).hasSize(1) },
             Executable {
                 assertThat(totalSaertilskuddResultat.beregnetSaertilskuddPeriodeListe[0].resultat.belop).isEqualTo(
-                    forventetSaertilskuddBelopBarn
+                    forventetSaertilskuddBelopBarn,
                 )
             },
             Executable {
                 assertThat(totalSaertilskuddResultat.beregnetSaertilskuddPeriodeListe[0].resultat.kode.toString()).isEqualTo(
-                    forventetSaertilskuddResultatkodeBarn
+                    forventetSaertilskuddResultatkodeBarn,
                 )
             },
             Executable { assertThat(saertilskuddDelberegningResultat!!.bidragsevneListe).size().isEqualTo(1) },
@@ -212,19 +217,19 @@ internal class BeregnSaertilskuddControllerIntegrationTest {
             Executable { assertThat(saertilskuddDelberegningResultat!!.bpsAndelSaertilskuddListe).size().isEqualTo(1) },
             Executable {
                 assertThat(saertilskuddDelberegningResultat!!.bpsAndelSaertilskuddListe[0].belop).isEqualTo(
-                    forventetBPAndelSaertilskuddBelopBarn
+                    forventetBPAndelSaertilskuddBelopBarn,
                 )
             },
             Executable {
                 assertThat(saertilskuddDelberegningResultat!!.bpsAndelSaertilskuddListe[0].prosent).isEqualTo(
-                    forventetBPAndelSaertilskuddProsentBarn
+                    forventetBPAndelSaertilskuddProsentBarn,
                 )
             },
             Executable { assertThat(saertilskuddDelberegningResultat!!.samvaersfradragListe).size().isEqualTo(1) },
             Executable {
                 assertThat(saertilskuddDelberegningResultat!!.samvaersfradragListe[0].belop).isEqualTo(forventetSamvaersfradragBelopBarn1)
             },
-            Executable { assertThat(referanserIGrunnlagListe).containsAll(alleReferanser) }
+            Executable { assertThat(referanserIGrunnlagListe).containsAll(alleReferanser) },
         )
     }
 
@@ -232,29 +237,35 @@ internal class BeregnSaertilskuddControllerIntegrationTest {
         val request = lesFilOgByggRequest(filnavn!!)
 
         // Kall rest-API for Saertilskudd
-        val responseEntity = httpHeaderTestRestTemplate!!.exchange(url, HttpMethod.POST, request, BeregnetTotalSaertilskuddResultat::class.java)
+        val responseEntity =
+            httpHeaderTestRestTemplate!!.exchange(
+                url,
+                HttpMethod.POST,
+                request,
+                BeregnetTotalSaertilskuddResultat::class.java,
+            )
         val totalSaertilskuddResultat = responseEntity.body
         val saertilskuddDelberegningResultat = totalSaertilskuddResultat?.let { SaertilskuddDelberegningResultat(it) }
         val alleReferanser = totalSaertilskuddResultat?.let { TestUtil.hentAlleReferanser(it) }
         val referanserIGrunnlagListe = totalSaertilskuddResultat!!.grunnlagListe.stream().map(Grunnlag::referanse).toList()
         assertAll(
             Executable { assertThat(responseEntity.statusCode).isEqualTo(HttpStatus.OK) },
-            Executable { assertThat(totalSaertilskuddResultat).isNotNull() }, // Sjekk BeregnBPBidragsevneResultat
+            Executable { assertThat(totalSaertilskuddResultat).isNotNull() },
             Executable { assertThat(saertilskuddDelberegningResultat!!.bidragsevneListe).hasSize(1) },
             Executable {
                 assertThat(saertilskuddDelberegningResultat!!.bidragsevneListe[0].belop).isEqualTo(forventetBidragsevneBelop)
-            }, // Sjekk BeregnBPAndelSaertilskuddResultat
+            },
             Executable { assertThat(saertilskuddDelberegningResultat!!.bpsAndelSaertilskuddListe).hasSize(1) },
             Executable {
                 assertThat(saertilskuddDelberegningResultat!!.bpsAndelSaertilskuddListe[0].belop).isEqualTo(
-                    forventetBPAndelSaertilskuddBelopBarn
+                    forventetBPAndelSaertilskuddBelopBarn,
                 )
             },
             Executable {
                 assertThat(saertilskuddDelberegningResultat!!.bpsAndelSaertilskuddListe[0].prosent).isEqualTo(
-                    forventetBPAndelSaertilskuddProsentBarn
+                    forventetBPAndelSaertilskuddProsentBarn,
                 )
-            }, // Sjekk BeregnBPSamvaersfradragResultat
+            },
             Executable { assertThat(saertilskuddDelberegningResultat!!.samvaersfradragListe).hasSize(2) },
             Executable {
                 assertThat(saertilskuddDelberegningResultat!!.samvaersfradragListe[0].belop).isEqualTo(forventetSamvaersfradragBelopBarn1)
@@ -265,15 +276,15 @@ internal class BeregnSaertilskuddControllerIntegrationTest {
             Executable { assertThat(totalSaertilskuddResultat.beregnetSaertilskuddPeriodeListe).hasSize(1) },
             Executable {
                 assertThat(totalSaertilskuddResultat.beregnetSaertilskuddPeriodeListe[0].resultat.belop).isEqualTo(
-                    forventetSaertilskuddBelopBarn
+                    forventetSaertilskuddBelopBarn,
                 )
             },
             Executable {
                 assertThat(totalSaertilskuddResultat.beregnetSaertilskuddPeriodeListe[0].resultat.kode.toString()).isEqualTo(
-                    forventetSaertilskuddResultatkodeBarn
+                    forventetSaertilskuddResultatkodeBarn,
                 )
             },
-            Executable { assertThat(referanserIGrunnlagListe).containsAll(alleReferanser) }
+            Executable { assertThat(referanserIGrunnlagListe).containsAll(alleReferanser) },
         )
     }
 

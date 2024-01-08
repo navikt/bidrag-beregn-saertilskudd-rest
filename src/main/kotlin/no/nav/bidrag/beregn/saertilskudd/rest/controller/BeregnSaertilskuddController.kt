@@ -19,13 +19,11 @@ class BeregnSaertilskuddController(private val beregnSaertilskuddService: Beregn
     @PostMapping(path = ["/saertilskudd"])
     @Operation(summary = "Beregner saertilskudd")
     @SecurityRequirement(name = "bearer-key")
-    fun beregnTotalSaertilskudd(
-        @RequestBody beregnGrunnlag: BeregnGrunnlag
-    ): ResponseEntity<BeregnetTotalSaertilskuddResultat> {
+    fun beregnTotalSaertilskudd(@RequestBody beregnGrunnlag: BeregnGrunnlag): ResponseEntity<BeregnetTotalSaertilskuddResultat> {
         val beregnTotalSaertilskuddResultat = beregnSaertilskuddService.beregn(beregnGrunnlag)
         return ResponseEntity(
             beregnTotalSaertilskuddResultat.responseEntity.body,
-            beregnTotalSaertilskuddResultat.responseEntity.statusCode
+            beregnTotalSaertilskuddResultat.responseEntity.statusCode,
         )
     }
 }

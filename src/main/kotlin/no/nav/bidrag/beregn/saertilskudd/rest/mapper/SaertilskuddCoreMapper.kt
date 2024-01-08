@@ -27,53 +27,56 @@ object SaertilskuddCoreMapper : CoreMapper() {
         beregnBPsAndelSaertilskuddResultatCore: BeregnBPsAndelSaertilskuddResultatCore,
         beregnSamvaersfradragResultatCore: BeregnSamvaersfradragResultatCore,
         soknadsBarnId: Int?,
-        sjablonListe: SjablonListe
+        sjablonListe: SjablonListe,
     ): BeregnSaertilskuddGrunnlagCore {
         // Løp gjennom output fra beregning av bidragsevne og bygg opp ny input-liste til core
-        val bidragsevnePeriodeCoreListe = beregnBidragsevneResultatCore.resultatPeriodeListe
-            .stream()
-            .map { (periode, resultatBeregning): ResultatPeriodeCore ->
-                BidragsevnePeriodeCore(
-                    byggReferanseForDelberegning("Delberegning_BP_Bidragsevne", periode.datoFom),
-                    PeriodeCore(periode.datoFom, periode.datoTil),
-                    resultatBeregning.belop
-                )
-            }
-            .toList()
+        val bidragsevnePeriodeCoreListe =
+            beregnBidragsevneResultatCore.resultatPeriodeListe
+                .stream()
+                .map { (periode, resultatBeregning): ResultatPeriodeCore ->
+                    BidragsevnePeriodeCore(
+                        byggReferanseForDelberegning("Delberegning_BP_Bidragsevne", periode.datoFom),
+                        PeriodeCore(periode.datoFom, periode.datoTil),
+                        resultatBeregning.belop,
+                    )
+                }
+                .toList()
 
         // Løp gjennom output fra beregning av BPs andel særtilskudd og bygg opp ny input-liste til core
-        val bpAndelSaertilskuddPeriodeCoreListe = beregnBPsAndelSaertilskuddResultatCore.resultatPeriodeListe
-            .stream()
-            .map { (periode, resultatBeregning): no.nav.bidrag.beregn.bpsandelsaertilskudd.dto.ResultatPeriodeCore ->
-                BPsAndelSaertilskuddPeriodeCore(
-                    byggReferanseForDelberegning("Delberegning_BP_AndelSaertilskudd", periode.datoFom),
-                    PeriodeCore(periode.datoFom, periode.datoTil),
-                    resultatBeregning.resultatAndelProsent,
-                    resultatBeregning.resultatAndelBelop,
-                    resultatBeregning.barnetErSelvforsorget
-                )
-            }
-            .toList()
+        val bpAndelSaertilskuddPeriodeCoreListe =
+            beregnBPsAndelSaertilskuddResultatCore.resultatPeriodeListe
+                .stream()
+                .map { (periode, resultatBeregning): no.nav.bidrag.beregn.bpsandelsaertilskudd.dto.ResultatPeriodeCore ->
+                    BPsAndelSaertilskuddPeriodeCore(
+                        byggReferanseForDelberegning("Delberegning_BP_AndelSaertilskudd", periode.datoFom),
+                        PeriodeCore(periode.datoFom, periode.datoTil),
+                        resultatBeregning.resultatAndelProsent,
+                        resultatBeregning.resultatAndelBelop,
+                        resultatBeregning.barnetErSelvforsorget,
+                    )
+                }
+                .toList()
 
         // Løp gjennom output fra beregning av samværsfradrag og bygg opp ny input-liste til core
-        val samvaersfradragPeriodeCoreListe = beregnSamvaersfradragResultatCore.resultatPeriodeListe
-            .stream()
-            .flatMap { (periode, resultatBeregningListe): no.nav.bidrag.beregn.samvaersfradrag.dto.ResultatPeriodeCore ->
-                resultatBeregningListe
-                    .stream()
-                    .map { (barnPersonId, resultatSamvaersfradragBelop): ResultatBeregningCore ->
-                        SamvaersfradragPeriodeCore(
-                            byggReferanseForDelberegning("Delberegning_BP_Samvaersfradrag", periode.datoFom),
-                            PeriodeCore(
-                                periode.datoFom,
-                                periode.datoTil
-                            ),
-                            barnPersonId,
-                            resultatSamvaersfradragBelop
-                        )
-                    }
-            }
-            .toList()
+        val samvaersfradragPeriodeCoreListe =
+            beregnSamvaersfradragResultatCore.resultatPeriodeListe
+                .stream()
+                .flatMap { (periode, resultatBeregningListe): no.nav.bidrag.beregn.samvaersfradrag.dto.ResultatPeriodeCore ->
+                    resultatBeregningListe
+                        .stream()
+                        .map { (barnPersonId, resultatSamvaersfradragBelop): ResultatBeregningCore ->
+                            SamvaersfradragPeriodeCore(
+                                byggReferanseForDelberegning("Delberegning_BP_Samvaersfradrag", periode.datoFom),
+                                PeriodeCore(
+                                    periode.datoFom,
+                                    periode.datoTil,
+                                ),
+                                barnPersonId,
+                                resultatSamvaersfradragBelop,
+                            )
+                        }
+                }
+                .toList()
         val andreLopendeBidragListe = ArrayList<LopendeBidragPeriodeCore>()
         for (grunnlag in beregnGrunnlag.grunnlagListe!!) {
             if (GrunnlagType.LOPENDE_BIDRAG == grunnlag.type) {
@@ -83,14 +86,15 @@ object SaertilskuddCoreMapper : CoreMapper() {
         }
 
         // Henter aktuelle sjabloner
-        val sjablonPeriodeCoreListe = ArrayList(
-            mapSjablonSjablontall(
-                sjablonListe.sjablonSjablontallResponse,
-                SAERTILSKUDD,
-                beregnGrunnlag,
-                mapSjablontall()
+        val sjablonPeriodeCoreListe =
+            ArrayList(
+                mapSjablonSjablontall(
+                    sjablonListe.sjablonSjablontallResponse,
+                    SAERTILSKUDD,
+                    beregnGrunnlag,
+                    mapSjablontall(),
+                ),
             )
-        )
         return BeregnSaertilskuddGrunnlagCore(
             beregnGrunnlag.beregnDatoFra!!,
             beregnGrunnlag.beregnDatoTil!!,
@@ -99,7 +103,7 @@ object SaertilskuddCoreMapper : CoreMapper() {
             bpAndelSaertilskuddPeriodeCoreListe,
             andreLopendeBidragListe,
             samvaersfradragPeriodeCoreListe,
-            sjablonPeriodeCoreListe
+            sjablonPeriodeCoreListe,
         )
     }
 
@@ -118,6 +122,6 @@ fun LopendeBidrag.tilCore(referanse: String): LopendeBidragPeriodeCore {
         belop!!,
         opprinneligBPAndelUnderholdskostnadBelop!!,
         opprinneligBidragBelop!!,
-        opprinneligSamvaersfradragBelop!!
+        opprinneligSamvaersfradragBelop!!,
     )
 }

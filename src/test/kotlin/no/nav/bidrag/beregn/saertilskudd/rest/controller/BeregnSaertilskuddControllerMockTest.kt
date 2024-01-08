@@ -62,40 +62,47 @@ internal class BeregnSaertilskuddControllerMockTest {
     @Test
     @DisplayName("Skal returnere total særtilskudd resultat ved gyldig input")
     fun skalReturnereTotalSaertilskuddResultatVedGyldigInput() {
-        every { beregnSaertilskuddServiceMock.beregn(any()) } returns HttpResponse.Companion.from(
-            HttpStatus.OK,
-            BeregnetTotalSaertilskuddResultat(
-                mapFraResultatPeriodeCore(
+        every { beregnSaertilskuddServiceMock.beregn(any()) } returns
+            HttpResponse.Companion.from(
+                HttpStatus.OK,
+                BeregnetTotalSaertilskuddResultat(
+                    mapFraResultatPeriodeCore(
+                        arrayListOf(
+                            ResultatPeriodeCore(
+                                PeriodeCore(
+                                    LocalDate.parse("2020-08-01"),
+                                    LocalDate.parse("2020-09-01"),
+                                ),
+                                1,
+                                ResultatBeregningCore(
+                                    BigDecimal.valueOf(100),
+                                    "SAERTILSKUDD_INNVILGET",
+                                ),
+                                arrayListOf(
+                                    BIDRAGSEVNE_REFERANSE,
+                                    BPS_ANDEL_SAERTILSKUDD_REFERANSE,
+                                    SAMVAERSFRADRAG_REFERANSE,
+                                ),
+                            ),
+                        ),
+                    ),
                     arrayListOf(
-                        ResultatPeriodeCore(
-                            PeriodeCore(
-                                LocalDate.parse("2020-08-01"),
-                                LocalDate.parse("2020-09-01")
-                            ),
-                            1,
-                            ResultatBeregningCore(
-                                BigDecimal.valueOf(100),
-                                "SAERTILSKUDD_INNVILGET"
-                            ),
-                            arrayListOf(
-                                BIDRAGSEVNE_REFERANSE,
-                                BPS_ANDEL_SAERTILSKUDD_REFERANSE,
-                                SAMVAERSFRADRAG_REFERANSE
-                            )
-                        )
-                    )
+                        TestUtil.dummyBidragsevneResultat(),
+                        TestUtil.dummyBPsAndelSaertilskuddResultat(),
+                        TestUtil.dummySamvaersfradragResultat(),
+                    ),
                 ),
-                arrayListOf(
-                    TestUtil.dummyBidragsevneResultat(),
-                    TestUtil.dummyBPsAndelSaertilskuddResultat(),
-                    TestUtil.dummySamvaersfradragResultat()
-                )
             )
-        )
 
         val url = "http://localhost:$port/beregn/saertilskudd"
         val request = initHttpEntity(TestUtil.byggTotalSaertilskuddGrunnlag())
-        val responseEntity = httpHeaderTestRestTemplate!!.exchange(url, HttpMethod.POST, request, BeregnetTotalSaertilskuddResultat::class.java)
+        val responseEntity =
+            httpHeaderTestRestTemplate!!.exchange(
+                url,
+                HttpMethod.POST,
+                request,
+                BeregnetTotalSaertilskuddResultat::class.java,
+            )
         val totalSaertilskuddResultat = responseEntity.body
         val saertilskuddDelberegningResultat = totalSaertilskuddResultat?.let { SaertilskuddDelberegningResultat(it) }
         assertAll(
@@ -141,22 +148,24 @@ internal class BeregnSaertilskuddControllerMockTest {
             Executable { assertThat(totalSaertilskuddResultat!!.beregnetSaertilskuddPeriodeListe).hasSize(1) },
             Executable {
                 assertThat(totalSaertilskuddResultat!!.beregnetSaertilskuddPeriodeListe[0].periode.datoFom).isEqualTo(
-                    LocalDate.parse("2020-08-01")
+                    LocalDate.parse("2020-08-01"),
                 )
             },
             Executable {
                 assertThat(totalSaertilskuddResultat!!.beregnetSaertilskuddPeriodeListe[0].periode.datoTil).isEqualTo(
-                    LocalDate.parse("2020-09-01")
+                    LocalDate.parse("2020-09-01"),
                 )
             },
             Executable {
                 assertThat(totalSaertilskuddResultat!!.beregnetSaertilskuddPeriodeListe[0].resultat.belop).isEqualByComparingTo(
-                    BigDecimal.valueOf(100)
+                    BigDecimal.valueOf(100),
                 )
             },
             Executable {
-                assertThat(totalSaertilskuddResultat!!.beregnetSaertilskuddPeriodeListe[0].resultat.kode).isEqualTo(ResultatKodeSaertilskudd.SAERTILSKUDD_INNVILGET)
-            }
+                assertThat(
+                    totalSaertilskuddResultat!!.beregnetSaertilskuddPeriodeListe[0].resultat.kode,
+                ).isEqualTo(ResultatKodeSaertilskudd.SAERTILSKUDD_INNVILGET)
+            },
         )
     }
 
@@ -166,7 +175,7 @@ internal class BeregnSaertilskuddControllerMockTest {
                 barn = it.soknadsbarnPersonId,
                 periode = Periode(it.periode.datoFom, it.periode.datoTil),
                 resultat = ResultatBeregning(it.resultatBeregning.belop, ResultatKodeSaertilskudd.valueOf(it.resultatBeregning.kode)),
-                grunnlagReferanseListe = it.grunnlagReferanseListe
+                grunnlagReferanseListe = it.grunnlagReferanseListe,
             )
         }.toList()
     }
@@ -174,36 +183,50 @@ internal class BeregnSaertilskuddControllerMockTest {
     @Test
     @DisplayName("Skal returnere 400 Bad Request når input data mangler")
     fun skalReturnere400BadRequestNaarInputDataMangler() {
-        every { beregnSaertilskuddServiceMock.beregn(any()) } returns HttpResponse.Companion.from(
-            BAD_REQUEST,
-            BeregnetTotalSaertilskuddResultat()
-        )
+        every { beregnSaertilskuddServiceMock.beregn(any()) } returns
+            HttpResponse.Companion.from(
+                BAD_REQUEST,
+                BeregnetTotalSaertilskuddResultat(),
+            )
 
         val url = "http://localhost:$port/beregn/saertilskudd"
         val request = initHttpEntity(BeregnGrunnlag(LocalDate.parse("2021-08-18"), LocalDate.parse("2021-08-18"), emptyList()))
-        val responseEntity = httpHeaderTestRestTemplate?.exchange(url, HttpMethod.POST, request, BeregnetTotalSaertilskuddResultat::class.java)
+        val responseEntity =
+            httpHeaderTestRestTemplate?.exchange(
+                url,
+                HttpMethod.POST,
+                request,
+                BeregnetTotalSaertilskuddResultat::class.java,
+            )
         val totalSaertilskuddResultat = responseEntity?.body
         assertAll(
             Executable { assertThat(responseEntity?.statusCode).isEqualTo(BAD_REQUEST) },
-            Executable { assertThat(totalSaertilskuddResultat).isEqualTo(BeregnetTotalSaertilskuddResultat()) }
+            Executable { assertThat(totalSaertilskuddResultat).isEqualTo(BeregnetTotalSaertilskuddResultat()) },
         )
     }
 
     @Test
     @DisplayName("Skal returnere 500 Internal Server Error når kall til servicen feiler")
     fun skalReturnere500InternalServerErrorNaarKallTilServicenFeiler() {
-        every { beregnSaertilskuddServiceMock.beregn(any()) } returns HttpResponse.Companion.from(
-            INTERNAL_SERVER_ERROR,
-            BeregnetTotalSaertilskuddResultat()
-        )
+        every { beregnSaertilskuddServiceMock.beregn(any()) } returns
+            HttpResponse.Companion.from(
+                INTERNAL_SERVER_ERROR,
+                BeregnetTotalSaertilskuddResultat(),
+            )
 
         val url = "http://localhost:$port/beregn/saertilskudd"
         val request = initHttpEntity(BeregnGrunnlag(LocalDate.parse("2021-08-18"), LocalDate.parse("2021-08-18"), emptyList()))
-        val responseEntity = httpHeaderTestRestTemplate?.exchange(url, HttpMethod.POST, request, BeregnetTotalSaertilskuddResultat::class.java)
+        val responseEntity =
+            httpHeaderTestRestTemplate?.exchange(
+                url,
+                HttpMethod.POST,
+                request,
+                BeregnetTotalSaertilskuddResultat::class.java,
+            )
         val totalSaertilskuddResultat = responseEntity?.body
         assertAll(
             Executable { assertThat(responseEntity?.statusCode).isEqualTo(INTERNAL_SERVER_ERROR) },
-            Executable { assertThat(totalSaertilskuddResultat).isEqualTo(BeregnetTotalSaertilskuddResultat()) }
+            Executable { assertThat(totalSaertilskuddResultat).isEqualTo(BeregnetTotalSaertilskuddResultat()) },
         )
     }
 

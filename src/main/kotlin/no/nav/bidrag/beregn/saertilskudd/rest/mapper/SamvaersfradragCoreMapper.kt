@@ -10,10 +10,7 @@ import no.nav.bidrag.transport.beregning.felles.BeregnGrunnlag
 import no.nav.bidrag.transport.beregning.saertilskudd.Samvaersklasse
 
 object SamvaersfradragCoreMapper : CoreMapper() {
-    fun mapSamvaersfradragGrunnlagTilCore(
-        beregnGrunnlag: BeregnGrunnlag,
-        sjablonListe: SjablonListe
-    ): BeregnSamvaersfradragGrunnlagCore {
+    fun mapSamvaersfradragGrunnlagTilCore(beregnGrunnlag: BeregnGrunnlag, sjablonListe: SjablonListe): BeregnSamvaersfradragGrunnlagCore {
         val samvaersklassePeriodeCoreListe = ArrayList<SamvaersklassePeriodeCore>()
 
         // Løper gjennom alle grunnlagene og identifiserer de som skal mappes til samværsfradrag core
@@ -25,17 +22,18 @@ object SamvaersfradragCoreMapper : CoreMapper() {
         }
 
         // Henter aktuelle sjabloner
-        val sjablonPeriodeCoreListe = ArrayList(
-            mapSjablonSamvaersfradrag(
-                sjablonListe.sjablonSamvaersfradragResponse,
-                beregnGrunnlag
+        val sjablonPeriodeCoreListe =
+            ArrayList(
+                mapSjablonSamvaersfradrag(
+                    sjablonListe.sjablonSamvaersfradragResponse,
+                    beregnGrunnlag,
+                ),
             )
-        )
         return BeregnSamvaersfradragGrunnlagCore(
             beregnGrunnlag.beregnDatoFra!!,
             beregnGrunnlag.beregnDatoTil!!,
             samvaersklassePeriodeCoreListe,
-            sjablonPeriodeCoreListe
+            sjablonPeriodeCoreListe,
         )
     }
 }
@@ -53,6 +51,6 @@ private fun Samvaersklasse.tilCore(referanse: String): SamvaersklassePeriodeCore
         tilPeriodeCore(),
         soknadsbarnId!!,
         soknadsbarnFodselsdato!!,
-        samvaersklasseId!!
+        samvaersklasseId!!,
     )
 }

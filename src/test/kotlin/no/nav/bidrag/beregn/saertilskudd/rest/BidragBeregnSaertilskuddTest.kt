@@ -15,9 +15,9 @@ import org.springframework.test.context.ActiveProfiles
     excludeFilters = [
         ComponentScan.Filter(
             type = FilterType.ASSIGNABLE_TYPE,
-            value = [BidragBeregnSaertilskudd::class, BidragBeregnSaertilskuddLocal::class]
-        )
-    ]
+            value = [BidragBeregnSaertilskudd::class, BidragBeregnSaertilskuddLocal::class],
+        ),
+    ],
 )
 class BidragBeregnSaertilskuddTest {
     companion object {
