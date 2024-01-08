@@ -32,7 +32,7 @@ object BidragsevneCoreMapper : CoreMapper() {
     fun mapBidragsevneGrunnlagTilCore(
         beregnGrunnlag: BeregnGrunnlag,
         sjablontallMap: Map<String, SjablonTallNavn>,
-        sjablonListe: SjablonListe
+        sjablonListe: SjablonListe,
     ): BeregnBidragsevneGrunnlagCore {
         val inntektBPPeriodeCoreListe = ArrayList<InntektPeriodeCore>()
         val skatteklassePeriodeCoreListe = ArrayList<SkatteklassePeriodeCore>()
@@ -77,7 +77,7 @@ object BidragsevneCoreMapper : CoreMapper() {
         }
         // Hent aktuelle sjabloner
         sjablonPeriodeCoreListe.addAll(
-            mapSjablonSjablontall(sjablonListe.sjablonSjablontallResponse, BIDRAGSEVNE, beregnGrunnlag, sjablontallMap)
+            mapSjablonSjablontall(sjablonListe.sjablonSjablontallResponse, BIDRAGSEVNE, beregnGrunnlag, sjablontallMap),
         )
         sjablonPeriodeCoreListe.addAll(mapSjablonBidragsevne(sjablonListe.sjablonBidragsevneResponse, beregnGrunnlag))
         sjablonPeriodeCoreListe
@@ -90,14 +90,11 @@ object BidragsevneCoreMapper : CoreMapper() {
             bostatusPeriodeCoreListe,
             antallBarnIEgetHusholdPeriodeCoreListe,
             saerfradragPeriodeCoreListe,
-            sjablonPeriodeCoreListe
+            sjablonPeriodeCoreListe,
         )
     }
 
-    private fun mapSjablonBidragsevne(
-        sjablonBidragsevneListe: List<Bidragsevne>,
-        beregnGrunnlag: BeregnGrunnlag
-    ): List<SjablonPeriodeCore> {
+    private fun mapSjablonBidragsevne(sjablonBidragsevneListe: List<Bidragsevne>, beregnGrunnlag: BeregnGrunnlag): List<SjablonPeriodeCore> {
         val beregnDatoFra = beregnGrunnlag.beregnDatoFra
         val beregnDatoTil = beregnGrunnlag.beregnDatoTil
         return sjablonBidragsevneListe
@@ -110,8 +107,8 @@ object BidragsevneCoreMapper : CoreMapper() {
                     listOf(SjablonNokkelCore(SjablonNokkelNavn.BOSTATUS.navn, bostatus!!)),
                     Arrays.asList(
                         SjablonInnholdCore(SjablonInnholdNavn.BOUTGIFT_BELOP.navn, belopBoutgift!!),
-                        SjablonInnholdCore(SjablonInnholdNavn.UNDERHOLD_BELOP.navn, belopUnderhold!!)
-                    )
+                        SjablonInnholdCore(SjablonInnholdNavn.UNDERHOLD_BELOP.navn, belopUnderhold!!),
+                    ),
                 )
             }
             .toList()

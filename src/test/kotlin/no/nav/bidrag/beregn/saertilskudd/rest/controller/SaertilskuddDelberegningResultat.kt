@@ -18,28 +18,37 @@ class SaertilskuddDelberegningResultat(beregnetTotalSaertilskuddResultat: Beregn
     init {
         for ((_, _, _, grunnlagReferanseListe) in beregnetTotalSaertilskuddResultat.beregnetSaertilskuddPeriodeListe) {
             for (referanse in grunnlagReferanseListe) {
-                val resultatGrunnlag = beregnetTotalSaertilskuddResultat.grunnlagListe.stream()
-                    .filter { (referanse1): Grunnlag -> referanse1 == referanse }
-                    .findFirst()
-                    .orElse(null)
+                val resultatGrunnlag =
+                    beregnetTotalSaertilskuddResultat.grunnlagListe.stream()
+                        .filter { (referanse1): Grunnlag -> referanse1 == referanse }
+                        .findFirst()
+                        .orElse(null)
                 if (resultatGrunnlag != null) {
                     when (resultatGrunnlag.type) {
-                        GrunnlagType.BIDRAGSEVNE -> bidragsevneListe.add(grunnlagTilObjekt(resultatGrunnlag, BidragsevneResultatPeriode::class.java))
-                        GrunnlagType.BPS_ANDEL_SAERTILSKUDD -> bpsAndelSaertilskuddListe.add(
-                            grunnlagTilObjekt(
-                                resultatGrunnlag,
-                                BPsAndelSaertilskuddResultatPeriode::class.java
+                        GrunnlagType.BIDRAGSEVNE ->
+                            bidragsevneListe.add(
+                                grunnlagTilObjekt(resultatGrunnlag, BidragsevneResultatPeriode::class.java),
                             )
-                        )
-
-                        GrunnlagType.SAMVAERSFRADRAG -> samvaersfradragListe.add(
-                            grunnlagTilObjekt(
-                                resultatGrunnlag,
-                                SamvaersfradragResultatPeriode::class.java
+                        GrunnlagType.BPS_ANDEL_SAERTILSKUDD ->
+                            bpsAndelSaertilskuddListe.add(
+                                grunnlagTilObjekt(
+                                    resultatGrunnlag,
+                                    BPsAndelSaertilskuddResultatPeriode::class.java,
+                                ),
                             )
-                        )
 
-                        GrunnlagType.SJABLON -> sjablonPeriodeListe.add(grunnlagTilObjekt(resultatGrunnlag, SjablonResultatPeriode::class.java))
+                        GrunnlagType.SAMVAERSFRADRAG ->
+                            samvaersfradragListe.add(
+                                grunnlagTilObjekt(
+                                    resultatGrunnlag,
+                                    SamvaersfradragResultatPeriode::class.java,
+                                ),
+                            )
+
+                        GrunnlagType.SJABLON ->
+                            sjablonPeriodeListe.add(
+                                grunnlagTilObjekt(resultatGrunnlag, SjablonResultatPeriode::class.java),
+                            )
                         else -> {}
                     }
                 }

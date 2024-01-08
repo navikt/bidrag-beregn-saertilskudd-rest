@@ -12,5 +12,5 @@ data class Samvaersfradrag(
     val datoTom: LocalDate? = null,
     val antDagerTom: Int? = null,
     val antNetterTom: Int? = null,
-    val belopFradrag: BigDecimal? = null
+    val belopFradrag: BigDecimal? = null,
 )

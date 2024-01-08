@@ -20,7 +20,7 @@ object BPAndelSaertilskuddCoreMapper : CoreMapper() {
     fun mapBPsAndelSaertilskuddGrunnlagTilCore(
         beregnGrunnlag: BeregnGrunnlag,
         sjablontallMap: Map<String, SjablonTallNavn>,
-        sjablonListe: SjablonListe
+        sjablonListe: SjablonListe,
     ): BeregnBPsAndelSaertilskuddGrunnlagCore {
         val nettoSaertilskuddPeriodeListe = ArrayList<NettoSaertilskuddPeriodeCore>()
         val inntektBPPeriodeListe = ArrayList<InntektPeriodeCore>()
@@ -54,12 +54,13 @@ object BPAndelSaertilskuddCoreMapper : CoreMapper() {
         }
 
         // Hent aktuelle sjabloner
-        val sjablonPeriodeCoreListe = mapSjablonSjablontall(
-            sjablonListe.sjablonSjablontallResponse,
-            BP_ANDEL_SAERTILSKUDD,
-            beregnGrunnlag,
-            sjablontallMap
-        )
+        val sjablonPeriodeCoreListe =
+            mapSjablonSjablontall(
+                sjablonListe.sjablonSjablontallResponse,
+                BP_ANDEL_SAERTILSKUDD,
+                beregnGrunnlag,
+                sjablontallMap,
+            )
         return BeregnBPsAndelSaertilskuddGrunnlagCore(
             beregnGrunnlag.beregnDatoFra!!,
             beregnGrunnlag.beregnDatoTil!!,
@@ -67,7 +68,7 @@ object BPAndelSaertilskuddCoreMapper : CoreMapper() {
             inntektBPPeriodeListe,
             inntektBMPeriodeListe,
             inntektBBPeriodeListe,
-            sjablonPeriodeCoreListe
+            sjablonPeriodeCoreListe,
         )
     }
 }

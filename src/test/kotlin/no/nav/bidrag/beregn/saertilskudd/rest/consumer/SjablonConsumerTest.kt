@@ -40,9 +40,8 @@ internal class SjablonConsumerTest {
                 anyString(),
                 eq(HttpMethod.GET),
                 eq(null),
-                any<ParameterizedTypeReference<List<Sjablontall>>>()
-
-            )
+                any<ParameterizedTypeReference<List<Sjablontall>>>(),
+            ),
         )
             .thenReturn(ResponseEntity(TestUtil.dummySjablonSjablontallListe(), HttpStatus.OK))
 
@@ -56,7 +55,7 @@ internal class SjablonConsumerTest {
             Executable {
                 assertThat(sjablonResponse?.responseEntity?.body?.get(0)?.typeSjablon)
                     .isEqualTo(TestUtil.dummySjablonSjablontallListe()[0].typeSjablon)
-            }
+            },
         )
     }
 
@@ -68,8 +67,8 @@ internal class SjablonConsumerTest {
                 anyString(),
                 eq(HttpMethod.GET),
                 eq(null),
-                any<ParameterizedTypeReference<List<Sjablontall>>>()
-            )
+                any<ParameterizedTypeReference<List<Sjablontall>>>(),
+            ),
         )
             .thenThrow(HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR))
         assertThatExceptionOfType(SjablonConsumerException::class.java).isThrownBy { sjablonConsumer?.hentSjablonSjablontall() }
@@ -83,8 +82,8 @@ internal class SjablonConsumerTest {
                 anyString(),
                 eq(HttpMethod.GET),
                 eq(null),
-                any<ParameterizedTypeReference<List<Samvaersfradrag>>>()
-            )
+                any<ParameterizedTypeReference<List<Samvaersfradrag>>>(),
+            ),
         )
             .thenReturn(ResponseEntity(TestUtil.dummySjablonSamvaersfradragListe(), HttpStatus.OK))
         val sjablonResponse = sjablonConsumer?.hentSjablonSamvaersfradrag()
@@ -97,7 +96,7 @@ internal class SjablonConsumerTest {
             Executable {
                 assertThat(sjablonResponse?.responseEntity?.body?.get(0)?.belopFradrag)
                     .isEqualTo(TestUtil.dummySjablonSamvaersfradragListe()[0].belopFradrag)
-            }
+            },
         )
     }
 
@@ -109,8 +108,8 @@ internal class SjablonConsumerTest {
                 anyString(),
                 eq(HttpMethod.GET),
                 eq(null),
-                any<ParameterizedTypeReference<List<Samvaersfradrag>>>()
-            )
+                any<ParameterizedTypeReference<List<Samvaersfradrag>>>(),
+            ),
         )
             .thenThrow(HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR))
         assertThatExceptionOfType(SjablonConsumerException::class.java).isThrownBy { sjablonConsumer?.hentSjablonSamvaersfradrag() }
@@ -124,8 +123,8 @@ internal class SjablonConsumerTest {
                 anyString(),
                 eq(HttpMethod.GET),
                 eq(null),
-                any<ParameterizedTypeReference<List<Bidragsevne>>>()
-            )
+                any<ParameterizedTypeReference<List<Bidragsevne>>>(),
+            ),
         )
             .thenReturn(ResponseEntity(TestUtil.dummySjablonBidragsevneListe(), HttpStatus.OK))
         val sjablonResponse = sjablonConsumer?.hentSjablonBidragsevne()
@@ -138,7 +137,7 @@ internal class SjablonConsumerTest {
             Executable {
                 assertThat(sjablonResponse?.responseEntity?.body?.get(0)?.belopBoutgift)
                     .isEqualTo(TestUtil.dummySjablonBidragsevneListe()[0].belopBoutgift)
-            }
+            },
         )
     }
 
@@ -150,8 +149,8 @@ internal class SjablonConsumerTest {
                 anyString(),
                 eq(HttpMethod.GET),
                 eq(null),
-                any<ParameterizedTypeReference<List<Bidragsevne>>>()
-            )
+                any<ParameterizedTypeReference<List<Bidragsevne>>>(),
+            ),
         )
             .thenThrow(HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR))
         assertThatExceptionOfType(SjablonConsumerException::class.java).isThrownBy { sjablonConsumer?.hentSjablonBidragsevne() }
@@ -165,8 +164,8 @@ internal class SjablonConsumerTest {
                 anyString(),
                 eq(HttpMethod.GET),
                 eq(null),
-                any<ParameterizedTypeReference<List<TrinnvisSkattesats>>>()
-            )
+                any<ParameterizedTypeReference<List<TrinnvisSkattesats>>>(),
+            ),
         )
             .thenReturn(ResponseEntity(TestUtil.dummySjablonTrinnvisSkattesatsListe(), HttpStatus.OK))
         val sjablonResponse = sjablonConsumer?.hentSjablonTrinnvisSkattesats()
@@ -179,7 +178,7 @@ internal class SjablonConsumerTest {
             Executable {
                 assertThat(sjablonResponse?.responseEntity?.body?.get(0)?.inntektgrense)
                     .isEqualTo(TestUtil.dummySjablonTrinnvisSkattesatsListe()[0].inntektgrense)
-            }
+            },
         )
     }
 
@@ -191,8 +190,8 @@ internal class SjablonConsumerTest {
                 anyString(),
                 eq(HttpMethod.GET),
                 eq(null),
-                any<ParameterizedTypeReference<List<TrinnvisSkattesats>>>()
-            )
+                any<ParameterizedTypeReference<List<TrinnvisSkattesats>>>(),
+            ),
         )
             .thenThrow(HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR))
         assertThatExceptionOfType(SjablonConsumerException::class.java).isThrownBy { sjablonConsumer?.hentSjablonTrinnvisSkattesats() }

@@ -10,5 +10,5 @@ data class Bidragsevne(
     val datoFom: LocalDate? = null,
     val datoTom: LocalDate? = null,
     val belopBoutgift: BigDecimal? = null,
-    val belopUnderhold: BigDecimal? = null
+    val belopUnderhold: BigDecimal? = null,
 )

@@ -29,7 +29,7 @@ abstract class CoreMapper {
         sjablonSjablontallListe: List<Sjablontall>,
         delberegning: String,
         beregnGrunnlag: BeregnGrunnlag,
-        sjablontallMap: Map<String, SjablonTallNavn>
+        sjablontallMap: Map<String, SjablonTallNavn>,
     ): List<SjablonPeriodeCore> {
         val beregnDatoFra = beregnGrunnlag.beregnDatoFra
         val beregnDatoTil = beregnGrunnlag.beregnDatoTil
@@ -42,7 +42,7 @@ abstract class CoreMapper {
                     PeriodeCore(datoFom!!, datoTom),
                     (sjablontallMap[typeSjablon] ?: SjablonTallNavn.DUMMY).navn,
                     emptyList(),
-                    listOf(SjablonInnholdCore(SjablonInnholdNavn.SJABLON_VERDI.navn, verdi!!))
+                    listOf(SjablonInnholdCore(SjablonInnholdNavn.SJABLON_VERDI.navn, verdi!!)),
                 )
             }
             .toList()
@@ -52,7 +52,7 @@ abstract class CoreMapper {
     // Filtrerer bort de sjablonene som ikke er innenfor intervallet beregnDatoFra-beregnDatoTil
     fun mapSjablonTrinnvisSkattesats(
         sjablonTrinnvisSkattesatsListe: List<TrinnvisSkattesats>,
-        beregnGrunnlag: BeregnGrunnlag
+        beregnGrunnlag: BeregnGrunnlag,
     ): List<SjablonPeriodeCore> {
         val beregnDatoFra = beregnGrunnlag.beregnDatoFra
         val beregnDatoTil = beregnGrunnlag.beregnDatoTil
@@ -66,8 +66,8 @@ abstract class CoreMapper {
                     emptyList(),
                     Arrays.asList(
                         SjablonInnholdCore(SjablonInnholdNavn.INNTEKTSGRENSE_BELOP.navn, inntektgrense!!),
-                        SjablonInnholdCore(SjablonInnholdNavn.SKATTESATS_PROSENT.navn, sats!!)
-                    )
+                        SjablonInnholdCore(SjablonInnholdNavn.SKATTESATS_PROSENT.navn, sats!!),
+                    ),
                 )
             }
             .toList()
@@ -77,7 +77,7 @@ abstract class CoreMapper {
     // Filtrerer bort de sjablonene som ikke er innenfor intervallet beregnDatoFra-beregnDatoTil
     protected fun mapSjablonSamvaersfradrag(
         sjablonSamvaersfradragListe: List<Samvaersfradrag>,
-        beregnGrunnlag: BeregnGrunnlag
+        beregnGrunnlag: BeregnGrunnlag,
     ): List<SjablonPeriodeCore> {
         val beregnDatoFra = beregnGrunnlag.beregnDatoFra
         val beregnDatoTil = beregnGrunnlag.beregnDatoTil
@@ -90,18 +90,18 @@ abstract class CoreMapper {
                     SjablonNavn.SAMVAERSFRADRAG.navn,
                     Arrays.asList(
                         SjablonNokkelCore(SjablonNokkelNavn.SAMVAERSKLASSE.navn, samvaersklasse!!),
-                        SjablonNokkelCore(SjablonNokkelNavn.ALDER_TOM.navn, alderTom.toString())
+                        SjablonNokkelCore(SjablonNokkelNavn.ALDER_TOM.navn, alderTom.toString()),
                     ),
                     Arrays.asList(
                         SjablonInnholdCore(
                             SjablonInnholdNavn.ANTALL_DAGER_TOM.navn,
                             BigDecimal.valueOf(
-                                antDagerTom!!.toLong()
-                            )
+                                antDagerTom!!.toLong(),
+                            ),
                         ),
                         SjablonInnholdCore(SjablonInnholdNavn.ANTALL_NETTER_TOM.navn, BigDecimal.valueOf(antNetterTom!!.toLong())),
-                        SjablonInnholdCore(SjablonInnholdNavn.FRADRAG_BELOP.navn, belopFradrag!!)
-                    )
+                        SjablonInnholdCore(SjablonInnholdNavn.FRADRAG_BELOP.navn, belopFradrag!!),
+                    ),
                 )
             }
             .toList()

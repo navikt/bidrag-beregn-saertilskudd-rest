@@ -92,18 +92,22 @@ internal class BeregnSaertilskuddServiceTest {
     @DisplayName("Skal ha korrekt sjablon-grunnlag når beregningsmodulen kalles")
     @Disabled
     fun skalHaKorrektSjablonGrunnlagNaarBeregningsmodulenKalles() {
-        val bidragsevneGrunnlagTilCoreCaptor = ArgumentCaptor.forClass(
-            BeregnBidragsevneGrunnlagCore::class.java
-        )
-        val samvaersfradragGrunnlagTilCoreCaptor = ArgumentCaptor.forClass(
-            BeregnSamvaersfradragGrunnlagCore::class.java
-        )
-        val bpAndelSaertilskuddGrunnlagTilCoreCaptor = ArgumentCaptor.forClass(
-            BeregnBPsAndelSaertilskuddGrunnlagCore::class.java
-        )
-        val saertilskuddGrunnlagTilCoreCaptor = ArgumentCaptor.forClass(
-            BeregnSaertilskuddGrunnlagCore::class.java
-        )
+        val bidragsevneGrunnlagTilCoreCaptor =
+            ArgumentCaptor.forClass(
+                BeregnBidragsevneGrunnlagCore::class.java,
+            )
+        val samvaersfradragGrunnlagTilCoreCaptor =
+            ArgumentCaptor.forClass(
+                BeregnSamvaersfradragGrunnlagCore::class.java,
+            )
+        val bpAndelSaertilskuddGrunnlagTilCoreCaptor =
+            ArgumentCaptor.forClass(
+                BeregnBPsAndelSaertilskuddGrunnlagCore::class.java,
+            )
+        val saertilskuddGrunnlagTilCoreCaptor =
+            ArgumentCaptor.forClass(
+                BeregnSaertilskuddGrunnlagCore::class.java,
+            )
         `when`(bidragsevneCoreMock.beregnBidragsevne(bidragsevneGrunnlagTilCoreCaptor.capture()))
             .thenReturn(TestUtil.dummyBidragsevneResultatCore())
         `when`(bpAndelSaertilskuddCoreMock.beregnBPsAndelSaertilskudd(bpAndelSaertilskuddGrunnlagTilCoreCaptor.capture()))
@@ -139,59 +143,70 @@ internal class BeregnSaertilskuddServiceTest {
             // Sjekk at det mappes ut riktig antall for en gitt sjablon av type Sjablontall
             Executable {
                 assertThat(
-                    sjablonPeriodeListe.count { (_, navn): SjablonPeriodeCore -> navn == SjablonTallNavn.TRYGDEAVGIFT_PROSENT.navn }
+                    sjablonPeriodeListe.count { (_, navn): SjablonPeriodeCore -> navn == SjablonTallNavn.TRYGDEAVGIFT_PROSENT.navn },
                 )
                     .isEqualTo(
                         TestUtil.dummySjablonSjablontallListe()
                             .filter { (typeSjablon): Sjablontall -> typeSjablon == "0017" }.count { (_, datoFom, datoTom): Sjablontall ->
-                                !datoFom!!.isAfter(LocalDate.parse("2020-09-01")) && !datoTom
-                                    ?.isBefore(LocalDate.parse("2020-08-01"))!!
-                            }
+                                !datoFom!!.isAfter(LocalDate.parse("2020-09-01")) &&
+                                    !datoTom
+                                        ?.isBefore(LocalDate.parse("2020-08-01"))!!
+                            },
                     )
-            }, // Sjekk at det mappes ut riktig antall sjabloner av type Bidragsevne
+            },
             Executable {
                 assertThat(
-                    sjablonPeriodeListe.count { (_, navn): SjablonPeriodeCore -> navn == SjablonNavn.BIDRAGSEVNE.navn }
+                    sjablonPeriodeListe.count { (_, navn): SjablonPeriodeCore -> navn == SjablonNavn.BIDRAGSEVNE.navn },
                 )
                     .isEqualTo(
                         TestUtil.dummySjablonBidragsevneListe().count { (_, datoFom, datoTom): Bidragsevne ->
-                            !datoFom!!.isAfter(LocalDate.parse("2020-09-01")) && !datoTom
-                                ?.isBefore(LocalDate.parse("2020-08-01"))!!
-                        }
+                            !datoFom!!.isAfter(LocalDate.parse("2020-09-01")) &&
+                                !datoTom
+                                    ?.isBefore(LocalDate.parse("2020-08-01"))!!
+                        },
                     )
-            }, // Sjekk at det mappes ut riktig verdi for en gitt sjablon av type Sjablontall
+            },
             Executable {
                 assertThat(
                     sjablonPeriodeListe.stream()
                         .filter { (periode, navn): SjablonPeriodeCore ->
-                            navn == SjablonTallNavn.TRYGDEAVGIFT_PROSENT.navn && periode.datoFom == LocalDate.parse(
-                                "2014-01-01"
-                            )
+                            navn == SjablonTallNavn.TRYGDEAVGIFT_PROSENT.navn && periode.datoFom ==
+                                LocalDate.parse(
+                                    "2014-01-01",
+                                )
                         }
                         .flatMap { it.innholdListe.stream() }
                         .findFirst()
                         .map { it.verdi }
-                        .orElse(BigDecimal.ZERO)
+                        .orElse(BigDecimal.ZERO),
                 )
                     .isEqualTo(BigDecimal.valueOf(8.2))
-            }
+            },
         )
     }
 
     @Test
     @DisplayName("Skal beregne særtilskudd")
     fun skalBeregneSaertilskudd() {
-        `when`(bidragsevneCoreMock.beregnBidragsevne(capture(beregnBidragsevneGrunnlagCoreCaptor))).thenReturn(TestUtil.dummyBidragsevneResultatCore())
-        `when`(bpAndelSaertilskuddCoreMock.beregnBPsAndelSaertilskudd(capture(beregnBPsAndelSaertilskuddGrunnlagCoreCaptor))).thenReturn(TestUtil.dummyBPsAndelSaertilskuddResultatCore())
-        `when`(samvaersfradragCoreMock.beregnSamvaersfradrag(capture(beregnSamvaersfradragGrunnlagCoreCaptor))).thenReturn(TestUtil.dummySamvaersfradragResultatCore())
-        `when`(saertilskuddCoreMock.beregnSaertilskudd(capture(beregnSaertilskuddGrunnlagCoreCaptor))).thenReturn(TestUtil.dummySaertilskuddResultatCore())
+        `when`(
+            bidragsevneCoreMock.beregnBidragsevne(capture(beregnBidragsevneGrunnlagCoreCaptor)),
+        ).thenReturn(TestUtil.dummyBidragsevneResultatCore())
+        `when`(
+            bpAndelSaertilskuddCoreMock.beregnBPsAndelSaertilskudd(capture(beregnBPsAndelSaertilskuddGrunnlagCoreCaptor)),
+        ).thenReturn(TestUtil.dummyBPsAndelSaertilskuddResultatCore())
+        `when`(
+            samvaersfradragCoreMock.beregnSamvaersfradrag(capture(beregnSamvaersfradragGrunnlagCoreCaptor)),
+        ).thenReturn(TestUtil.dummySamvaersfradragResultatCore())
+        `when`(
+            saertilskuddCoreMock.beregnSaertilskudd(capture(beregnSaertilskuddGrunnlagCoreCaptor)),
+        ).thenReturn(TestUtil.dummySaertilskuddResultatCore())
 
         val beregnSaertilskuddResultat = beregnSaertilskuddService.beregn(TestUtil.byggTotalSaertilskuddGrunnlag())
         assertAll(
             { assertEquals(HttpStatus.OK, beregnSaertilskuddResultat.responseEntity.statusCode) },
             { assertNotNull(beregnSaertilskuddResultat.responseEntity.body) },
             { assertNotNull(beregnSaertilskuddResultat.responseEntity.body?.beregnetSaertilskuddPeriodeListe) },
-            { assertEquals(1, beregnSaertilskuddResultat.responseEntity.body?.beregnetSaertilskuddPeriodeListe?.size) }
+            { assertEquals(1, beregnSaertilskuddResultat.responseEntity.body?.beregnetSaertilskuddPeriodeListe?.size) },
         )
     }
 
@@ -199,7 +214,9 @@ internal class BeregnSaertilskuddServiceTest {
     @DisplayName("Skal kaste UgyldigInputException ved feil retur fra BidragsevneCore")
     @Disabled
     fun skalKasteUgyldigInputExceptionVedFeilReturFraBidragsevneCore() {
-        `when`(bidragsevneCoreMock.beregnBidragsevne(capture(beregnBidragsevneGrunnlagCoreCaptor))).thenReturn(TestUtil.dummyBidragsevneResultatCoreMedAvvik())
+        `when`(
+            bidragsevneCoreMock.beregnBidragsevne(capture(beregnBidragsevneGrunnlagCoreCaptor)),
+        ).thenReturn(TestUtil.dummyBidragsevneResultatCoreMedAvvik())
         Assertions.assertThatExceptionOfType(UgyldigInputException::class.java)
             .isThrownBy { beregnSaertilskuddService.beregn(TestUtil.byggTotalSaertilskuddGrunnlag()) }
             .withMessageContaining("Ugyldig input ved beregning av bidragsevne. Følgende avvik ble funnet:")
@@ -210,7 +227,9 @@ internal class BeregnSaertilskuddServiceTest {
     @Test
     @DisplayName("Skal kaste UgyldigInputException ved feil retur fra BPsAndelSaertilskuddCore")
     fun skalKasteUgyldigInputExceptionVedFeilReturFraBPsAndelSaertilskuddCore() {
-        `when`(bidragsevneCoreMock.beregnBidragsevne(capture(beregnBidragsevneGrunnlagCoreCaptor))).thenReturn(TestUtil.dummyBidragsevneResultatCore())
+        `when`(
+            bidragsevneCoreMock.beregnBidragsevne(capture(beregnBidragsevneGrunnlagCoreCaptor)),
+        ).thenReturn(TestUtil.dummyBidragsevneResultatCore())
         `when`(bpAndelSaertilskuddCoreMock.beregnBPsAndelSaertilskudd(capture(beregnBPsAndelSaertilskuddGrunnlagCoreCaptor)))
             .thenReturn(TestUtil.dummyBPsAndelSaertilskuddResultatCoreMedAvvik())
         Assertions.assertThatExceptionOfType(UgyldigInputException::class.java)
@@ -223,7 +242,9 @@ internal class BeregnSaertilskuddServiceTest {
     @Test
     @DisplayName("Skal kaste UgyldigInputException ved feil retur fra SamvaersfradragCore")
     fun skalKasteUgyldigInputExceptionVedFeilReturFraSamvaersfradragCore() {
-        `when`(bidragsevneCoreMock.beregnBidragsevne(capture(beregnBidragsevneGrunnlagCoreCaptor))).thenReturn(TestUtil.dummyBidragsevneResultatCore())
+        `when`(
+            bidragsevneCoreMock.beregnBidragsevne(capture(beregnBidragsevneGrunnlagCoreCaptor)),
+        ).thenReturn(TestUtil.dummyBidragsevneResultatCore())
         `when`(bpAndelSaertilskuddCoreMock.beregnBPsAndelSaertilskudd(capture(beregnBPsAndelSaertilskuddGrunnlagCoreCaptor)))
             .thenReturn(TestUtil.dummyBPsAndelSaertilskuddResultatCore())
         `when`(samvaersfradragCoreMock.beregnSamvaersfradrag(capture(beregnSamvaersfradragGrunnlagCoreCaptor)))
@@ -243,7 +264,9 @@ internal class BeregnSaertilskuddServiceTest {
             .thenReturn(TestUtil.dummyBPsAndelSaertilskuddResultatCore())
         `when`(samvaersfradragCoreMock.beregnSamvaersfradrag(capture(beregnSamvaersfradragGrunnlagCoreCaptor)))
             .thenReturn(TestUtil.dummySamvaersfradragResultatCore())
-        `when`(saertilskuddCoreMock.beregnSaertilskudd(capture(beregnSaertilskuddGrunnlagCoreCaptor))).thenReturn(TestUtil.dummySaertilskuddResultatCoreMedAvvik())
+        `when`(
+            saertilskuddCoreMock.beregnSaertilskudd(capture(beregnSaertilskuddGrunnlagCoreCaptor)),
+        ).thenReturn(TestUtil.dummySaertilskuddResultatCoreMedAvvik())
         Assertions.assertThatExceptionOfType(UgyldigInputException::class.java)
             .isThrownBy { beregnSaertilskuddService.beregn(TestUtil.byggTotalSaertilskuddGrunnlag()) }
             .withMessageContaining("Ugyldig input ved beregning av særtilskudd. Følgende avvik ble funnet:")
@@ -253,6 +276,7 @@ internal class BeregnSaertilskuddServiceTest {
 
     companion object MockitoHelper {
         fun <T> any(): T = Mockito.any()
+
         fun <T> any(type: Class<T>): T = Mockito.any(type)
     }
 }

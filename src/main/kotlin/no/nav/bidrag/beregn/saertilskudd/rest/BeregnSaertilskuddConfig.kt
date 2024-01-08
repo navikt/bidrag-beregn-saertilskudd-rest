@@ -32,17 +32,16 @@ const val LIVE_PROFILE = "live"
 @Configuration
 @OpenAPIDefinition(
     info = Info(title = "bidrag-beregn-saertilskudd-rest", version = "v1"),
-    security = [SecurityRequirement(name = "bearer-key")]
+    security = [SecurityRequirement(name = "bearer-key")],
 )
 @SecurityScheme(
     bearerFormat = "JWT",
     name = "bearer-key",
     scheme = "bearer",
-    type = SecuritySchemeType.HTTP
+    type = SecuritySchemeType.HTTP,
 )
 @Import(CorrelationIdFilter::class, UserMdcFilter::class, DefaultCorsFilter::class)
 class BeregnSaertilskuddConfig {
-
     @Bean
     @Scope("prototype")
     fun restTemplate(): HttpHeaderRestTemplate {
@@ -72,10 +71,7 @@ class BeregnSaertilskuddConfig {
     }
 
     @Bean
-    fun sjablonConsumer(
-        @Value("\${BIDRAGSJABLON_URL}") sjablonBaseUrl: String,
-        restTemplate: RestTemplate
-    ): SjablonConsumer {
+    fun sjablonConsumer(@Value("\${BIDRAGSJABLON_URL}") sjablonBaseUrl: String, restTemplate: RestTemplate): SjablonConsumer {
         restTemplate.uriTemplateHandler = RootUriTemplateHandler(sjablonBaseUrl)
         return SjablonConsumer(restTemplate)
     }

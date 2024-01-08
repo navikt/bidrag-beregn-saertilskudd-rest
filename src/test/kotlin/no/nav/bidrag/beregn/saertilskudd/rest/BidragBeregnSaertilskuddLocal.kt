@@ -15,7 +15,14 @@ import org.springframework.test.context.ActiveProfiles
 
 @SpringBootApplication(exclude = [SecurityAutoConfiguration::class, ManagementWebSecurityAutoConfiguration::class])
 @EnableJwtTokenValidation(ignore = ["org.springdoc", "org.springframework"])
-@ComponentScan(excludeFilters = [ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, value = [BidragBeregnSaertilskudd::class, BidragBeregnSaertilskuddTest::class])])
+@ComponentScan(
+    excludeFilters = [
+        ComponentScan.Filter(
+            type = FilterType.ASSIGNABLE_TYPE,
+            value = [BidragBeregnSaertilskudd::class, BidragBeregnSaertilskuddTest::class],
+        ),
+    ],
+)
 @EnableMockOAuth2Server
 @ActiveProfiles(LOCAL_PROFILE)
 class BidragBeregnSaertilskuddLocal {
@@ -24,9 +31,10 @@ class BidragBeregnSaertilskuddLocal {
     }
 
     fun main(args: Array<String>) {
-        val wireMockServer = WireMockServer(
-            WireMockConfiguration.wireMockConfig().dynamicPort().dynamicHttpsPort()
-        ) // No-args constructor will start on port 8080, no HTTPS
+        val wireMockServer =
+            WireMockServer(
+                WireMockConfiguration.wireMockConfig().dynamicPort().dynamicHttpsPort(),
+            ) // No-args constructor will start on port 8080, no HTTPS
         wireMockServer.start()
 
         val profile = if (args.isEmpty()) LOCAL_PROFILE else args[0]
