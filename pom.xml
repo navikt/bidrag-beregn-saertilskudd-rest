@@ -34,7 +34,7 @@
     <com.squareup.okhttp3.version>4.9.2</com.squareup.okhttp3.version>
     <okhttp3.version>4.9.2</okhttp3.version>
     <mockito-kotlin.version>5.2.1</mockito-kotlin.version>
-    <kotest.version>5.6.2</kotest.version>
+    <kotest.version>5.8.0</kotest.version>
     <mockk.version>4.0.2</mockk.version>
     <!-- language -->
     <java.version>21</java.version>
